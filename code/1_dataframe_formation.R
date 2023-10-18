@@ -175,7 +175,7 @@ fish <- fish %>%
 ##want to write a loop function that will go through and check if the categories sum to each other.. each site/year
 
 fish_sp_list <- fish %>%
-  distinct(Resource_Code, Resource_Name)
+  distinct(General_Category, General_Category_lvl2, Family, Species, Resource_Code, Resource_Name)
 
 
   
@@ -187,6 +187,117 @@ fish_test <- fish %>%
 
 
 ##also want to check that all the values for the different categories add up 
+
+
+##testing to see if can build loop function
+angoon_1984 <- fish %>%
+  filter(Site_Year_Code == "Angoon_1984") %>%
+  select(Site_Year_Code, General_Category:Species, Fishing_Gear_Type, Resource_Code, Resource_Name, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Estimated_Amount_Harvested, Estimated_Total_Pounds_Harvested)
+
+
+##this function removes the total family sum, and the gear specific rows, so takes the already calculated sum within each species, and if there are multiple of each speices (e.g., herring roe, it takes the sum of those)
+test_func <- function(x){
+  df_prep <- x
+  family_total <- df_prep %>%
+    filter(Fishing_Gear_Type == "NA") %>%
+    filter(!is.na(Species)) %>%
+    group_by(Species) %>%
+    mutate_if(is.numeric, sum) %>%
+    mutate_if(is.character, funs(paste(unique(.), collapse = "_"))) %>%
+    distinct()
+}
+
+ang_test <- test_func(angoon_1984)
+##kind of worked but not really
+
+fish_test_2 <- split(fish, paste0(fish$Site_Year_Code)) %>%
+  map(test_func) %>%
+  bind_rows()
+
+##so i think this works, have 1 value for each species/year/site but the only thing it does not have is the type of gear
+##also for some variables, summing does not work -- i.e., the %'s 
+
+##need to figure out how to check/confirm that these sums are accurate and okay -- this is the hard part!
+##for each category in general_category_level 2
+###if Family is.na ---> mutaate - level 1
+###if species is.na --> mutate level 2
+###if fishing gear is.na --> level 3
+###if fishing gear is not na --> level 4
+
+angoon_1984$Family <- angoon_1984$Family %>% replace_na("NA")
+angoon_1984$Species <- angoon_1984$Species %>% replace_na("NA")
+
+ang_test_2 <- angoon_1984 %>%
+  mutate(Nest_Level = case_when(
+  grepl("NA", Family) ~ "Level_1",
+  grepl("NA", Species) ~ "Level_2",
+  grepl("NA", Fishing_Gear_Type) ~ "Level_3",
+  grepl("CF", Fishing_Gear_Type) ~ "Level_4",
+  grepl("Rod", Fishing_Gear_Type) ~ "Level_4",
+  grepl("Other", Fishing_Gear_Type) ~ "Level_4",
+  )) 
+
+sp_sum <- aggregate(Mean_Pounds_Per_Household~Family+Species+Nest_Level, data=ang_test_2, FUN=sum, na.rm = FALSE)
+
+test_func_2 <- function(x){
+  df_prep <- x
+  
+}
+
+
+Family, Species, Fishing_Gear_Type,Resource_Code, Resource_Name,
+
+angoon_1984_salmon_na <- fish %>%
+  filter(Site_Year_Code == "Angoon_1984") %>%
+  filter(General_Category_lvl2 == "Salmon") %>%
+  filter(is.na(Species)) %>%
+  filter(Fishing_Gear_Type == "NA")%>%
+  select(Species, Percent_Using:Percapita_Pounds_Harvested, Number_Of_Resource_Harvested:Mean_Grams_Percapita_Harvest) %>%
+  mutate(geartype = "NA")
+
+angoon_1984_salmon_gt <- fish %>%
+  filter(Site_Year_Code == "Angoon_1984") %>%
+  filter(General_Category_lvl2 == "Salmon") %>%
+  filter(Fishing_Gear_Type != "NA") %>%
+  #group_by(Species) %>%
+  summarise_at(vars(Percent_Using:Percapita_Pounds_Harvested, Number_Of_Resource_Harvested:Mean_Grams_Percapita_Harvest), sum, na.rm = TRUE) %>%
+  mutate(geartype = "sum_all") %>%
+  mutate(Species = "allspecies") %>%
+  select(Species, Percent_Using:Mean_Grams_Percapita_Harvest, geartype)
+
+salmon_test <- rbind(angoon_1984_salmon_gt, angoon_1984_salmon_na) %>%
+  select(Species, geartype, Percent_Using:Mean_Grams_Percapita_Harvest)
+
+angoon_1984_chinook_na <- angoon_1984 %>%
+  filter(Species == "Chinook Salmon")  %>%
+  filter(Fishing_Gear_Type == "NA") %>%
+  select(Percent_Using:Percapita_Pounds_Harvested, Number_Of_Resource_Harvested:Mean_Grams_Percapita_Harvest) %>%
+  mutate(geartype = "NA")
+ 
+angoon_1984_chinook_gt <- angoon_1984 %>%
+  filter(Species == "Chinook Salmon")  %>%
+  filter(Fishing_Gear_Type != "NA") %>%
+  summarise_at(vars(Percent_Using:Percapita_Pounds_Harvested, Number_Of_Resource_Harvested:Mean_Grams_Percapita_Harvest), sum, na.rm = TRUE) %>%
+  mutate(geartype = "sum_all")
+
+
+angoon_1984_chinook_test <- rbind(angoon_1984_chinook_na, angoon_1984_chinook_gt)
+##so even just looking at 1 year, 1 season, these values do not always add up... need to figure out methods and extrapolations to see if gear type is even worth retaining.. and why are the values different? 
+
+
+sum(angoong_1984_chinook[which(angoong_1984_chinook != "NA")], 10)  
+  ifelse(Fishing_Gear_Type == "NA", )
+  if(Fishing_Gear_Type == "NA"){
+    
+  }
+
+
+%>%
+  group_nest(General_Category, General_Category_lvl2, Family)
+
+angoon_1984
+##for each species, identified by first 4 to 7 digits of resource code, do they match sum of codes with gear type.. 
+##determine if nested levels sum up to furthur up level 
 
 
 ##generate list of all species in df 
