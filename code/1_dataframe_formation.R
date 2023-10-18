@@ -48,10 +48,10 @@ str(fish)
 
 fish <- fish %>%
   mutate(Fishing_Gear_Type = case_when(
-    endsWith(Resource_Code, "0") ~ "NA",
-    endsWith(Resource_Code, "1") ~ "CF_Retention",
-    endsWith(Resource_Code, "2") ~ "Rod_Reel",
-    endsWith(Resource_Code, "3") ~ "Other_Gear",
+    endsWith(Resource_Code, "0") ~ "NA", ##fishing NA
+    endsWith(Resource_Code, "1") ~ "CF_Retention", ##CF_retention
+    endsWith(Resource_Code, "2") ~ "Rod_Reel", ##Rod and Real
+    endsWith(Resource_Code, "3") ~ "Other_Gear", ##Other Gear
   )) %>%
   mutate(General_Category = case_when(
     startsWith(Resource_Code, "1") ~ "Fish",
@@ -191,8 +191,93 @@ fish_test <- fish %>%
 
 ##testing to see if can build loop function
 angoon_1984 <- fish %>%
-  filter(Site_Year_Code == "Angoon_1984") %>%
-  select(Site_Year_Code, General_Category:Species, Fishing_Gear_Type, Resource_Code, Resource_Name, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Estimated_Amount_Harvested, Estimated_Total_Pounds_Harvested)
+  filter(Site_Year_Code == "Angoon_1984") #%>%
+ # select(Site_Year_Code, General_Category:Species, Fishing_Gear_Type, Resource_Code, Resource_Name, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Estimated_Amount_Harvested, Estimated_Total_Pounds_Harvested) %>%
+  #select(Site_Year_Code, General_Category:Species, Fishing_Gear_Type, Resource_Code, Resource_Name, sort(names(.)))
+
+##select species that are broken down into gear types -- this will be within species level
+gt_sp <- angoon_1984 %>%
+  filter(Fishing_Gear_Type != "NA") %>%
+  filter(!is.na(Species)) %>%
+  group_by(Family, Species) %>%
+  summarise_at(vars(Percent_Using:Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Mean_Grams_Percapita_Harvest), sum, na.rm = TRUE) %>%
+  rename_with(~paste0(., "_gt_sum"), Percent_Using:Mean_Grams_Percapita_Harvest)
+
+ng_sp <- angoon_1984 %>%
+  filter(Fishing_Gear_Type == "NA") %>%
+  group_by(Family, Species) %>%
+  summarise_at(vars(Percent_Using:Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Mean_Grams_Percapita_Harvest), sum, na.rm = TRUE) %>%
+  rename_with(~paste0(., "_db_sum"), Percent_Using:Mean_Grams_Percapita_Harvest)
+
+test <- inner_join(gt_sp, ng_sp, by = c("Family", "Species")) %>%
+  select(Family, Species, sort(names(.)))
+
+
+
+##comparing sums at family level -- only for families that are broken down into multiple species 
+fam_db <- angoon_1984 %>%
+    filter(Fishing_Gear_Type == "NA") %>%
+    filter(is.na(Species)) %>%
+    group_by(Family) %>%
+    summarise_at(vars(Percent_Using:Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Mean_Grams_Percapita_Harvest), sum, na.rm = TRUE) %>%
+    rename_with(~paste0(., "_db_sum"), Percent_Using:Mean_Grams_Percapita_Harvest)
+
+fam_calc <- angoon_1984 %>%
+  filter(Fishing_Gear_Type == "NA") %>%
+  filter(Species != "NA") %>%
+  group_by(Family) %>%
+  summarise_at(vars(Percent_Using:Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Mean_Grams_Percapita_Harvest), sum, na.rm = TRUE) %>%
+  rename_with(~paste0(., "_fam_sum"), Percent_Using:Mean_Grams_Percapita_Harvest)
+
+ 
+test_2 <- inner_join(fam_db, fam_calc, by = "Family") %>%
+  select(Family, sort(names(.)))
+
+##put into function to apply to all sites/years
+##function to test whether sum of gear types within species matches with sum value already given in database
+sp_gt_sum_test_func <- function(x){
+  gt_sp <- x %>%
+    filter(Fishing_Gear_Type != "NA") %>%
+    filter(!is.na(Species)) %>%
+    group_by(Site_Year_Code, Family, Species) %>%
+    summarise_at(vars(Percent_Using:Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Mean_Grams_Percapita_Harvest), sum, na.rm = TRUE) %>%
+    rename_with(~paste0(., "_gt_sum"), Percent_Using:Mean_Grams_Percapita_Harvest)
+  ng_sp <- x %>%
+    filter(Fishing_Gear_Type == "NA") %>%
+    group_by(Site_Year_Code, Family, Species) %>%
+    summarise_at(vars(Percent_Using:Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Mean_Grams_Percapita_Harvest), sum, na.rm = TRUE) %>%
+    rename_with(~paste0(., "_db_sum"), Percent_Using:Mean_Grams_Percapita_Harvest)
+  gear_sum <- inner_join(gt_sp, ng_sp, by = c("Site_Year_Code", "Family", "Species")) %>%
+    select(Site_Year_Code, Family, Species, sort(names(.)))
+}
+
+##function to test if species sum within family to the family level sum already given in the database
+fam_sum_test_func <- function(x){
+  fam_db <- x %>%
+    filter(Fishing_Gear_Type == "NA") %>%
+    filter(is.na(Species)) %>%
+    group_by(Site_Year_Code, Family) %>%
+    summarise_at(vars(Percent_Using:Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Mean_Grams_Percapita_Harvest), sum, na.rm = TRUE) %>%
+    rename_with(~paste0(., "_db_sum"), Percent_Using:Mean_Grams_Percapita_Harvest)
+  fam_calc <- x %>%
+    filter(Fishing_Gear_Type == "NA") %>%
+    filter(Species != "NA") %>%
+    group_by(Site_Year_Code, Family) %>%
+    summarise_at(vars(Percent_Using:Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Mean_Grams_Percapita_Harvest), sum, na.rm = TRUE) %>%
+    rename_with(~paste0(., "_fam_sum"), Percent_Using:Mean_Grams_Percapita_Harvest)
+  fam_sum <- inner_join(fam_db, fam_calc, by = c("Site_Year_Code", "Family")) %>%
+    select(Site_Year_Code, Family, sort(names(.)))
+}  
+
+sp_gt_sum_test <- split(fish, paste0(fish$Site_Year_Code)) %>%
+  map(sp_gt_sum_test_func) %>%
+  bind_rows()
+
+fam_sum_test <- split(fish, paste0(fish$Site_Year_Code)) %>%
+  map(fam_sum_test_func) %>%
+  bind_rows()
+
+
 
 
 ##this function removes the total family sum, and the gear specific rows, so takes the already calculated sum within each species, and if there are multiple of each speices (e.g., herring roe, it takes the sum of those)
@@ -236,6 +321,90 @@ ang_test_2 <- angoon_1984 %>%
   grepl("Rod", Fishing_Gear_Type) ~ "Level_4",
   grepl("Other", Fishing_Gear_Type) ~ "Level_4",
   )) 
+
+sp_sum_func <- function(x){
+  df_prep <- x
+  lvl3_sum <- df_prep %>%
+    filter(Fishing_Gear_Type =="CF_Retention" | Fishing_Gear_Type == "Rod_Reel" | Fishing_Gear_Type == "Other_Gear") %>%
+    group_by(Family) %>%
+    mutate(mean_pph_sum = sum(Mean_Pounds_Per_Household)) ##will need to figure out how to run this for multiple columns, have done this before just forget 
+  lvl4_sum <- df_prep %>%
+    filter(Nest_Level == "Level_4") %>%
+    group_by(Family) %>%
+    mutate(mean_pph_sum = sum(Mean_Pounds_Per_Household))
+  lvl2_sum <- df_prep %>%
+  filter(Nest_Level == "Level_2") %>%
+    group_by(Family) %>%
+    mutate(mean_pph_sum = sum(Mean_Pounds_Per_Household))
+  lvl_sums <- rbind(lvl2_sum, lvl3_sum, lvl4_sum)
+}
+##not doing what i want
+
+
+
+
+
+ 
+  
+ang_sum_test <- ang_test_2 %>%
+  filter(Fishing_Gear_Type =="CF_Retention" | Fishing_Gear_Type == "Rod_Reel" | Fishing_Gear_Type == "Other_Gear") %>%
+  group_by(Family, Species) %>%
+  summarise_at(vars(Mean_Pounds_Per_Household:Estimated_Total_Pounds_Harvested), sum) 
+
+ang_sum_test_2 <- ang_sum_test %>%
+  filter(Species != "NA") %>%
+  group_by(Family) %>%
+  summarise_at(vars(Mean_Pounds_Per_Household:Estimated_Total_Pounds_Harvested), sum) %>%
+  mutate(type = "gear_type_sp_breakdown")
+  
+ang_sum_test_3 <- 
+  ang_sum_test %>%
+  filter(Species == "NA") %>%
+  group_by(Family) %>%
+  summarise_at(vars(Mean_Pounds_Per_Household:Estimated_Total_Pounds_Harvested), sum) %>%
+  mutate(type = "gear_type_fam_breakdown") 
+
+ang_sum_test_4 <- rbind(ang_sum_test_2, ang_sum_test_3)
+
+
+  mutate(mean_pph_sum = sum(Mean_Pounds_Per_Household))
+
+
+ang_sum_test <- ang_test_2 %>%
+  if(all(Fishing_Gear_Type =="CF_Retention" | Fishing_Gear_Type == "Rod_Reel" | Fishing_Gear_Type == "Other_Gear")){
+    group_by(Species) %>%
+      mutate(mean_pph_sum = sum(Mean_Pounds_Per_Household))
+  }else{
+    group_by(Species) %>%
+      mutate(mean_pph_sum = Mean_Pounds_Per_Household)
+  }
+
+##create numeric code vector for fishing gear type
+str(angoon_1984)
+
+angoon_1984$Fishing_Gear_Type <- as.numeric(angoon_1984$Fishing_Gear_Type)
+
+w <- c() ##creates empty vector named 'w'
+test <- angoon_1984 %>%
+  if(all(Fishing_Gear_Type >= 1)){
+    group_by(Family) %>%
+      group_by(Species) %>%
+      mutate(mean_pph_sum = sum(Mean_Pounds_Per_Household))
+  }else{
+    group_by(Species) %>%
+      mutate(mean_pph_sum = Mean_Pounds_Per_Household)
+  }
+  
+  for(i in 1:length(Fishing_Gear_Type)){
+    if (Fishing_Gear_Type[i] >= 1){
+    w[i] <- group_by(Family) %>%
+      sum(Mean_Pounds_Per_Household[i])
+  }
+  else 
+    w[i] <- Mean_Pounds_Per_Household[i]
+}
+
+w <- as.data.frame(w)
 
 sp_sum <- aggregate(Mean_Pounds_Per_Household~Family+Species+Nest_Level, data=ang_test_2, FUN=sum, na.rm = FALSE)
 
