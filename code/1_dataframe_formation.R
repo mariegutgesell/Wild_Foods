@@ -185,55 +185,6 @@ fish_test <- fish %>%
   
 ##have 65 separate food webs to construct :D 
 
-
-##also want to check that all the values for the different categories add up 
-
-
-##testing to see if can build loop function
-angoon_1984 <- fish %>%
-  filter(Site_Year_Code == "Angoon_1984") #%>%
- # select(Site_Year_Code, General_Category:Species, Fishing_Gear_Type, Resource_Code, Resource_Name, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Estimated_Amount_Harvested, Estimated_Total_Pounds_Harvested) %>%
-  #select(Site_Year_Code, General_Category:Species, Fishing_Gear_Type, Resource_Code, Resource_Name, sort(names(.)))
-
-##select species that are broken down into gear types -- this will be within species level
-gt_sp <- angoon_1984 %>%
-  filter(Fishing_Gear_Type != "NA") %>%
-  filter(!is.na(Species)) %>%
-  group_by(Family, Species) %>%
-  summarise_at(vars(Percent_Using:Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Mean_Grams_Percapita_Harvest), sum, na.rm = TRUE) %>%
-  rename_with(~paste0(., "_gt_sum"), Percent_Using:Mean_Grams_Percapita_Harvest)
-
-ng_sp <- angoon_1984 %>%
-  filter(Fishing_Gear_Type == "NA") %>%
-  group_by(Family, Species) %>%
-  summarise_at(vars(Percent_Using:Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Mean_Grams_Percapita_Harvest), sum, na.rm = TRUE) %>%
-  rename_with(~paste0(., "_db_sum"), Percent_Using:Mean_Grams_Percapita_Harvest)
-
-test <- inner_join(gt_sp, ng_sp, by = c("Family", "Species")) %>%
-  select(Family, Species, sort(names(.)))
-
-
-
-##comparing sums at family level -- only for families that are broken down into multiple species 
-fam_db <- angoon_1984 %>%
-    filter(Fishing_Gear_Type == "NA") %>%
-    filter(is.na(Species)) %>%
-    group_by(Family) %>%
-    summarise_at(vars(Percent_Using:Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Mean_Grams_Percapita_Harvest), sum, na.rm = TRUE) %>%
-    rename_with(~paste0(., "_db_sum"), Percent_Using:Mean_Grams_Percapita_Harvest)
-
-fam_calc <- angoon_1984 %>%
-  filter(Fishing_Gear_Type == "NA") %>%
-  filter(Species != "NA") %>%
-  group_by(Family) %>%
-  summarise_at(vars(Percent_Using:Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Mean_Grams_Percapita_Harvest), sum, na.rm = TRUE) %>%
-  rename_with(~paste0(., "_fam_sum"), Percent_Using:Mean_Grams_Percapita_Harvest)
-
- 
-test_2 <- inner_join(fam_db, fam_calc, by = "Family") %>%
-  select(Family, sort(names(.)))
-
-##put into function to apply to all sites/years
 ##function to test whether sum of gear types within species matches with sum value already given in database
 sp_gt_sum_test_func <- function(x){
   gt_sp <- x %>%
@@ -277,8 +228,21 @@ fam_sum_test <- split(fish, paste0(fish$Site_Year_Code)) %>%
   map(fam_sum_test_func) %>%
   bind_rows()
 
+##Which columns do not add up? i.e., the nested versions to do not generate the same values as already given in the database - set threshold of difference >1
+##want to set up function that will tell me if values for specific pairs of columns are close to eachother or not
+##there are some columns we may expect that they wouldn't be the same, for ex. confidence intervals, because these may not be a sum depending on how they are calculated (do want to figure out how they are)
 
-
+df$ID.match <- sapply(df$ID, function(x){
+  
+  df %>%
+    filter(abs(Estim- lat[ID == x]) < 1,
+           abs(long - long[ID == x]) < 1,
+           abs(score - score[ID == x]) < 0.7,
+           ID != x) %>%
+    pull(ID) %>%
+    paste0(collapse = ',')
+  
+})
 
 ##this function removes the total family sum, and the gear specific rows, so takes the already calculated sum within each species, and if there are multiple of each speices (e.g., herring roe, it takes the sum of those)
 test_func <- function(x){
