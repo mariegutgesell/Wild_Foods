@@ -231,12 +231,64 @@ fam_sum_test <- split(fish, paste0(fish$Site_Year_Code)) %>%
 ##Which columns do not add up? i.e., the nested versions to do not generate the same values as already given in the database - set threshold of difference >1
 ##want to set up function that will tell me if values for specific pairs of columns are close to eachother or not
 ##there are some columns we may expect that they wouldn't be the same, for ex. confidence intervals, because these may not be a sum depending on how they are calculated (do want to figure out how they are)
+head(sp_gt_sum_test)
 
-df$ID.match <- sapply(df$ID, function(x){
+angoon_2012<- fish %>%
+  filter(Site_Year_Code == "Angoon_2012")
+
+
+sp_gt_diff_test <- sp_gt_sum_test %>%
+    group_by(Site_Year_Code, Family, Species) %>%
+    mutate(est_total_lb_harv_diff = Estimated_Total_Pounds_Harvested_db_sum - Estimated_Total_Pounds_Harvested_gt_sum)
+
+sp_gt_diff_test$est_total_lb_harv_diff <- as.numeric(sp_gt_diff_test$est_total_lb_harv_diff)
+sp_gt_diff_test$est_total_lb_harv_diff  <- format(sp_gt_diff_test$est_total_lb_harv_diff, scientific = FALSE)
+
+
+   
+sp_gt_diff_2 <- filter(sp_gt_diff_test, est_total_lb_harv_diff > 2) %>%
+  select(Site_Year_Code, Family, Species, Estimated_Total_Pounds_Harvested_db_sum, Estimated_Total_Pounds_Harvested_gt_sum, est_total_lb_harv_diff)
+sp_gt_diff_3 <- filter(sp_gt_diff_test, est_total_lb_harv_diff < -2) %>%
+  select(Site_Year_Code, Family, Species, Estimated_Total_Pounds_Harvested_db_sum, Estimated_Total_Pounds_Harvested_gt_sum, est_total_lb_harv_diff)
+sp_gt_diff <- rbind(sp_gt_diff_2, sp_gt_diff_3)
   
-  df %>%
-    filter(abs(Estim- lat[ID == x]) < 1,
-           abs(long - long[ID == x]) < 1,
+
+##family level
+fam_diff_test <- fam_sum_test %>%
+  group_by(Site_Year_Code, Family) %>%
+  mutate(est_total_lb_harv_diff = Estimated_Total_Pounds_Harvested_db_sum - Estimated_Total_Pounds_Harvested_fam_sum)
+
+fam_diff_test$est_total_lb_harv_diff <- as.numeric(fam_diff_test$est_total_lb_harv_diff)
+fam_diff_test$est_total_lb_harv_diff  <- format(fam_diff_test$est_total_lb_harv_diff, scientific = FALSE)
+
+
+fam_diff_2 <- filter(fam_diff_test, est_total_lb_harv_diff > 2) %>%
+  select(Site_Year_Code, Family, Estimated_Total_Pounds_Harvested_db_sum, Estimated_Total_Pounds_Harvested_fam_sum, est_total_lb_harv_diff)
+fam_diff_3 <- filter(fam_diff_test, est_total_lb_harv_diff > -2) %>%
+  select(Site_Year_Code, Family, Estimated_Total_Pounds_Harvested_db_sum, Estimated_Total_Pounds_Harvested_fam_sum, est_total_lb_harv_diff)
+fam_diff <- rbind(fam_diff_2, fam_diff_3)
+
+##this is not working, idk why come back to tmrw
+
+
+
+
+  sp_gt_diff_test[abs(sp_gt_diff_test$est_total_lb_harv_diff > 2)]
+  
+  sp_gt_diff_test %>% filter(abs(est_total_lb_harv_diff > 2))
+  
+str(sp_gt_diff_test)
+sp_gt_diff_test$est_total_lb_harv_diff  <- format(sp_gt_diff_test$est_total_lb_harv_diff, scientific = FALSE)
+    
+fish$Resource_Code  <- format(fish$Resource_Code, scientific = FALSE)
+
+filter(abs(Estimated_Total_Pounds_Harvested_db_sum - Estimated_Total_Pounds_Harvested_gt_sum < 1))
+    
+    
+           
+               
+               
+               abs(long - long[ID == x]) < 1,
            abs(score - score[ID == x]) < 0.7,
            ID != x) %>%
     pull(ID) %>%
