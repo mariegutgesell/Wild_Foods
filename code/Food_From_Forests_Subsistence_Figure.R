@@ -312,6 +312,7 @@ sankeyNetwork(Links = links, Nodes = nodes,
               fontSize= 12, nodeWidth = 30, colourScale = my_color)
 
 
+###USE THIS 
 ##trying it again.. 
 # Make a connection data frame
 links <- data.frame(
