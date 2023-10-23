@@ -124,7 +124,11 @@ total_harvest_cat <- df_2_res %>%
 
 df_2_res <- df_2_res %>%
   left_join(total_harvest_cat, by= "Category") %>%
-  mutate(percent_total_harvest = (estimated_total_kg/cat_total_est_kg)*100) 
+  mutate(percent_total_harvest_cat = (estimated_total_kg/cat_total_est_kg)*100) %>%
+  mutate(total_harvest_all_lb = total_harvest_all_lb) %>%
+  mutate(total_harvest_all_kg = total_harvest_all_kg) %>%
+  mutate(percent_total_harvest_all = (estimated_total_kg/total_harvest_all_kg)*100)
+
 
 
 
@@ -136,7 +140,7 @@ df_2_res$estimated_total_kg  <- as.numeric(df_2_res$estimated_total_kg)
 ##anyway to stop these from going back to scientific format? annnnooying
 
 df_2_res$estimated_total_kg = round(df_2_res$estimated_total_kg, digits = 2)
-df_2_res$percent_total_harvest = round(df_2_res$percent_total_harvest, digits = 2)
+df_2_res$percent_total_harvest = round(df_2_res$percent_total_harvest_all, digits = 2)
 
 str(df_2_res)
 
@@ -151,7 +155,7 @@ terr_plot <- df_2_res %>%
   geom_bar(stat = "identity", width = 1, colour = "white") +
   coord_polar("y", start = 0) +
   theme_void() +
-  geom_text(aes(label = paste(percent_total_harvest, "%", sep = "")), position = position_stack(vjust = 0.5), color = "black", size=3) +
+  geom_text(aes(label = paste(percent_total_harvest_cat, "%", sep = "")), position = position_stack(vjust = 0.5), color = "black", size=3) +
  # scale_fill_brewer() +
   geom_label_repel(aes(x =1.4, y = pos_2, label = paste0(estimated_total_kg, "kg")),
                    size = 4, nudge_x = 0.6, show.legend = FALSE, fill = alpha("white", 0.5), label.size = NA) +
@@ -169,7 +173,7 @@ ana_plot <- df_2_res %>%
   geom_bar(stat = "identity", width = 1, colour = "white") +
   coord_polar("y", start = 0) +
   theme_void() +
-  geom_text(aes(label = paste(percent_total_harvest, "%", sep = "")), position = position_stack(vjust = 0.5), color = "black", size=3) +
+  geom_text(aes(label = paste(percent_total_harvest_cat, "%", sep = "")), position = position_stack(vjust = 0.5), color = "black", size=3) +
  # scale_fill_brewer() +
   geom_label_repel(aes(x =1.4, y = pos_2, label = paste0(estimated_total_kg, "kg")),
                    size = 4, nudge_x = 0.6, show.legend = FALSE, fill = alpha("white", 0.5), label.size = NA) +
@@ -187,7 +191,7 @@ ns_plot <- df_2_res %>%
   geom_bar(stat = "identity", width = 1, colour = "white") +
   coord_polar("y", start = 0) +
   theme_void() +
-  geom_text(aes(label = paste(percent_total_harvest, "%", sep = "")), position = position_stack(vjust = 0.5), color = "black", size=3) +
+  geom_text(aes(label = paste(percent_total_harvest_cat, "%", sep = "")), position = position_stack(vjust = 0.5), color = "black", size=3) +
   #scale_fill_brewer() +
   geom_label_repel(aes(x =1.4, y = pos_2, label = paste0(estimated_total_kg, "kg")),
                    size = 4, nudge_x = 0.6, show.legend = FALSE, fill = alpha("white", 0.5), label.size = NA) + 
@@ -315,6 +319,9 @@ sankeyNetwork(Links = links, Nodes = nodes,
 ###USE THIS 
 ##trying it again.. 
 # Make a connection data frame
+df_sank <- df_2_res %>%
+  select(Category, Resource_Group, percent_total_harvest_cat)
+
 links <- data.frame(
   source=c("All Harvest Species","All Harvest Species", "All Harvest Species", "All Harvest Species", "Terrestrial", "Terrestrial", "Terrestrial", "Terrestrial", "Terrestrial", "Anadromous", "Anadromous", "Anadromous", "Anadromous", "Nearshore", "Nearshore", "Nearshore", "Nearshore", "Nearshore", "Marine", "Marine", "Marine", "Marine"), 
   target=c("Terrestrial","Anadromous", "Nearshore", "Marine", "Berries", "Birds/Eggs", "Large Land Mammals", "Plants/Greens/Mushrooms", "Small Land Mammals", "Char", "Salmon", "Smelt", "Trout", "Herring Roe", "Molluscs", "Crabs", "Other", "Seaweed/Kelp", "Halibut", "Non-Halibut Fish", "Marine Invertebrates", "Marine Mammals" ), 
@@ -350,4 +357,57 @@ my_color <- 'd3.scaleOrdinal() .domain(["type_a", "type_b", "type_c", "type_d", 
 # Make the Network. I call my colour scale with the colourScale argument
 p <- sankeyNetwork(Links = links, Nodes = nodes, Source = "IDsource", Target = "IDtarget", 
                    Value = "value", NodeID = "name", colourScale = my_color, LinkGroup = "group", NodeGroup = "group", fontSize = 13)
+p
+
+###Attempt 2 
+##trying it again.. 
+# Make a connection data frame
+df_sank <- df_2_res %>%
+  select(Category, Resource_Group, percent_total_harvest_all)
+
+df_sank_2 <- df_sank %>%
+  group_by(Category) %>%
+  mutate(percent_total_harvest_all = sum(percent_total_harvest_all))
+
+##need to go through calculations in this script to make sure all the numbers add up and make sense ... something still looks off and don't like that the values have changed since pie chart
+
+links <- data.frame(
+  source=c("All Harvest Species", "All Harvest Species", "All Harvest Species", "All Harvest Species", "","", "", "", "Terrestrial", "Terrestrial", "Terrestrial", "Terrestrial", "Terrestrial", "Anadromous", "Anadromous", "Anadromous", "Anadromous", "Nearshore", "Nearshore", "Nearshore", "Nearshore", "Nearshore", "Marine", "Marine", "Marine", "Marine"), 
+  target=c("", "", "", "",  "Terrestrial","Anadromous", "Nearshore", "Marine", "Berries", "Birds/Eggs", "Large Land Mammals", "Plants/Greens/Mushrooms", "Small Land Mammals", "Char", "Salmon", "Smelt", "Trout", "Herring Roe", "Molluscs", "Crabs", "Other", "Seaweed/Kelp", "Halibut", "Non-Halibut Fish", "Marine Invertebrates", "Marine Mammals" ), 
+  value=c(23.190, 31.166, 11.607, 33.341, 23.190, 31.166, 11.607, 33.341, 4.603, 0.487, 17.383, 0.648, 0.069, 1.181, 28.380, 0.862, 0.743, 3.329, 3.508, 3.009, 0.551, 1.210, 15.337, 8.046, 7.425, 2.533)
+)
+
+# From these flows we need to create a node data frame: it lists every entities involved in the flow
+nodes <- data.frame(
+  name=c(as.character(links$source), as.character(links$target)) %>% 
+    unique()
+)
+
+# With networkD3, connection must be provided using id, not using real name like in the links dataframe.. So we need to reformat it.
+links$IDsource <- match(links$source, nodes$name)-1 
+links$IDtarget <- match(links$target, nodes$name)-1
+
+# prepare color scale: I give one specific color for each node.
+#my_color <- 'd3.scaleOrdinal() .domain(["All Species", "Terrestrial","Anadromous", "Nearshore", "Marine", "Berries", "Birds/Eggs", "Large Land Mammals", "Plants/Greens/Mushrooms", "Small Land Mammals", "Char", "Salmon", "Smelt", "Trout", "Herring Roe", "Molluscs", "Crabs", "Other", "Seaweed/Kelp", "Halibut", "Non-Halibut Fish", "Marine Invertebrates", "Marine Mammals"]) .range(["black", "green", "lightblue", "blue", "grey",  "green", "green", "green", "green", "green", "lightblue", "lightblue", "lightblue", "lightblue", "blue", "blue", "blue", "blue", "blue", "grey", "grey", "grey", "grey"])'
+
+
+# Add a 'group' column to each connection:
+links$group <- as.factor(c("type_a","type_b","type_c","type_d","type_a","type_b","type_c","type_d","type_a","type_a", "type_a", "type_a", "type_a", "type_b", "type_b", "type_b", "type_b", "type_c", "type_c", "type_c", "type_c", "type_c", "type_d", "type_d", "type_d", "type_d"))
+
+# Add a 'group' column to each node. Here I decide to put all of them in the same group to make them grey
+nodes$group <- as.factor(c("a","b","c","d","e","f", "c","c","c", "c", "c", "d", "d", "d", "d", "e", "e", "e", "e", "e", "f", "f", "f", "f"))
+
+# Give a color for each group:
+my_color <- 'd3.scaleOrdinal() .domain(["type_a", "type_b", "type_c", "type_d", "a", "b", "c", "d", "e", "f"]) .range(["#66CC66", "#99FFCC", "#66CCFF", "#CCCCCC", "#000000", "#FFFFFF", "#006600", "#66CC99", "#3399CC", "#999999"])'
+
+my_color_2 <- 'd3.scaleOrdinal() .domain(["type_a", "type_b", "type_c", "type_d", "a", "b", "c", "d", "e", "f"]) .range(["#006600", "#FF6699", "#CC9933", "#0066CC", "#000000", "#FFFFFF", "#006600", "#FF6699", "#CC9933", "#0066CC"])'
+
+my_color_3 <- 'd3.scaleOrdinal() .domain(["type_a", "type_b", "type_c", "type_d", "a", "b", "c", "d", "e", "f"]) .range(["#339933", "#FF9999", "#33CCFF", "#003366", "#000000", "#FFFFFF", "#339933", "#FF9999", "#33CCFF", "#003366"])'
+
+##this is the colour palette using
+my_color_4 <- 'd3.scaleOrdinal() .domain(["type_a", "type_b", "type_c", "type_d", "a", "b", "c", "d", "e", "f"]) .range(["#339933", "#FF9999", "#CC9966", "#003366", "#000000", "#FFFFFF", "#339933", "#FF9999", "#CC9966", "#003366"])'
+
+# Make the Network. I call my colour scale with the colourScale argument
+p <- sankeyNetwork(Links = links, Nodes = nodes, Source = "IDsource", Target = "IDtarget", 
+                   Value = "value", NodeID = "name", colourScale = my_color_4, LinkGroup = "group", NodeGroup = "group", fontSize = 13, nodePadding = 23)
 p
