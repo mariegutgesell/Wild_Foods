@@ -104,7 +104,7 @@ fish <- fish %>%
     startsWith(Resource_Code, "12041") ~ "Silver Smelt",
     startsWith(Resource_Code, "12049") ~ "Unknown Smelt",
     startsWith(Resource_Code, "120602") ~ "Sea Bass", ##what is difference between sea bass and black rockfish?
-    startsWith(Resource_Code, "120609") ~ "Unknown Bass",
+    startsWith(Resource_Code, "120699") ~ "Unknown Bass",
     startsWith(Resource_Code, "1208") ~ "Blenny",
     startsWith(Resource_Code, "121004") ~ "Pacific Cod (gray)",
     startsWith(Resource_Code, "121008") ~ "Pacific Tom Cod",
@@ -164,16 +164,29 @@ fish <- fish %>%
     startsWith(Resource_Code, "1299") ~ "Unknown Non-Salmon Fish", 
     startsWith(Resource_Code, "1248") ~ "Burbot",
     startsWith(Resource_Code, "1256") ~ "Sheefish",
+  )) %>%
+  mutate(Habitat = case_when(
+    startsWith(General_Category_lvl2, "Salmon") ~ "Freshwater_Anadromous",
+    startsWith(Family, "Osmeridae") ~ "Freshwater_Anadromous",
+    startsWith(Family, "Char") ~ "Freshwater_Anadromous",
+    startsWith(Family, "Trout") ~ "Freshwater_Anadromous",
+    startsWith(Family, "Whitefish") ~ "Freshwater_Anadromous",
+    startsWith(Species, "Herring Roe") ~ "Nearshore",
+    startsWith(General_Category_lvl2, "Non-Salmon") ~ "Marine",
   ))
-
-##add habitat in here... 
-
-##need to see if i should put in species name for family level sum, have only put now if family not further broken down
 
 ##want to write a loop function that will go through and check if the categories sum to each other.. each site/year
 
 fish_sp_list <- fish %>%
-  distinct(General_Category, General_Category_lvl2, Family, Species, Resource_Code, Resource_Name)
+  distinct(Habitat, General_Category, General_Category_lvl2, Family, Species, Resource_Code, Resource_Name, Fishing_Gear_Type)
+
+##unique fish species -- when don't run distinct line, this will give dataframe of only unique species w/ associated harvest info
+fish_sp_list_2 <- fish %>%
+  filter(!is.na(Species)) %>%
+  filter(Fishing_Gear_Type == "NA") %>%
+  distinct(Habitat, General_Category, General_Category_lvl2, Family, Species, Fishing_Gear_Type)
+##okay i think this process works, so if don't do distinct, and make sure to first filter out anything that has 0 estimated catch, this would give me species richness. 
+
 
 ####2) LAND MAMMALS -----------------
 land_mammal_code <- "2"
@@ -184,10 +197,9 @@ lm <- df_test %>%
 lm$Resource_Code  <- format(lm$Resource_Code, scientific = FALSE)
 lm$Resource_Code <- as.character(lm$Resource_Code) 
 str(lm)
-sp_lm <- lm %>%
-  distinct(Resource_Code, Resource_Name)
 
-sp_lm <- sp_lm %>%
+
+lm <- lm %>%
   mutate(Habitat = "Terrestrial") %>%
   mutate(Sex = case_when(
     grepl("Sex Unknown", Resource_Name) ~ "Unknown",
@@ -263,6 +275,14 @@ sp_lm <- sp_lm %>%
 
 ##what are all of the NAs?? where have resource code but no resource name
 
+sp_lm <- lm %>%
+  distinct(Habitat, General_Category, General_Category_lvl2, Family, Species, Resource_Code, Resource_Name, Sex)
+
+##generate list of unique species -- when don't run distinct line, this will give dataframe of only unique species w/ associated harvest info
+lm_sp_list <- lm %>%
+  filter(!is.na(Species)) %>%
+  filter(is.na(Sex)) %>%
+  distinct(Habitat, General_Category, General_Category_lvl2, Family, Species, Sex)
 
 ###MARINE MAMMALS ------------------
 marine_mammal_code <- "3"
@@ -273,10 +293,9 @@ mm <- df_test %>%
 mm$Resource_Code  <- format(mm$Resource_Code, scientific = FALSE)
 mm$Resource_Code <- as.character(mm$Resource_Code) 
 str(mm)
-sp_mm <- mm %>%
-  distinct(Resource_Code, Resource_Name)
 
-sp_mm <- sp_mm %>%
+
+mm <- mm %>%
   mutate(Habitat = "Marine") %>%
   mutate(Sex = case_when(
     grepl("Unknown Sex", Resource_Name) ~ "Unknown",
@@ -307,13 +326,24 @@ mutate(Family = case_when(
     startsWith(Resource_Code, "301606") ~ "Bowhead",
    startsWith(Resource_Code, "301699") ~ "Unknown Whale",
    startsWith(Resource_Code, "3014") ~ "Walrus",
-    
+   startsWith(Resource_Code, "3010") ~ "Sea Otter",
+   startsWith(Resource_Code, "3012") ~ "Stellar Sea Lion",
+   startsWith(Resource_Code, "3099") ~ "Unknown Marine Mammals",
   ))
 
 
-##need to figure out how to properly differentiate between the ones w/ breakdowns and not... my brain is too tired to think rn but there has to be a way
+sp_mm <- mm %>%
+  distinct(Habitat, General_Category, General_Category_lvl2, Family, Species, Resource_Code, Resource_Name, Sex)
 
-###4) BIRDS AND EGGS
+
+##generate list of unique species -- when don't run distinct line, this will give dataframe of only unique species w/ associated harvest info
+mm_sp_list <- mm %>%
+  filter(!is.na(Species)) %>%
+  filter(is.na(Sex)) %>%
+  distinct(Habitat, General_Category, General_Category_lvl2, Family, Species, Sex)
+
+
+###4) BIRDS AND EGGS -----------------
 
 birds_eggs_code <- "4"
 
@@ -323,8 +353,385 @@ be <- df_test %>%
 be$Resource_Code  <- format(be$Resource_Code, scientific = FALSE)
 be$Resource_Code <- as.character(be$Resource_Code) 
 str(be)
-be_mm <- be %>%
+
+be <- be %>%
+  mutate(Habitat = "Terrestrial") %>% ##for purposes of my own research project may want to go through these and be more specific
+  mutate(Season = case_when(
+    grepl("Winter", Resource_Name) ~ "Winter",
+    grepl("Fall", Resource_Name) ~ "Fall",
+    grepl("Summer", Resource_Name) ~ "Summer",
+    grepl("Spring", Resource_Name) ~ "Spring",
+    grepl("Season Unknown", Resource_Name) ~ "Unknown",
+  )) %>%
+  mutate(General_Category = "Birds and Eggs") %>%
+  mutate(General_Category_lvl2 = case_when(
+    startsWith(Resource_Code, "41") ~ "Migratory Birds",
+    startsWith(Resource_Code, "42") ~ "Other Birds", 
+    startsWith(Resource_Code, "43") ~ "Bird Eggs",
+  )) %>%
+  mutate(Family = case_when(
+    startsWith(Resource_Code, "4102") ~ "Ducks",
+    startsWith(Resource_Code, "4104") ~ "Geese",
+    startsWith(Resource_Code, "4106") ~ "Swan",
+    startsWith(Resource_Code, "4108") ~ "Crane",
+    startsWith(Resource_Code, "4110") ~ "Shorebird",
+    startsWith(Resource_Code, "4112") ~ "Seabirds and Loons",
+    startsWith(Resource_Code, "4114") ~ "Heron",
+    startsWith(Resource_Code, "4218") ~ "Upland Game Birds",
+    startsWith(Resource_Code, "4288") ~ "Unknown Other Birds", ##is this. the right place to put this? 
+    startsWith(Resource_Code, "4302") ~" Ducks",
+    startsWith(Resource_Code, "4304") ~ "Geese",
+    startsWith(Resource_Code, "4306") ~ "Swan",
+    startsWith(Resource_Code, "4308") ~ "Crane",
+    startsWith(Resource_Code, "4310") ~ "Shorebird",
+    startsWith(Resource_Code, "4312") ~ "Seabirds and Loons",
+    startsWith(Resource_Code, "4318") ~ "Upland Game Birds",
+    startsWith(Resource_Code, "4399") ~ "Unknown",
+  )) %>% ##should i add an intermediate level? maybe..as there seem to be fair amount that have another level of categorization... 
+  mutate(Species = case_when(
+    startsWith(Resource_Code, "410202") ~ "Bufflehead",
+    startsWith(Resource_Code, "410204") ~ "Canvasback",
+    startsWith(Resource_Code, "410208") ~ "Gadwall",
+    startsWith(Resource_Code, "41021002") ~ "Barrows Goldeneye", ##need to check, is goldeneye always broken down? or are there times when only goldeneye is recorded and not further broken down? 
+    startsWith(Resource_Code, "41021004") ~ "Common Goldeneye",
+    startsWith(Resource_Code, "4102109") ~ "Unknown Goldeneye",
+    startsWith(Resource_Code, "410212") ~ "Harlequin",
+    startsWith(Resource_Code, "410214") ~ "Mallard",
+    startsWith(Resource_Code, "41021602") ~ "Common Merganser", ##merganser always broken down?
+    startsWith(Resource_Code, "41021604") ~ "Red-Breasted Merganser",
+    startsWith(Resource_Code, "41021699") ~ "Unknown Merganser",
+    startsWith(Resource_Code, "410218") ~ "Long-tailed Duck (Oldsquaw)",
+    startsWith(Resource_Code, "410220") ~ "Northern Pintail",
+    startsWith(Resource_Code, "410222") ~ "Redhead Duck",
+    startsWith(Resource_Code, "41022602") ~ "Greater Scaup", ##scaup always broken down?
+    startsWith(Resource_Code, "41022604") ~"Lesser Scaup",
+    startsWith(Resource_Code, "41022699") ~ "Unknown Scaup",
+    startsWith(Resource_Code, "41022804") ~ "Surf Scoter", ##scoter always broken down?
+    startsWith(Resource_Code, "41022806") ~ "White-winged Scoter",
+    startsWith(Resource_Code, "41022899") ~ "Unknown Scoter",
+    startsWith(Resource_Code, "41023206") ~ "Green-Winged Teal", ##teal always broken down?
+    startsWith(Resource_Code, "41023299") ~ "Unknown Teal",
+    startsWith(Resource_Code, "41023602") ~ "American Wigeon", ##wigeon always broken down?
+    startsWith(Resource_Code, "41023699") ~ "Unknown Wigeon",
+    startsWith(Resource_Code, "410299") ~ "Unknown Ducks",
+    startsWith(Resource_Code, "410402") ~ "Brant",
+    startsWith(Resource_Code, "41040406") ~ "Dusky Canada Geese", ##canada geese always broken down?
+    startsWith(Resource_Code, "41040408") ~ "Lesser Canada Geese",
+    startsWith(Resource_Code, "4104041") ~ "Vancouver Canada Geese",
+    startsWith(Resource_Code, "41040499") ~ "Unknown Canada Geese",
+    startsWith(Resource_Code, "410406") ~ "Emperor Geese",
+    startsWith(Resource_Code, "410408") ~ "Snow Geese",
+    startsWith(Resource_Code, "410410") ~ "White-fronted Geese",
+    startsWith(Resource_Code, "410499") ~ "Unknown Geese",
+    startsWith(Resource_Code, "410604") ~ "Tundra Swan (whistling)",
+    startsWith(Resource_Code, "410699") ~ "Unknown Swan",
+    startsWith(Resource_Code, "410802") ~ "Sandhill Crane",
+    startsWith(Resource_Code, "411002") ~ "Wilson's Snipe",
+    startsWith(Resource_Code, "411004") ~ "Black Oystercatcher",
+    startsWith(Resource_Code, "41109901") ~ "Unknown Small Shorebirds", ##do they always break down unknown into large/small?
+    startsWith(Resource_Code, "41109902") ~ "Unknown Large Shorebirds",
+    startsWith(Resource_Code, "411204") ~ "Cormorants",
+    startsWith(Resource_Code, "41120802") ~ "Horned Grebe", ##grebe always broken down?
+    startsWith(Resource_Code, "41120804") ~ "Red Necked Grebe",
+    startsWith(Resource_Code, "41120899") ~ "Unknown Grebe",
+    startsWith(Resource_Code, "411210") ~ "Guillemot",
+    startsWith(Resource_Code, "411212") ~ "Gull",  ##different species than the glaucous winged gull?
+    startsWith(Resource_Code, "4112160") ~ "Loon",
+    startsWith(Resource_Code, "4112169") ~ "Unknown Loon",
+    startsWith(Resource_Code, "4112220") ~ "Puffin",
+    startsWith(Resource_Code, "4112229") ~ "Unknown Puffin",
+    startsWith(Resource_Code, "411226") ~ "Tern",
+    startsWith(Resource_Code, "411299") ~ "Unknown Seabirds",
+    startsWith(Resource_Code, "4114") ~ "Great Blue Heron",
+    startsWith(Resource_Code, "42180202") ~ "Spruce Grouse", ##grouse always broken down?
+    startsWith(Resource_Code, "42180206") ~ "Ruffed Grouse",
+    startsWith(Resource_Code, "4218029") ~ "Unknown Grouse",
+    startsWith(Resource_Code, "42180402") ~ "Rock Ptarmigan", ##ptarmigan always broken down?
+    startsWith(Resource_Code, "42180404") ~ "Willow Ptarmigan",
+    startsWith(Resource_Code, "4218049") ~ "Unknown Ptarmigan",
+    startsWith(Resource_Code, "421899") ~ "Unknown Upland Game Birds",
+    startsWith(Resource_Code, "430214") ~ "Mallard", 
+    startsWith(Resource_Code, "430299") ~ "Unknown Duck",
+    startsWith(Resource_Code, "43040408") ~ "Lesser Canada Geese",
+    startsWith(Resource_Code, "4304049") ~ "Unknown Canada Geese",
+    startsWith(Resource_Code, "430499") ~ "Unknown Geese",
+    startsWith(Resource_Code, "43060") ~ "Swan",
+    startsWith(Resource_Code, "43069") ~ "Unknown Swan",
+    startsWith(Resource_Code, "430802") ~ "Sandhill Crane",
+    startsWith(Resource_Code, "430899") ~ "Unknown Crane",
+    startsWith(Resource_Code, "431004") ~ "Black Oystercatcher",
+    startsWith(Resource_Code, "43109901" ) ~ "Unknown Small Shorebird",
+    startsWith(Resource_Code, "43109902") ~ "Unknown Large Shorebird",
+    startsWith(Resource_Code, "431210") ~ "Guillemot",
+    startsWith(Resource_Code, "43121204") ~ "Glaucous Winged Gull", ##
+    startsWith(Resource_Code, "43121299") ~ "Unknown Gull",
+    startsWith(Resource_Code, "4312160") ~ "Loon",
+    startsWith(Resource_Code, "4312169") ~ "Unknown Loon",
+    startsWith(Resource_Code, "43121802") ~ "Common Murre", ##same value as the murre eggs? is the only breakdown for the murre... 
+    startsWith(Resource_Code, "4312260") ~ "Tern",
+    startsWith(Resource_Code, "4312269") ~ "Unknown Tern",
+    startsWith(Resource_Code, "43129") ~ "Unknown Seabird",
+    startsWith(Resource_Code, "431802") ~ "Grouse",
+    startsWith(Resource_Code, "4318029") ~ "Unknown Grouse",
+    startsWith(Resource_Code, "4318040") ~ "Ptarmigan",
+    startsWith(Resource_Code, "4318049") ~ "Unknown Ptarmigan",
+  )) %>%
+  mutate(Type = case_when(
+    startsWith(Resource_Code, "41") ~ "Adult",
+    startsWith(Resource_Code, "42") ~ "Adult", 
+    startsWith(Resource_Code, "43") ~ "Egg",
+    ))
+
+
+##how to deal with eggs? from a diversity perspective...because not really different species (this goes the same for roe..)
+##i think will have to go back through and add the other level... where it does occur for certain species
+
+sp_be <- be %>%
+  distinct(Habitat, General_Category, General_Category_lvl2, Family, Species, Resource_Code, Resource_Name, Season, Type)
+
+
+##generate list of unique species -- when don't run distinct line, this will give dataframe of only unique species w/ associated harvest info
+be_sp_list <- be %>%
+  filter(!is.na(Species)) %>%
+  filter(is.na(Season)) %>%
+  distinct(Habitat, General_Category,  Family, Species, Season)
+
+##5) MARINE INVERTEBRATES -----------------
+
+marine_inverts_code <- "5"
+
+mi <- df_test %>% 
+  filter(str_detect(Resource_Code, '^5')) 
+
+mi$Resource_Code  <- format(mi$Resource_Code, scientific = FALSE)
+mi$Resource_Code <- as.character(mi$Resource_Code) 
+str(mi)
+
+mi <- mi %>%
+  mutate(Fishing_Gear_Type = case_when(
+    endsWith(Resource_Code, "1") ~ "CF_Retention", ##CF_retention
+    endsWith(Resource_Code, "2") ~ "Non Commercial Gear", 
+  )) %>%
+  mutate(General_Category = "Marine Invertebrates") %>%
+  mutate(General_Category_lvl2 = "Marine Invertebrates") %>%
+  mutate(Family = case_when(
+    startsWith(Resource_Code, "5002") ~ "Abalone",
+    startsWith(Resource_Code, "5004") ~ "Chiton",
+    startsWith(Resource_Code, "5006") ~ "Clam",
+    startsWith(Resource_Code, "5008") ~ "Cockle",
+    startsWith(Resource_Code, "5010") ~ "Crab",
+    startsWith(Resource_Code, "5012") ~ "Geoduck",
+    startsWith(Resource_Code, "5018") ~ "Limpet",
+    startsWith(Resource_Code, "5020") ~ "Mussel",
+    startsWith(Resource_Code, "5022") ~ "Octopus",
+    startsWith(Resource_Code, "5024") ~ "Oyster",
+    startsWith(Resource_Code, "5026") ~ "Scallop",
+    startsWith(Resource_Code, "5030") ~ "Sea Cucumber",
+    startsWith(Resource_Code, "5032") ~ "Sea Urchin",
+    startsWith(Resource_Code, "5034") ~ "Shrimp",
+    startsWith(Resource_Code, "5037") ~ "Starfish",
+    startsWith(Resource_Code, "5038") ~ "Squid",
+    startsWith(Resource_Code, "5040") ~ "Whelk",
+    startsWith(Resource_Code, "5099") ~ "Unknown Marine Invertebrates",
+  )) %>%
+  mutate(Species = case_when(
+    startsWith(Resource_Code, "5002") ~ "Abalone",
+    startsWith(Resource_Code, "500404") ~ "Red (large) Chiton",
+    startsWith(Resource_Code, "500408") ~ "Black (small) Chiton",
+    startsWith(Resource_Code, "500499") ~ "Unknown Chiton",
+    startsWith(Resource_Code, "500602") ~ "Butter Clam",
+    startsWith(Resource_Code, "500606") ~ "Horse Clam",
+    startsWith(Resource_Code, "500608") ~ "Pacific Littleneck Clam",
+    startsWith(Resource_Code, "500610") ~ "Pinkneck Clam",
+    startsWith(Resource_Code, "500612") ~ "Razor Clam",
+    startsWith(Resource_Code, "50069") ~ "Unknown Clam",
+    startsWith(Resource_Code, "500802") ~ "Basket Cockle",
+    startsWith(Resource_Code, "500804") ~ "Heart Cockle",
+    startsWith(Resource_Code, "500899") ~ "Unknown Cockle",
+    startsWith(Resource_Code, "501002") ~ "Box Crab",
+    startsWith(Resource_Code, "501004") ~ "Dungeness Crab",
+    startsWith(Resource_Code, "50100802") ~ "Blue King Crab", ##are the king crabs always broken down? do we need another level here?
+    startsWith(Resource_Code, "50100804") ~ "Brown King Crab",
+    startsWith(Resource_Code, "50100808") ~ "Red King Crab",
+    startsWith(Resource_Code, "50100899") ~ "Unknown King Crab",
+    startsWith(Resource_Code, "50101202") ~ "Tanner Crab, Bairdi", ##tanner crab also has summary level
+    startsWith(Resource_Code, "5010129") ~ "Unknown Tanner Crab",
+    startsWith(Resource_Code, "50109") ~ "Unknown Crab",
+    startsWith(Resource_Code, "5012") ~ "Geoduck",
+    startsWith(Resource_Code, "5014") ~ "Limpet",
+    startsWith(Resource_Code, "502002") ~ "Blue Mussel",
+    startsWith(Resource_Code, "502099") ~ "Unknown Mussel",
+    startsWith(Resource_Code, "5022") ~ "Octopus",
+    startsWith(Resource_Code, "50240") ~ "Oyster",
+    startsWith(Resource_Code, "50249") ~ "Unknown Oyster",
+    startsWith(Resource_Code, "502602") ~ "Weathervane Scallop",
+    startsWith(Resource_Code, "502604") ~ "Rock Scallops",
+    startsWith(Resource_Code, "502699") ~ "Unknown Scallop",
+    startsWith(Resource_Code, "503004") ~ "Yein Sea Cucumber",
+    startsWith(Resource_Code, "503099") ~ "Unknown Sea Cucumber",
+    startsWith(Resource_Code, "503202") ~ "Green Sea Urchin",
+    startsWith(Resource_Code, "503204") ~ "Read Sea Urchin",
+    startsWith(Resource_Code, "504306") ~ "Purple Sea Urchin",
+    startsWith(Resource_Code, "50329") ~ "Unknown Sea Urchin",
+    startsWith(Resource_Code, "5034") ~ "Shrimp",
+    startsWith(Resource_Code, "5037") ~ "Starfish",
+    startsWith(Resource_Code, "5038") ~ "Squid",
+    startsWith(Resource_Code, "5040") ~ "Whelk",
+    startsWith(Resource_Code, "5099") ~ "Unknown Marine Invertebrates",
+  )) %>%
+  mutate(Habitat = case_when(
+    grepl("King Crab", Species) ~ "Marine",
+    startsWith(Family, "Octopus") ~ "Marine",
+    startsWith(Family, "Scallop") ~ "Marine", 
+    startsWith(Family, "Shrimp") ~ "Marine",
+    grepl("Tanner Crab", Species) ~ "Marine",
+    startsWith(Family, "Abalone") ~ "Nearshore",
+    startsWith(Family, "Chiton") ~ "Nearshore",
+    startsWith(Family, "Clam") ~ "Nearshore",
+    startsWith(Family, "Cockle") ~ "Nearshore",
+    startsWith(Species, "Dungeness") ~ "Nearshore",
+    startsWith(Family, "Geoduck") ~ "Nearshore",
+    startsWith(Family, "Limpet") ~ "Nearshore",
+    startsWith(Family, "Mussel") ~ "Nearshore",
+    startsWith(Family, "Sea Cucumber") ~ "Nearshore",
+    startsWith(Family, "Sea Urchin") ~ "Nearshore",
+    startsWith(Family, "Squid") ~ "Marine", 
+    startsWith(Species, "Box Crab") ~ "Marine",
+    startsWith(Species, "Unknown Crab") ~ "Marine",
+    startsWith(Family, "Oyster") ~ "Marine",
+    startsWith(Family, "Starfish") ~ "Nearshore",
+    startsWith(Family, "Unknown Marine Invert") ~ "Marine",
+  ))
+
+
+
+sp_mi <- mi %>%
+  distinct(Habitat, General_Category, General_Category_lvl2, Family, Species, Resource_Code, Resource_Name, Fishing_Gear_Type)
+
+
+##generate list of unique species -- when don't run distinct line, this will give dataframe of only unique species w/ associated harvest info
+mi_sp_list <- mi %>%
+  filter(!is.na(Species)) %>%
+  filter(is.na(Fishing_Gear_Type)) %>%
+  distinct(Habitat, General_Category,  Family, Species, Fishing_Gear_Type)
+
+##6) VEGETATION --------------------
+
+veg_code <- "6"
+
+veg <- df_test %>% 
+  filter(str_detect(Resource_Code, '^6')) 
+
+veg$Resource_Code  <- format(veg$Resource_Code, scientific = FALSE)
+veg$Resource_Code <- as.character(veg$Resource_Code) 
+str(veg)
+sp_veg <- veg %>%
   distinct(Resource_Code, Resource_Name)
+
+veg <- veg %>%
+  mutate(General_Category = "Vegetation") %>%
+  mutate(General_Category_lvl2 = "Vegetation") %>% ##don't think has another general cat
+  mutate(Family = case_when(
+    startsWith(Resource_Code, "6010") ~ "Berries",
+    startsWith(Resource_Code, "6020") ~ "Plants/Greens/Mushrooms",
+    startsWith(Resource_Code, "6030") ~ "Seaweed/Kelp",
+    startsWith(Resource_Code, "6040") ~ "Wood", ##wood will have to be removed for diversity calculations
+    startsWith(Resource_Code, "6050") ~ "Coal", ##remove for diversity calc
+    startsWith(Resource_Code, "6053") ~ "Kelp for Fertilizer", ##remove for diversity calc
+  )) %>%
+  mutate(Species = case_when(
+    startsWith(Resource_Code, "601002") ~ "Blueberry",
+    startsWith(Resource_Code, "601004") ~ "Low Bush Cranberry",
+    startsWith(Resource_Code, "601006") ~ "High Bush Cranberry",
+    startsWith(Resource_Code, "601008") ~ "Elderberry",
+    startsWith(Resource_Code, "601010") ~ "Gooseberry",
+    startsWith(Resource_Code, "601012") ~ "Currants",
+    startsWith(Resource_Code, "601014") ~ "Huckleberry",
+    startsWith(Resource_Code, "601016") ~ "Cloud Berry",
+    startsWith(Resource_Code, "601018") ~ "Nagoonberry",
+    startsWith(Resource_Code, "601020") ~ "Raspberry",
+    startsWith(Resource_Code, "601022") ~ "Salmonberry",
+    startsWith(Resource_Code, "601024") ~ "Soapberry",
+    startsWith(Resource_Code, "601026") ~ "Strawberry",
+    startsWith(Resource_Code, "601028") ~ "Thimbleberry",
+    startsWith(Resource_Code, "601032") ~ "Twisted Stalk Berry (Watermelon Berry)",
+    startsWith(Resource_Code, "602002") ~ "Beach Asparagus",
+    startsWith(Resource_Code, "602004") ~ "Goose Tongue",
+    startsWith(Resource_Code, "602006") ~ "Wild Rhubarb",
+    startsWith(Resource_Code, "602009") ~ "Eskimo Potato",
+    startsWith(Resource_Code, "602012") ~ "Devils Club",
+    startsWith(Resource_Code, "602014") ~ "Fiddlehead Ferns",
+    startsWith(Resource_Code, "602016") ~ "Nettle",
+    startsWith(Resource_Code, "602018") ~ "Hudson Bay Tea",
+    startsWith(Resource_Code, "602020") ~ "Indian Rice",
+    startsWith(Resource_Code, "602022") ~ "Mint",
+    startsWith(Resource_Code, "602024") ~ "Salmonberry Shoots", ##when thinking about diversity, is this really another species?
+    startsWith(Resource_Code, "602026") ~ "Skunk Cabbage",
+    startsWith(Resource_Code, "602028") ~ "Sourdock",
+    startsWith(Resource_Code, "602030") ~ "Spruce Tips",
+    startsWith(Resource_Code, "602032") ~ "Wild Celery",
+    startsWith(Resource_Code, "602034") ~ "Wild Parsley",
+    startsWith(Resource_Code, "602036") ~ "Wild Rose Hips",
+    startsWith(Resource_Code, "602038") ~ "Other Wild Greens", #would we include this in diversity estimates? may need. to also filter out other
+    startsWith(Resource_Code, "602040") ~ "Unknown Mushrooms", ##would we include this in diversity estimates?
+    startsWith(Resource_Code, "603002") ~ "Black Seaweed",
+    startsWith(Resource_Code, "603004") ~ "Bull Kelp",
+    startsWith(Resource_Code, "603006") ~ "Red Seaweed",
+    startsWith(Resource_Code, "603008") ~ "Sea Ribbons",
+    startsWith(Resource_Code, "603010") ~ "Giant Kelp",
+    startsWith(Resource_Code, "603012") ~ "Alaria",
+    startsWith(Resource_Code, "603090") ~ "Seaweed/Kelp Used for Fertilizer", ##This should also not be considered in diversity calcuations 
+    startsWith(Resource_Code, "603099") ~ "Unknown Seaweed",
+    startsWith(Resource_Code, "604011") ~ "Alder",
+    startsWith(Resource_Code, "604099") ~ "Other Wood",
+    startsWith(Resource_Code, "601007") ~ "Crowberry",
+    startsWith(Resource_Code, "602010") ~ "Other Beach Greens",
+    startsWith(Resource_Code, "602027") ~ "Dandelion Greens",
+    startsWith(Resource_Code, "602037") ~ "Yarrow",
+    startsWith(Resource_Code, "602041") ~ "Sorrel",
+    startsWith(Resource_Code, "602042") ~ "Fireweed",
+    startsWith(Resource_Code, "602043") ~ "Plantain",
+    startsWith(Resource_Code, "603014") ~ "Red Laver (Dulse)",
+    startsWith(Resource_Code, "603016") ~ "Bladder Wrack",
+    startsWith(Resource_Code, "604005") ~ "Spruce Pitch",
+    startsWith(Resource_Code, "601030") ~ "Blackberry",
+    startsWith(Resource_Code, "601099") ~ "Other Wild Berry",
+    startsWith(Resource_Code, "602025") ~ "Lambs Quarter",
+    startsWith(Resource_Code, "604008") ~ "Spruce",
+    startsWith(Resource_Code, "604010") ~ "Cottonwood",
+    startsWith(Resource_Code, "601034") ~ "Serviceberry",
+    startsWith(Resource_Code, "602008") ~ "Wild Sweet Potato",
+    startsWith(Resource_Code, "604002") ~"Bark",
+    startsWith(Resource_Code, "604004") ~ "Roots",
+    startsWith(Resource_Code, "602044") ~ "Stinkweed",
+    startsWith(Resource_Code, "602048") ~ "Unknown Greens from Land",
+    startsWith(Resource_Code, "60204604") ~ "Chaga", ##one higher level is fungus, is chaga always fungus or is sometimes fingus reported and not chaga?
+    startsWith(Resource_Code, "602052") ~ "Wild Chives",
+    startsWith(Resource_Code, "604013") ~ "Willow",
+    startsWith(Resource_Code, "6050") ~ "Coal",
+    startsWith(Resource_Code, "6053") ~ "Kelp for Fertilizer",
+  )) %>%
+  mutate(Harvest_Type = case_when(
+    endsWith(Resource_Code, "2") ~ "Non Commercial",
+    endsWith(Resource_Code, "1") ~ "Commercial",
+  )) %>% 
+  mutate(Habitat = case_when(
+    grepl("Kelp", Family) ~ "Nearshore",
+    !grepl("Kelp", Family) ~ "Terrestrial",
+  ))
+
+
+##filter out unknown and other 
+
+sp_veg <- veg %>%
+  distinct(Habitat, General_Category, General_Category_lvl2, Family, Species, Resource_Code, Resource_Name, Harvest_Type)
+
+
+##generate list of unique species -- when don't run distinct line, this will give dataframe of only unique species w/ associated harvest info
+veg_sp_list <- veg %>%
+  filter(!is.na(Species)) %>%
+  filter(is.na(Harvest_Type)) %>%
+  distinct(Habitat, General_Category,  Family, Species, Harvest_Type)
 
 
 
