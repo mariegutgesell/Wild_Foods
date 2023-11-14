@@ -184,7 +184,8 @@ fish_sp_list <- fish %>%
 fish_sp_list_2 <- fish %>%
   filter(!is.na(Species)) %>%
   filter(Fishing_Gear_Type == "NA") %>%
-  distinct(Habitat, General_Category, General_Category_lvl2, Family, Species, Fishing_Gear_Type)
+  distinct(Habitat, General_Category, General_Category_lvl2, Family, Species, Fishing_Gear_Type) %>%
+  select(Habitat, General_Category, Family, Species)
 ##okay i think this process works, so if don't do distinct, and make sure to first filter out anything that has 0 estimated catch, this would give me species richness. 
 
 
@@ -282,7 +283,8 @@ sp_lm <- lm %>%
 lm_sp_list <- lm %>%
   filter(!is.na(Species)) %>%
   filter(is.na(Sex)) %>%
-  distinct(Habitat, General_Category, General_Category_lvl2, Family, Species, Sex)
+  distinct(Habitat, General_Category, General_Category_lvl2, Family, Species, Sex) %>%
+  select(Habitat, General_Category, Family, Species)
 
 ###MARINE MAMMALS ------------------
 marine_mammal_code <- "3"
@@ -340,7 +342,8 @@ sp_mm <- mm %>%
 mm_sp_list <- mm %>%
   filter(!is.na(Species)) %>%
   filter(is.na(Sex)) %>%
-  distinct(Habitat, General_Category, General_Category_lvl2, Family, Species, Sex)
+  distinct(Habitat, General_Category, General_Category_lvl2, Family, Species, Sex) %>%
+  select(Habitat, General_Category, Family, Species)
 
 
 ###4) BIRDS AND EGGS -----------------
@@ -494,7 +497,8 @@ sp_be <- be %>%
 be_sp_list <- be %>%
   filter(!is.na(Species)) %>%
   filter(is.na(Season)) %>%
-  distinct(Habitat, General_Category,  Family, Species, Season)
+  distinct(Habitat, General_Category,  Family, Species, Season)  %>%
+  select(Habitat, General_Category, Family, Species)
 
 ##5) MARINE INVERTEBRATES -----------------
 
@@ -613,7 +617,8 @@ sp_mi <- mi %>%
 mi_sp_list <- mi %>%
   filter(!is.na(Species)) %>%
   filter(is.na(Fishing_Gear_Type)) %>%
-  distinct(Habitat, General_Category,  Family, Species, Fishing_Gear_Type)
+  distinct(Habitat, General_Category,  Family, Species, Fishing_Gear_Type) %>%
+  select(Habitat, General_Category, Family, Species)
 
 ##6) VEGETATION --------------------
 
@@ -731,7 +736,9 @@ sp_veg <- veg %>%
 veg_sp_list <- veg %>%
   filter(!is.na(Species)) %>%
   filter(is.na(Harvest_Type)) %>%
-  distinct(Habitat, General_Category,  Family, Species, Harvest_Type)
+  distinct(Habitat, General_Category,  Family, Species, Harvest_Type) %>%
+  select(Habitat, General_Category, Family, Species)
 
+##join all of these back together to get list of unique species
 
 
