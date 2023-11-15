@@ -22,27 +22,49 @@ survey_demographics <- read_excel("CSIS_SurveyData_Demographics.xlsx", sheet = 2
   unite(Site_Year_Code, c(Community, Year), sep = "_", remove = FALSE)
 
 
+
 ##filter/cleaning dataframe
 ##reduce dataframe to only focus on comprehensive surveys
-df_test <- df %>%
+df_comp <- df %>%
   filter(Site_Year_Code %in% survey_demographics$Site_Year_Code) %>% ##selects only years where a comprehensive survey was done
   filter(!grepl("Marine Mammals", Project_Name)) #%>% ##this removes data from targeted marine mammal surveys done in same year as comprehensive survey
   #select(Project_Name, Site_Year_Code, Study_Year, Community_Name, Resource_Code, Resource_Name, Percent_Using, Percent_Attempting_to_Harvest, Percent_Harvesting, Percent_Receiving, Percent_Giving, Percent_Of_Total_Harvest, Estimated_Total_Pounds_Harvested, Percapita_Pounds_Harvested) #%>%##reducing to most likely columns of interest
 #  filter(!str_detect(Resource_Name, "\\[.*?\\]")) ##Remove breakdown of each species into gear type -- can add this back in later if interested, but for now have removed
   
+##Exploring Dataset 
+##unique projects - all
+proj <- df %>%
+  group_by(Project_ID, Project_Name) %>%
+  distinct(Project_ID, Project_Name)
+##unique comprehensive projects
+comp_proj <- df_test %>%
+  group_by(Project_ID, Project_Name) %>%
+  distinct(Project_ID, Project_Name)
+
+##looking into surveys where both comprehensive and targeted years -- is the targeted data incorporated into the comprehensive data? 
+ct_survey <- survey_demographics %>%
+  filter(`Also_Target_Year?` == "Yes")
+ct_test <- df %>%
+  filter(Site_Year_Code %in% ct_survey$Site_Year_Code) %>%
+  filter(str_detect(Resource_Code, '^3')) %>%
+  filter(Site_Year_Code == "Angoon_1996") 
+##no, separate surveys conducted. and values not identical, as survey protocols are different, and not all communities/years have the targeted marine survey, best to focus on only data from comprehensive survey
+
+
+  
+
 ##or could you change orientation so gear type goes long? or make a separate dataframe that has gear type as column
 ##or since this is all nested, maybe go to lowest/most detailed level and then create summary ones.. need to think about most streamlined/efficient way of doing this grouping and so don't have duplicate data
   
 ##reorganize dataframe to make categories, levels, usable/no repeat rows of data
 
 ##start with fish
+##start with fish
+###1) FISH ------------------
 fish_code <- "1"
-
-fish <- df_test %>% 
+fish <- df_comp %>% 
   filter(str_detect(Resource_Code, '^1')) 
- 
 fish$Resource_Code  <- format(fish$Resource_Code, scientific = FALSE)
- 
 fish$Resource_Code <- as.character(fish$Resource_Code) 
 str(fish)
 
@@ -108,7 +130,7 @@ fish <- fish %>%
     startsWith(Resource_Code, "12041") ~ "Silver Smelt",
     startsWith(Resource_Code, "12049") ~ "Unknown Smelt",
     startsWith(Resource_Code, "120602") ~ "Sea Bass", ##what is difference between sea bass and black rockfish?
-    startsWith(Resource_Code, "120609") ~ "Unknown Bass",
+    startsWith(Resource_Code, "120699") ~ "Unknown Bass",
     startsWith(Resource_Code, "1208") ~ "Blenny",
     startsWith(Resource_Code, "121004") ~ "Pacific Cod (gray)",
     startsWith(Resource_Code, "121008") ~ "Pacific Tom Cod",
@@ -138,7 +160,7 @@ fish <- fish %>%
     startsWith(Resource_Code, "1228") ~ "Sablefish (black cod)", 
     startsWith(Resource_Code, "123002") ~ "Buffalo Sculpin", 
     startsWith(Resource_Code, "123004") ~ "Bullhead Sculpin",
-    startsWith(Resource_Code, "123006") ~ "Irish Lord",
+    startsWith(Resource_Code, "12300600") ~ "Irish Lord",
     startsWith(Resource_Code, "12300602") ~ "Red Irish Lord",
     startsWith(Resource_Code, "12309") ~ "Unknown Sculpin",
     startsWith(Resource_Code, "123202") ~ "Dogfish",
@@ -168,16 +190,36 @@ fish <- fish %>%
     startsWith(Resource_Code, "1299") ~ "Unknown Non-Salmon Fish", 
     startsWith(Resource_Code, "1248") ~ "Burbot",
     startsWith(Resource_Code, "1256") ~ "Sheefish",
+  )) %>%
+  mutate(Habitat = case_when(
+    startsWith(General_Category_lvl2, "Salmon") ~ "Freshwater_Anadromous",
+    startsWith(Family, "Osmeridae") ~ "Freshwater_Anadromous",
+    startsWith(Family, "Char") ~ "Freshwater_Anadromous",
+    startsWith(Family, "Trout") ~ "Freshwater_Anadromous",
+    startsWith(Family, "Whitefish") ~ "Freshwater_Anadromous",
+    startsWith(Species, "Herring Roe") ~ "Nearshore",
+    startsWith(General_Category_lvl2, "Non-Salmon") ~ "Marine",
+  )) %>%
+  mutate(Roe_Collection_Type = case_when(
+    startsWith(Resource_Code, "120302") ~ "Unspecified",
+    startsWith(Resource_Code, "120304") ~ "Sac Roe",
+    startsWith(Resource_Code, "120306") ~ "Spawn on Kelp",
+    startsWith(Resource_Code, "120308") ~ "Roe on Hair Seaweed",
+    startsWith(Resource_Code, "120310") ~ "Roe in Hemlock Branches",
   ))
- 
+
+
 ##need to see if i should put in species name for family level sum, have only put now if family not further broken down
 
 ##want to write a loop function that will go through and check if the categories sum to each other.. each site/year
 
+fish_str <- fish %>%
+  distinct(Habitat, General_Category, General_Category_lvl2, Family, Species, Roe_Collection_Type, Resource_Code, Resource_Name, Fishing_Gear_Type)
+
 fish_sp_list <- fish %>%
-  distinct(General_Category, General_Category_lvl2, Family, Species, Resource_Code, Resource_Name)
-
-
+  filter(!is.na(Species)) %>%
+  filter(Fishing_Gear_Type == "NA") %>%
+  distinct(Habitat, General_Category, General_Category_lvl2, Family, Species)
   
 fish_test <- fish %>%
   group_by(Site_Year_Code) %>%
@@ -186,21 +228,42 @@ fish_test <- fish %>%
 ##have 65 separate food webs to construct :D 
 
 ##function to test whether sum of gear types within species matches with sum value already given in database
+##this function generates sums across numeric variables for rows in data with fishing gear, and those without, only for fish broken down into gear type
 sp_gt_sum_test_func <- function(x){
   gt_sp <- x %>%
+    filter(Species != "Herring Roe") %>%
     filter(Fishing_Gear_Type != "NA") %>%
     filter(!is.na(Species)) %>%
     group_by(Site_Year_Code, Family, Species) %>%
-    summarise_at(vars(Percent_Using:Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Mean_Grams_Percapita_Harvest), sum, na.rm = TRUE) %>%
+    summarise_at(vars(Percent_Using:Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest, Mean_Grams_Per_Capita_Use, Mean_Pounds_Per_Capita_Use, Mean_Grams_Percapita_Harvest), sum, na.rm = TRUE) %>%
     rename_with(~paste0(., "_gt_sum"), Percent_Using:Mean_Grams_Percapita_Harvest)
+  ##need to do herring roe separate, as is a unique case -- because has another level of separation (based on where harvested from), so the ng total is double because it includes each levels no gear sum, so need to remove those.. 
+  gt_hr <- x %>%
+    filter(Species == "Herring Roe") %>%
+    filter(Fishing_Gear_Type != "NA") %>%
+    filter(is.na(Roe_Collection_Type)) %>% 
+    group_by(Site_Year_Code, Family, Species) %>%
+    summarise_at(vars(Percent_Using:Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest, Mean_Grams_Per_Capita_Use, Mean_Pounds_Per_Capita_Use, Mean_Grams_Percapita_Harvest), sum, na.rm = TRUE) %>%
+    rename_with(~paste0(., "_gt_sum"), Percent_Using:Mean_Grams_Percapita_Harvest)
+  gt_sp2 <- rbind(gt_sp, gt_hr)
   ng_sp <- x %>%
+    filter(Species != "Herring Roe") %>%
     filter(Fishing_Gear_Type == "NA") %>%
     group_by(Site_Year_Code, Family, Species) %>%
-    summarise_at(vars(Percent_Using:Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Mean_Grams_Percapita_Harvest), sum, na.rm = TRUE) %>%
+    summarise_at(vars(Percent_Using:Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest, Mean_Grams_Per_Capita_Use, Mean_Pounds_Per_Capita_Use, Mean_Grams_Percapita_Harvest), sum, na.rm = TRUE) %>%
     rename_with(~paste0(., "_db_sum"), Percent_Using:Mean_Grams_Percapita_Harvest)
-  gear_sum <- inner_join(gt_sp, ng_sp, by = c("Site_Year_Code", "Family", "Species")) %>%
+    ng_hr <- x %>%
+    filter(Species == "Herring Roe") %>%
+    filter(Fishing_Gear_Type == "NA") %>%
+    filter(is.na(Roe_Collection_Type)) %>% ##so this keeps only the overall sum of herring roe row, not each sub-type of where collected sum row, so this should remove duplication
+    group_by(Site_Year_Code, Family, Species) %>%
+    summarise_at(vars(Percent_Using:Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest, Mean_Grams_Per_Capita_Use, Mean_Pounds_Per_Capita_Use, Mean_Grams_Percapita_Harvest), sum, na.rm = TRUE) %>%
+    rename_with(~paste0(., "_db_sum"), Percent_Using:Mean_Grams_Percapita_Harvest)
+  ng_sp2 <- rbind(ng_sp, ng_hr)
+  gear_sum <- inner_join(gt_sp2, ng_sp2, by = c("Site_Year_Code", "Family", "Species")) %>%
     select(Site_Year_Code, Family, Species, sort(names(.)))
 }
+##next step is to compare the sum already in the database, to the one calculated here by summing the gear type
 
 ##function to test if species sum within family to the family level sum already given in the database
 fam_sum_test_func <- function(x){
@@ -208,13 +271,13 @@ fam_sum_test_func <- function(x){
     filter(Fishing_Gear_Type == "NA") %>%
     filter(is.na(Species)) %>%
     group_by(Site_Year_Code, Family) %>%
-    summarise_at(vars(Percent_Using:Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Mean_Grams_Percapita_Harvest), sum, na.rm = TRUE) %>%
+    summarise_at(vars(Percent_Using:Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest, Mean_Grams_Per_Capita_Use, Mean_Pounds_Per_Capita_Use, Mean_Grams_Percapita_Harvest), sum, na.rm = TRUE) %>%
     rename_with(~paste0(., "_db_sum"), Percent_Using:Mean_Grams_Percapita_Harvest)
   fam_calc <- x %>%
     filter(Fishing_Gear_Type == "NA") %>%
     filter(Species != "NA") %>%
     group_by(Site_Year_Code, Family) %>%
-    summarise_at(vars(Percent_Using:Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Mean_Grams_Percapita_Harvest), sum, na.rm = TRUE) %>%
+    summarise_at(vars(Percent_Using:Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest, Mean_Grams_Per_Capita_Use, Mean_Pounds_Per_Capita_Use, Mean_Grams_Percapita_Harvest), sum, na.rm = TRUE) %>%
     rename_with(~paste0(., "_fam_sum"), Percent_Using:Mean_Grams_Percapita_Harvest)
   fam_sum <- inner_join(fam_db, fam_calc, by = c("Site_Year_Code", "Family")) %>%
     select(Site_Year_Code, Family, sort(names(.)))
@@ -233,25 +296,93 @@ fam_sum_test <- split(fish, paste0(fish$Site_Year_Code)) %>%
 ##there are some columns we may expect that they wouldn't be the same, for ex. confidence intervals, because these may not be a sum depending on how they are calculated (do want to figure out how they are)
 head(sp_gt_sum_test)
 
-angoon_2012<- fish %>%
-  filter(Site_Year_Code == "Angoon_2012")
+angoon_1984<- fish %>%
+  filter(Site_Year_Code == "Angoon_1984")
 
 
+##testing calculating difference and then selecting those rows with a magnitude greater than 2 lbs (note for now just starting with est. total lbs harvested)
+##to-do next once working: expand to other variables (only that you would expect to sum!!) and then add this into the function so all of this happens at once
+##variables we would expect to add up: Estimated_Total_Pounds_Harvested, Mean_Grams_Percapita_Harvest, Mean_Pounds_Per_Household, Number_of_Resource_Harvested, Percapita_Pounds_Harvested, Percent_Attempting_to_Harvest, Percent_Giving, Percent_Harvesting, Percent_Recieving, Percent_Using, Reported_Pounds_Harvested, 
+##variables we wouldn't expect to add up: the confidence intervals 
 sp_gt_diff_test <- sp_gt_sum_test %>%
     group_by(Site_Year_Code, Family, Species) %>%
-    mutate(est_total_lb_harv_diff = Estimated_Total_Pounds_Harvested_db_sum - Estimated_Total_Pounds_Harvested_gt_sum)
+    mutate(est_total_lb_harv_diff = Estimated_Total_Pounds_Harvested_db_sum - Estimated_Total_Pounds_Harvested_gt_sum) %>%
+    mutate(est_amount_harv_diff = Estimated_Amount_Harvested_db_sum - Estimated_Amount_Harvested_gt_sum) %>%
+    mutate(mean_g_percapita_use_diff = Mean_Grams_Per_Capita_Use_db_sum - Mean_Grams_Per_Capita_Use_gt_sum) %>%
+    mutate(mean_g_percapita_harv_diff = Mean_Grams_Percapita_Harvest_db_sum - Mean_Grams_Percapita_Harvest_gt_sum) %>%
+    mutate(mean_lb_percapita_use_diff = Mean_Pounds_Per_Capita_Use_db_sum - Mean_Pounds_Per_Capita_Use_gt_sum) %>%
+    mutate(mean_lb_perhousehold_diff = Mean_Pounds_Per_Household_db_sum - Mean_Pounds_Per_Household_gt_sum) %>%
+    mutate(num_res_harv_diff = Number_Of_Resource_Harvested_db_sum - Number_Of_Resource_Harvested_gt_sum) %>%
+    mutate(percap_lb_harv_diff = Percapita_Pounds_Harvested_db_sum - Percapita_Pounds_Harvested_gt_sum) %>%
+    mutate(per_attempt_harv_diff = Percent_Attempting_to_Harvest_db_sum - Percent_Attempting_to_Harvest_gt_sum) %>%
+    mutate(per_give_diff = Percent_Giving_db_sum - Percent_Giving_gt_sum) %>%
+    mutate(per_harv_diff = Percent_Harvesting_db_sum - Percent_Harvesting_gt_sum) %>%
+    mutate(per_total_harv_diff = Percent_Of_Total_Harvest_db_sum - Percent_Of_Total_Harvest_gt_sum) %>%
+    mutate(per_rec_diff = Percent_Receiving_db_sum - Percent_Receiving_gt_sum) %>%
+    mutate(per_use_diff = Percent_Using_db_sum - Percent_Using_gt_sum) %>%
+    mutate(rep_lb_harv_diff = Reported_Pounds_Harvested_db_sum - Reported_Pounds_Harvested_gt_sum) %>%
+    select(Site_Year_Code, Family, Species, est_total_lb_harv_diff, est_amount_harv_diff, mean_g_percapita_use_diff, mean_g_percapita_harv_diff, mean_lb_percapita_use_diff, mean_lb_perhousehold_diff, num_res_harv_diff, percap_lb_harv_diff, per_attempt_harv_diff, per_give_diff, per_harv_diff, per_total_harv_diff, per_rec_diff, per_use_diff, rep_lb_harv_diff)
 
-sp_gt_diff_test$est_total_lb_harv_diff <- as.numeric(sp_gt_diff_test$est_total_lb_harv_diff)
-sp_gt_diff_test$est_total_lb_harv_diff  <- format(sp_gt_diff_test$est_total_lb_harv_diff, scientific = FALSE)
-
+##so differences in sums are not consistent... if low differences somewhere, doesn't mean low differences elsewhere.. 
+str(sp_gt_diff_test)
 
    
-sp_gt_diff_2 <- filter(sp_gt_diff_test, est_total_lb_harv_diff > 2) %>%
-  select(Site_Year_Code, Family, Species, Estimated_Total_Pounds_Harvested_db_sum, Estimated_Total_Pounds_Harvested_gt_sum, est_total_lb_harv_diff)
-sp_gt_diff_3 <- filter(sp_gt_diff_test, est_total_lb_harv_diff < -2) %>%
-  select(Site_Year_Code, Family, Species, Estimated_Total_Pounds_Harvested_db_sum, Estimated_Total_Pounds_Harvested_gt_sum, est_total_lb_harv_diff)
-sp_gt_diff <- rbind(sp_gt_diff_2, sp_gt_diff_3)
-  
+sp_gt_diff_2 <- sp_gt_diff_test %>%
+  filter(if_any(est_total_lb_harv_diff:rep_lb_harv_diff, ~ .x > 2))
+
+sp_gt_diff_3 <- sp_gt_diff_test %>%
+  filter(if_any(est_total_lb_harv_diff:rep_lb_harv_diff, ~ .x < -2))
+sp_gt_diff <- rbind(sp_gt_diff_2, sp_gt_diff_3) %>%##these are not going to be mutually exclusive... some rows could be >2 some less than >2
+  distinct(Site_Year_Code, Family, Species, .keep_all = TRUE)
+
+##869/1604 have some variable where the difference is greater or less than a value of 2....
+##I think the main issue is the percent using/giving etc. because they often just put the value for the sum, for each gear breakdown. so of course the sum is not going to add up. I am not sure how much I trust the % data. This will also then cause issues w/ any of the mean percapita % using.. if they are based on those values. 
+
+
+##Seeing issues w/ non-percent variables
+sp_gt_diff_test_2 <- sp_gt_diff_test %>%
+  select(Site_Year_Code, Family, Species, est_total_lb_harv_diff, est_amount_harv_diff, num_res_harv_diff, percap_lb_harv_diff, rep_lb_harv_diff)
+
+
+sp_gt_diff_4 <- sp_gt_diff_test_2 %>%
+  filter(if_any(est_total_lb_harv_diff:rep_lb_harv_diff, ~ .x > 2))
+
+sp_gt_diff_5 <- sp_gt_diff_test_2 %>%
+  filter(if_any(est_total_lb_harv_diff:rep_lb_harv_diff, ~ .x < -2))
+sp_gt_diff2 <- rbind(sp_gt_diff_4, sp_gt_diff_5) %>%
+  distinct(Site_Year_Code, Family, Species, .keep_all = TRUE)
+##okay, so when ignoring the percent data, or values derived from the % data, it is the same 73/1604 (4.5%) that have issues as only the est_total harvest, so same 3 reasons as listed below
+##but the % stuff is kinda messed up, i need to understand more how those % values are input/what assumptions are made.. 
+
+##variables that tend to have the greatest magnitude of differences, consistently 
+##
+
+
+
+#setwd("~/Desktop/Wild Foods Repo/")
+#write.csv(sp_gt_diff, "intermediate_files/gear_type_sum_large_differences.csv")  
+
+##so for only est total lbs harvested, differences +/- 2, 73/1604 (4.5%) records 
+##need to figure out if there is some consistent pattern why... and which is more accurate in terms of moving forward, already summed or gear type breakdown? 
+##trying to figure out why such a large magnitude of differences:
+test <- fish %>%
+  filter(Site_Year_Code == "Hoonah_2012") %>%
+  filter(Species == "Halibut")
+
+
+##Reasons not adding up:
+##1. Gear type breakdown mentioned/included in list, but no values reported, confusing because this is true for some of the variables, but not others -- why? for example have values for % harvesting/giving/recieving etc/ and not for the weights, this doesn't really make sense to me... 
+##    - This is likely the case for any where the estimated sum across gear type is 0 (so 35/76)
+##    - I think if this is the case, use the db summed row and not the gear breakdown -- can write this into filtering function I think.. 
+##2. Looks like not all of what is collected is reported/broken down by gear type... so even if gear type is listed, then still not broken down fully, so likely gear type not known for all of harvest (because some will be filled, other 0)
+##    - This I think would also make sense to use the pre-calculated one.. 
+##3. Breakdown across all gears (or reported for some gears) but values do not add up... why? nature of how survey done? also some mention %'s but no reported harvest
+
+##I think should talk to Lauren about what she recommends, could be nature of how data is collected/survey done that maybe that sum by species is more accurate?
+##See if can find example of survey from 2012, or maybe earlier years.. have 2021 but survey may have changed
+
+
+
 
 ##family level
 fam_diff_test <- fam_sum_test %>%
