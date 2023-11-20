@@ -157,7 +157,7 @@ fish <- fish %>%
   ))
 
 
-##unique fish species -- when don't run distinct line, this will give dataframe of only unique species w/ associated harvest info
+##unique fish species -- 
 fish_sp_list <- fish %>%
   filter(!is.na(Species)) %>%
   filter(Fishing_Gear_Type == "NA") %>%

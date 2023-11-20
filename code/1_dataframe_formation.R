@@ -410,6 +410,226 @@ fam_diff <- rbind(fam_diff_2, fam_diff_3) %>%
 il <- fish %>%
   filter(Species == "Irish Lord" | Species == "Red Irish Lord")
 
+##conversion factors for fish
+fish_cf <- fish %>%
+  select(Site_Year_Code, Project_Name, Family, Species, Roe_Collection_Type, Fishing_Gear_Type, Resource_Harvest_Units, Conversion_Units_To_Pounds) %>%
+  distinct(Site_Year_Code, Project_Name, Species, Resource_Harvest_Units, Conversion_Units_To_Pounds, .keep_all = TRUE)
+
+test <- fish %>%
+  select(Habitat, Site_Year_Code, General_Category, General_Category_lvl2, Family, Species, Roe_Collection_Type, Fishing_Gear_Type, Resource_Harvest_Units, Conversion_Units_To_Pounds, Number_Of_Resource_Harvested, Reported_Pounds_Harvested) %>%
+  filter(Site_Year_Code == "Klukwan_2014")
+  
+#2) Land Mammals ------------------
+land_mammal_code <- "2"
+
+lm <- df_comp %>% 
+  filter(str_detect(Resource_Code, '^2')) 
+
+lm$Resource_Code  <- format(lm$Resource_Code, scientific = FALSE)
+lm$Resource_Code <- as.character(lm$Resource_Code) 
+str(lm)
+
+lm <- lm %>%
+  mutate(Habitat = "Terrestrial") %>%
+  mutate(Sex = case_when(
+    endsWith(Resource_Code, "1") ~ "Male", 
+    endsWith(Resource_Code, "2") ~ "Female", 
+    endsWith(Resource_Code, "9") ~ "Unknown",
+  )) %>%
+  mutate(General_Category = "Land Mammals") %>%
+  mutate(General_Category_lvl2 = case_when(
+    startsWith(Resource_Code, "21") ~ "Large Land Mammals",
+    startsWith(Resource_Code, "22") ~ "Small Land Mammals",
+  )) %>%
+  mutate(Family = case_when( ##since the mammals aren't broken down into families (no sums at that level, will just make family and species the same.. )
+    startsWith(Resource_Code, "2106") ~ "Black Bear",
+    startsWith(Resource_Code, "2108") ~ "Brown Bear",
+    startsWith(Resource_Code, "2110") ~ "Caribou",
+    startsWith(Resource_Code, "2112") ~ "Deer",
+    startsWith(Resource_Code, "2114") ~ "Elk", 
+    startsWith(Resource_Code, "2116") ~ "Goat", 
+    startsWith(Resource_Code, "2118") ~ "Moose",
+    startsWith(Resource_Code, "2122") ~ "Dall Sheep",
+    startsWith(Resource_Code, "2202") ~ "Beaver",
+    startsWith(Resource_Code, "2204") ~ "Coyote",
+    startsWith(Resource_Code, "2208") ~ "Fox", 
+    startsWith(Resource_Code, "2210") ~ "Hare",
+    startsWith(Resource_Code, "2212") ~ "Land Otter",
+    startsWith(Resource_Code, "2216") ~ "Lynx",
+    startsWith(Resource_Code, "2218") ~ "Marmot",
+    startsWith(Resource_Code, "2220") ~ "Marten",
+    startsWith(Resource_Code, "2222") ~ "Mink",
+    startsWith(Resource_Code, "2224") ~ "Muskrat",
+    startsWith(Resource_Code, "2226") ~ "Porcupine", 
+    startsWith(Resource_Code, "2228") ~ "Squirrel", 
+    startsWith(Resource_Code, "2230") ~ "Weasel",
+    startsWith(Resource_Code, "2232") ~ "Wolf",
+    startsWith(Resource_Code, "2234" ) ~ "Wolverine",
+    startsWith(Resource_Code, "2120") ~ "Muskox",
+    startsWith(Resource_Code, "2104") ~ "Bison", 
+    startsWith(Resource_Code, "2199") ~ "Unknown Large Land Mammal",
+    startsWith(Resource_Code, "2299") ~ "Unknown Small Land Mammals/Furbearers"
+  )) %>%
+  mutate(Species = case_when( ##since the mammals aren't broken down into families (no sums at that level, will just make family and species the same.. )
+    startsWith(Resource_Code, "2106") ~ "Black Bear",
+    startsWith(Resource_Code, "2108") ~ "Brown Bear",
+    startsWith(Resource_Code, "2110") ~ "Caribou",
+    startsWith(Resource_Code, "2112") ~ "Deer",
+    startsWith(Resource_Code, "2114") ~ "Elk", 
+    startsWith(Resource_Code, "2116") ~ "Goat", 
+    startsWith(Resource_Code, "2118") ~ "Moose",
+    startsWith(Resource_Code, "2122") ~ "Dall Sheep",
+    startsWith(Resource_Code, "2202") ~ "Beaver",
+    startsWith(Resource_Code, "2204") ~ "Coyote",
+    startsWith(Resource_Code, "220804") ~ "Red Fox", 
+    startsWith(Resource_Code, "221004") ~ "Snowshoe Hare",
+    startsWith(Resource_Code, "221099") ~ "Unknown Hare",
+    startsWith(Resource_Code, "2212") ~ "Land Otter",
+    startsWith(Resource_Code, "2216") ~ "Lynx",
+    startsWith(Resource_Code, "2218") ~ "Marmot",
+    startsWith(Resource_Code, "2220") ~ "Marten",
+    startsWith(Resource_Code, "2222") ~ "Mink",
+    startsWith(Resource_Code, "2224") ~ "Muskrat",
+    startsWith(Resource_Code, "2226") ~ "Porcupine", 
+    startsWith(Resource_Code, "222804") ~ "Tree Squirrel",
+    startsWith(Resource_Code, "222899") ~ "Unknown Squirrel", 
+    startsWith(Resource_Code, "222806") ~ "Flying Squirrel",
+    startsWith(Resource_Code, "2230") ~ "Weasel",
+    startsWith(Resource_Code, "2232") ~ "Wolf",
+    startsWith(Resource_Code, "2234" ) ~ "Wolverine",
+    startsWith(Resource_Code, "2120") ~ "Muskox",
+    startsWith(Resource_Code, "2104") ~ "Bison", 
+    startsWith(Resource_Code, "2199") ~ "Unknown Large Land Mammal",
+    startsWith(Resource_Code, "2299") ~ "Unknown Small Land Mammals/Furbearers"
+  )) 
+##what are all of the NAs?? where have resource code but no resource name
+##is last digit 9 always sex unknown? why for the small land mammals do they have that line and the total line ugh like what is going on here
+
+##Lets look into the small land mammals
+slm <- lm %>%
+  filter(General_Category_lvl2 == "Small Land Mammals") %>%
+  select(Habitat, General_Category, General_Category_lvl2, Family, Species,  Resource_Code, Resource_Name, Sex, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Conversion_Units_To_Pounds, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest )
+
+
+lm_str <- lm %>%
+  distinct(Habitat, General_Category, General_Category_lvl2, Family, Species,  Resource_Code, Resource_Name, Sex)
+
+lm_sp_list <- lm %>%
+  filter(!is.na(Species)) %>%
+  filter(is.na(Sex)) %>%
+  distinct(Habitat, General_Category, General_Category_lvl2, Family, Species)
+
+##small land mammals are broken down into species (sometimes) and then have unknown sex and NA (so broken down into sex unknown, seems fucking pointless but why not complicate it more)
+
+##testing if land mammal values add up
+lm_sp_sex_sum_test_func <- function(x){
+  sex_sp <- x %>%
+    filter(!is.na(Sex)) %>%
+    filter(!is.na(Species)) %>%
+    group_by(Site_Year_Code, Family, Species) %>%
+    summarise_at(vars(Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest), sum, na.rm = TRUE) %>%
+    rename_with(~paste0(., "_sex_sum"), Reported_Pounds_Harvested:Percent_Of_Total_Harvest)
+  db_sex_sp <- x %>%
+    filter(is.na(Sex)) %>%
+    group_by(Site_Year_Code, Family, Species) %>%
+    summarise_at(vars(Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest), sum, na.rm = TRUE) %>%
+    rename_with(~paste0(., "_db_sum"), Reported_Pounds_Harvested:Percent_Of_Total_Harvest)
+  sex_sum <- inner_join(sex_sp, db_sex_sp, by = c("Site_Year_Code", "Family", "Species")) %>%
+    select(Site_Year_Code, Family, Species, sort(names(.)))
+}
+
+lm_sp_sex_sum_test <- split(lm, paste0(lm$Site_Year_Code)) %>%
+  map(lm_sp_sex_sum_test_func) %>%
+  bind_rows()
+
+
+sp_sex_diff_test <- lm_sp_sex_sum_test %>%
+  group_by(Site_Year_Code, Family, Species) %>%
+  mutate(est_total_lb_harv_diff = Estimated_Total_Pounds_Harvested_db_sum - Estimated_Total_Pounds_Harvested_sex_sum) %>%
+  mutate(est_amount_harv_diff = Estimated_Amount_Harvested_db_sum - Estimated_Amount_Harvested_sex_sum) %>%
+  mutate(mean_lb_perhousehold_diff = Mean_Pounds_Per_Household_db_sum - Mean_Pounds_Per_Household_sex_sum) %>%
+  mutate(num_res_harv_diff = Number_Of_Resource_Harvested_db_sum - Number_Of_Resource_Harvested_sex_sum) %>%
+  mutate(percap_lb_harv_diff = Percapita_Pounds_Harvested_db_sum - Percapita_Pounds_Harvested_sex_sum) %>%
+  mutate(per_total_harv_diff = Percent_Of_Total_Harvest_db_sum - Percent_Of_Total_Harvest_sex_sum) %>%
+  mutate(rep_lb_harv_diff = Reported_Pounds_Harvested_db_sum - Reported_Pounds_Harvested_sex_sum) %>%
+  select(Site_Year_Code, Family, Species, est_total_lb_harv_diff, est_amount_harv_diff, mean_lb_perhousehold_diff, num_res_harv_diff, percap_lb_harv_diff, per_total_harv_diff,  rep_lb_harv_diff)
+
+str(sp_sex_diff_test)
+##determine where magnitude is > +/- 2
+sp_sex_diff_2 <- sp_sex_diff_test %>%
+  filter(if_any(est_total_lb_harv_diff:rep_lb_harv_diff, ~ .x > 2))
+
+sp_sex_diff_3 <- sp_sex_diff_test %>%
+  filter(if_any(est_total_lb_harv_diff:rep_lb_harv_diff, ~ .x < -2))
+sp_sex_diff <- rbind(sp_sex_diff_2, sp_sex_diff_3) %>%##these are not going to be mutually exclusive... some rows could be >2 some less than >2
+  distinct(Site_Year_Code, Family, Species, .keep_all = TRUE)
+
+##all of the sex breakdowns seem to add up 
+
+
+##Note: sometimes conversion values are 0, but # of species returned is not 0, so estimated weight is 0... what is going on here? 
+conv_0 <- lm %>%
+  filter(Conversion_Units_To_Pounds == "0") %>%
+  select(Site_Year_Code,Habitat, General_Category, General_Category_lvl2, Family, Species, Sex, Conversion_Units_To_Pounds, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest) %>%
+  filter(Number_Of_Resource_Harvested != "0")
+##145/794 small mammal data rows .. 18.3%.. that is a lot.. 
+
+test <- lm %>%
+  select(Site_Year_Code,Habitat, General_Category, General_Category_lvl2, Family, Species, Sex, Conversion_Units_To_Pounds, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest) %>%
+  filter(Site_Year_Code == "Angoon_2012") %>%
+  filter(Species == "Land Otter")
+##can i do conversions myself?
+
+lm_cf <- lm %>%
+ select(Project_Name, Family, Species, Sex,  Resource_Harvest_Units, Conversion_Units_To_Pounds) %>%
+  distinct(Project_Name, Family, Species, Resource_Harvest_Units, Conversion_Units_To_Pounds)
+
+##sometimes have multiple conversion factors per species, for example the bears, this honestly looks like mistakes rather than intentional.. 
+
+##do the species within families add up? only break down is in small land mammals
+lm_fam_sum_test_func <- function(x){
+  fam_db <- x %>%
+    filter(is.na(Sex)) %>%
+    filter(is.na(Species)) %>%
+    group_by(Site_Year_Code, Family) %>%
+    summarise_at(vars(Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest), sum, na.rm = TRUE) %>%
+    rename_with(~paste0(., "_db_sum"), Reported_Pounds_Harvested:Percent_Of_Total_Harvest)
+  fam_calc <- x %>%
+    filter(is.na(Sex)) %>%
+    filter(Species != "NA") %>%
+       group_by(Site_Year_Code, Family) %>%
+    summarise_at(vars(Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest), sum, na.rm = TRUE) %>%
+    rename_with(~paste0(., "_fam_sum"), Reported_Pounds_Harvested:Percent_Of_Total_Harvest)
+  fam_sum <- inner_join(fam_db, fam_calc, by = c("Site_Year_Code", "Family")) %>%
+    select(Site_Year_Code, Family, sort(names(.)))
+} 
+
+lm_fam_sum_test <- split(lm, paste0(lm$Site_Year_Code)) %>%
+  map(lm_fam_sum_test_func) %>%
+  bind_rows()
+##only fox, hare and squirrel are broken down into species (regardless of sex, other small land mammals are broken down into sex but not species)
+
+##so it looks like, if this is working properly, that at least the summed species level adds up, i don't think worth keeping the breakdown to sex... 
+
+##NEXT:
+##Need to decide what to do with the conversion factors, the multiple conversion factors which may or may not be accurate? not sure.. 
+lm_data <- lm %>%
+  select(Site_Year_Code,Habitat, General_Category, General_Category_lvl2, Family, Species, Sex, Conversion_Units_To_Pounds, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest) %>%
+  filter(!is.na(Species)) %>%
+  filter(is.na(Sex))
+
+##the NAs are still weirding me out..not sure if i like this approach
+lm_na <- lm_data %>%
+  filter(is.na(Number_Of_Resource_Harvested)) %>%
+  filter(Estimated_Total_Pounds_Harvested != "0")
+##for 107 of 987 entries, there is an NA for # of resources harvested and reported lbs harvested, and 57 have an estimated total lbs harvested, how? 
+##for example, angoon 1987, have no reported lbs or # of deer harvest, but have somehow a total estimate of lbs and number harvested? how? 
+test <- lm %>%
+  select(Site_Year_Code,Habitat, General_Category, General_Category_lvl2, Family, Species, Sex, Conversion_Units_To_Pounds, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest) %>%
+  filter(Site_Year_Code == "Angoon_1987")
+
+
+
 ##OLD CODE -------------------
 ##this function removes the total family sum, and the gear specific rows, so takes the already calculated sum within each species, and if there are multiple of each speices (e.g., herring roe, it takes the sum of those)
 test_func <- function(x){
