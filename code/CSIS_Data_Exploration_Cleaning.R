@@ -628,7 +628,349 @@ test <- lm %>%
   select(Site_Year_Code,Habitat, General_Category, General_Category_lvl2, Family, Species, Sex, Conversion_Units_To_Pounds, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest) %>%
   filter(Site_Year_Code == "Angoon_1987")
 
+###MARINE MAMMALS ------------------
+marine_mammal_code <- "3"
 
+mm <- df_comp %>% 
+  filter(str_detect(Resource_Code, '^3')) 
+
+mm$Resource_Code  <- format(mm$Resource_Code, scientific = FALSE)
+mm$Resource_Code <- as.character(mm$Resource_Code) 
+str(mm)
+
+
+mm <- mm %>%
+  mutate(Habitat = "Marine") %>%
+  mutate(Sex = case_when(
+    grepl("Unknown Sex", Resource_Name) ~ "Unknown",
+    grepl("Male", Resource_Name) ~ "Male",
+    grepl("Female", Resource_Name) ~ "Female",
+  )) %>%
+  mutate(General_Category = "Marine Mammals") %>%
+  mutate(General_Category_lvl2 = case_when( ##don't have a category level 2, so leaving it as marine mammals.. 
+    startsWith(Resource_Code, "30") ~ "Marine Mammals",
+  )) %>%
+  mutate(Family = case_when(
+    startsWith(Resource_Code, "3008") ~ "Seal", 
+    startsWith(Resource_Code, "3010") ~ "Sea Otter",
+    startsWith(Resource_Code, "3012") ~ "Stellar Sea Lion",
+    startsWith(Resource_Code, "3016") ~ "Whale",
+    startsWith(Resource_Code, "3099") ~ "Unknown Marine Mammals",
+    startsWith(Resource_Code, "3014") ~ "Walrus",
+    
+  )) %>%
+  mutate(Species = case_when(
+    startsWith(Resource_Code, "300804") ~ "Fur Seal", 
+    startsWith(Resource_Code, "30080404") ~ "Fur Seal (other)", ##what is a fur seal other?? 
+    startsWith(Resource_Code, "300806") ~ "Harbor Seal",
+    startsWith(Resource_Code, "30080604") ~ "Harbour Seal (saltwater)", ##is this a different habitat? can it be captured that way? as not really different species
+    startsWith(Resource_Code, "300899") ~ "Unknown Seal",
+    startsWith(Resource_Code, "300888") ~ "Unknown Seal Oil",
+    startsWith(Resource_Code, "301602") ~ "Belukha",
+    startsWith(Resource_Code, "301606") ~ "Bowhead",
+    startsWith(Resource_Code, "301699") ~ "Unknown Whale",
+    startsWith(Resource_Code, "3014") ~ "Walrus",
+    startsWith(Resource_Code, "3010") ~ "Sea Otter",
+    startsWith(Resource_Code, "3012") ~ "Stellar Sea Lion",
+    startsWith(Resource_Code, "3099") ~ "Unknown Marine Mammals",
+  ))
+
+mm_str <- mm %>%
+  distinct(Habitat, General_Category, General_Category_lvl2, Family, Species,  Resource_Code, Resource_Name, Sex)
+
+mm_sp_list <- mm %>%
+  filter(!is.na(Species)) %>%
+  filter(is.na(Sex)) %>%
+  distinct(Habitat, General_Category, General_Category_lvl2, Family, Species)
+
+
+##fur seal and harbor seal are duplicates. -- do both of them always come up? 
+harbour_seal <- mm %>%
+  filter(Species == "Harbor Seal") %>%
+  filter(is.na(Sex))
+##harbor seal saltwater is always a replicate, of harbor seal, so just remove.. 
+fur_seal <- mm %>%
+  filter(Species == "Fur Seal") %>%
+  filter(is.na(Sex))
+##fur seal (other) is always a replicate, of fur seal, so just remove.. 
+
+
+###4) BIRDS AND EGGS -----------------
+
+birds_eggs_code <- "4"
+
+be <- df_comp %>% 
+  filter(str_detect(Resource_Code, '^4')) 
+
+be$Resource_Code  <- format(be$Resource_Code, scientific = FALSE)
+be$Resource_Code <- as.character(be$Resource_Code) 
+str(be)
+
+be <- be %>%
+  mutate(Habitat = "Terrestrial") %>% ##for purposes of my own research project may want to go through these and be more specific
+  mutate(Season = case_when(
+    grepl("Winter", Resource_Name) ~ "Winter",
+    grepl("Fall", Resource_Name) ~ "Fall",
+    grepl("Summer", Resource_Name) ~ "Summer",
+    grepl("Spring", Resource_Name) ~ "Spring",
+    grepl("Season Unknown", Resource_Name) ~ "Unknown",
+  )) %>%
+  mutate(General_Category = "Birds and Eggs") %>%
+  mutate(General_Category_lvl2 = case_when(
+    startsWith(Resource_Code, "41") ~ "Migratory Birds",
+    startsWith(Resource_Code, "42") ~ "Other Birds", 
+    startsWith(Resource_Code, "43") ~ "Bird Eggs",
+  )) %>%
+  mutate(Family = case_when(
+    startsWith(Resource_Code, "4102") ~ "Ducks",
+    startsWith(Resource_Code, "4104") ~ "Geese",
+    startsWith(Resource_Code, "4106") ~ "Swan",
+    startsWith(Resource_Code, "4108") ~ "Crane",
+    startsWith(Resource_Code, "4110") ~ "Shorebird",
+    startsWith(Resource_Code, "4112") ~ "Seabirds and Loons",
+    startsWith(Resource_Code, "4114") ~ "Heron",
+    startsWith(Resource_Code, "4218") ~ "Upland Game Birds",
+    startsWith(Resource_Code, "4288") ~ "Unknown Other Birds", ##is this. the right place to put this? 
+    startsWith(Resource_Code, "4302") ~ "Ducks",
+    startsWith(Resource_Code, "4304") ~ "Geese",
+    startsWith(Resource_Code, "4306") ~ "Swan",
+    startsWith(Resource_Code, "4308") ~ "Crane",
+    startsWith(Resource_Code, "4310") ~ "Shorebird",
+    startsWith(Resource_Code, "4312") ~ "Seabirds and Loons",
+    startsWith(Resource_Code, "4318") ~ "Upland Game Birds",
+    startsWith(Resource_Code, "4399") ~ "Unknown",
+  )) %>% 
+  mutate(Genus = case_when(
+    startsWith(Resource_Code, "410202") ~ "Bufflehead",
+    startsWith(Resource_Code, "410204") ~ "Canvasback",
+    startsWith(Resource_Code, "410208") ~ "Gadwall",
+    startsWith(Resource_Code, "410210") ~ "Goldeneye", ##need to check, is goldeneye always broken down? or are there times when only goldeneye is recorded and not further broken down? 
+    startsWith(Resource_Code, "410212") ~ "Harlequin",
+    startsWith(Resource_Code, "410214") ~ "Mallard",
+    startsWith(Resource_Code, "410216") ~ "Merganser", ##merganser always broken down?
+    startsWith(Resource_Code, "410218") ~ "Long-tailed Duck (Oldsquaw)",
+    startsWith(Resource_Code, "410220") ~ "Northern Pintail",
+    startsWith(Resource_Code, "410222") ~ "Redhead Duck",
+    startsWith(Resource_Code, "410226") ~ "Scaup", ##scaup always broken down?
+    startsWith(Resource_Code, "410228") ~ "Scoter", ##scoter always broken down?
+    startsWith(Resource_Code, "410232") ~ "Teal", ##teal always broken down?
+    startsWith(Resource_Code, "410236") ~ "Wigeon", ##wigeon always broken down?
+    startsWith(Resource_Code, "410299") ~ "Unknown Ducks",
+    startsWith(Resource_Code, "410402") ~ "Brant",
+    startsWith(Resource_Code, "410404") ~ "Canada Geese", ##canada geese always broken down?
+    startsWith(Resource_Code, "410406") ~ "Emperor Geese",
+    startsWith(Resource_Code, "410408") ~ "Snow Geese",
+    startsWith(Resource_Code, "410410") ~ "White-fronted Geese",
+    startsWith(Resource_Code, "410499") ~ "Unknown Geese",
+    startsWith(Resource_Code, "410604") ~ "Tundra Swan (whistling)",
+    startsWith(Resource_Code, "410699") ~ "Unknown Swan",
+    startsWith(Resource_Code, "410802") ~ "Sandhill Crane",
+    startsWith(Resource_Code, "411002") ~ "Wilson's Snipe",
+    startsWith(Resource_Code, "411004") ~ "Black Oystercatcher",
+    startsWith(Resource_Code, "411099") ~ "Unknown Shorebirds", ##do they always break down unknown into large/small?
+    startsWith(Resource_Code, "411204") ~ "Cormorants",
+    startsWith(Resource_Code, "411208") ~ "Grebe", ##grebe always broken down?
+    startsWith(Resource_Code, "411210") ~ "Guillemot",
+    startsWith(Resource_Code, "411212") ~ "Gull",  ##different species than the glaucous winged gull?
+    startsWith(Resource_Code, "411216") ~ "Loon",
+    startsWith(Resource_Code, "411222") ~ "Puffin",
+    startsWith(Resource_Code, "411226") ~ "Tern",
+    startsWith(Resource_Code, "411299") ~ "Unknown Seabirds",
+    startsWith(Resource_Code, "4114") ~ "Great Blue Heron",
+    startsWith(Resource_Code, "421802") ~ "Grouse", ##grouse always broken down?
+    startsWith(Resource_Code, "421804") ~ "Ptarmigan", ##ptarmigan always broken down?
+    startsWith(Resource_Code, "421899") ~ "Unknown Upland Game Birds",
+    startsWith(Resource_Code, "430214") ~ "Mallard", 
+    startsWith(Resource_Code, "430299") ~ "Unknown Duck",
+    startsWith(Resource_Code, "430404") ~ "Canada Geese",
+    startsWith(Resource_Code, "430499") ~ "Unknown Geese",
+    startsWith(Resource_Code, "43060") ~ "Swan",
+    startsWith(Resource_Code, "43069") ~ "Unknown Swan", ##kind of confused by the eggs, need to think about how to organize and will i separate them in a food web? 
+    startsWith(Resource_Code, "430802") ~ "Sandhill Crane",
+    startsWith(Resource_Code, "430899") ~ "Unknown Crane",
+    startsWith(Resource_Code, "431004") ~ "Black Oystercatcher",
+    startsWith(Resource_Code, "43109901" ) ~ "Unknown Small Shorebird",
+    startsWith(Resource_Code, "43109902") ~ "Unknown Large Shorebird",
+    startsWith(Resource_Code, "431210") ~ "Guillemot",
+    startsWith(Resource_Code, "43121204") ~ "Glaucous Winged Gull", ##
+    startsWith(Resource_Code, "43121299") ~ "Unknown Gull",
+    startsWith(Resource_Code, "4312160") ~ "Loon",
+    startsWith(Resource_Code, "4312169") ~ "Unknown Loon",
+    startsWith(Resource_Code, "43121802") ~ "Common Murre", ##same value as the murre eggs? is the only breakdown for the murre... 
+    startsWith(Resource_Code, "4312260") ~ "Tern",
+    startsWith(Resource_Code, "4312269") ~ "Unknown Tern",
+    startsWith(Resource_Code, "43129") ~ "Unknown Seabird",
+    startsWith(Resource_Code, "431802") ~ "Grouse",
+    startsWith(Resource_Code, "4318029") ~ "Unknown Grouse",
+    startsWith(Resource_Code, "4318040") ~ "Ptarmigan",
+    startsWith(Resource_Code, "4318049") ~ "Unknown Ptarmigan",
+  )) %>% ##should i add an intermediate level? maybe..as there seem to be fair amount that have another level of categorization... 
+  mutate(Species = case_when(
+    startsWith(Resource_Code, "410202") ~ "Bufflehead",
+    startsWith(Resource_Code, "410204") ~ "Canvasback",
+    startsWith(Resource_Code, "410208") ~ "Gadwall",
+    startsWith(Resource_Code, "41021002") ~ "Barrows Goldeneye", ##need to check, is goldeneye always broken down? or are there times when only goldeneye is recorded and not further broken down? 
+    startsWith(Resource_Code, "41021004") ~ "Common Goldeneye",
+    startsWith(Resource_Code, "4102109") ~ "Unknown Goldeneye",
+    startsWith(Resource_Code, "410212") ~ "Harlequin",
+    startsWith(Resource_Code, "410214") ~ "Mallard",
+    startsWith(Resource_Code, "41021602") ~ "Common Merganser", ##merganser always broken down?
+    startsWith(Resource_Code, "41021604") ~ "Red-Breasted Merganser",
+    startsWith(Resource_Code, "41021699") ~ "Unknown Merganser",
+    startsWith(Resource_Code, "410218") ~ "Long-tailed Duck (Oldsquaw)",
+    startsWith(Resource_Code, "410220") ~ "Northern Pintail",
+    startsWith(Resource_Code, "410222") ~ "Redhead Duck",
+    startsWith(Resource_Code, "41022602") ~ "Greater Scaup", ##scaup always broken down?
+    startsWith(Resource_Code, "41022604") ~"Lesser Scaup",
+    startsWith(Resource_Code, "41022699") ~ "Unknown Scaup",
+    startsWith(Resource_Code, "41022804") ~ "Surf Scoter", ##scoter always broken down?
+    startsWith(Resource_Code, "41022806") ~ "White-winged Scoter",
+    startsWith(Resource_Code, "41022899") ~ "Unknown Scoter",
+    startsWith(Resource_Code, "41023206") ~ "Green-Winged Teal", ##teal always broken down?
+    startsWith(Resource_Code, "41023299") ~ "Unknown Teal",
+    startsWith(Resource_Code, "41023602") ~ "American Wigeon", ##wigeon always broken down?
+    startsWith(Resource_Code, "41023699") ~ "Unknown Wigeon",
+    startsWith(Resource_Code, "410299") ~ "Unknown Ducks",
+    startsWith(Resource_Code, "410402") ~ "Brant",
+    startsWith(Resource_Code, "41040406") ~ "Dusky Canada Geese", ##canada geese always broken down?
+    startsWith(Resource_Code, "41040408") ~ "Lesser Canada Geese",
+    startsWith(Resource_Code, "4104041") ~ "Vancouver Canada Geese",
+    startsWith(Resource_Code, "41040499") ~ "Unknown Canada Geese",
+    startsWith(Resource_Code, "410406") ~ "Emperor Geese",
+    startsWith(Resource_Code, "410408") ~ "Snow Geese",
+    startsWith(Resource_Code, "410410") ~ "White-fronted Geese",
+    startsWith(Resource_Code, "410499") ~ "Unknown Geese",
+    startsWith(Resource_Code, "410604") ~ "Tundra Swan (whistling)",
+    startsWith(Resource_Code, "410699") ~ "Unknown Swan",
+    startsWith(Resource_Code, "410802") ~ "Sandhill Crane",
+    startsWith(Resource_Code, "411002") ~ "Wilson's Snipe",
+    startsWith(Resource_Code, "411004") ~ "Black Oystercatcher",
+    startsWith(Resource_Code, "41109901") ~ "Unknown Small Shorebirds", ##do they always break down unknown into large/small?
+    startsWith(Resource_Code, "41109902") ~ "Unknown Large Shorebirds",
+    startsWith(Resource_Code, "411204") ~ "Cormorants",
+    startsWith(Resource_Code, "41120802") ~ "Horned Grebe", ##grebe always broken down?
+    startsWith(Resource_Code, "41120804") ~ "Red Necked Grebe",
+    startsWith(Resource_Code, "41120899") ~ "Unknown Grebe",
+    startsWith(Resource_Code, "411210") ~ "Guillemot",
+    startsWith(Resource_Code, "411212") ~ "Gull",  ##different species than the glaucous winged gull?
+    startsWith(Resource_Code, "4112160") ~ "Loon",
+    startsWith(Resource_Code, "4112169") ~ "Unknown Loon",
+    startsWith(Resource_Code, "4112220") ~ "Puffin",
+    startsWith(Resource_Code, "4112229") ~ "Unknown Puffin",
+    startsWith(Resource_Code, "411226") ~ "Tern",
+    startsWith(Resource_Code, "411299") ~ "Unknown Seabirds",
+    startsWith(Resource_Code, "4114") ~ "Great Blue Heron",
+    startsWith(Resource_Code, "42180202") ~ "Spruce Grouse", ##grouse always broken down?
+    startsWith(Resource_Code, "42180206") ~ "Ruffed Grouse",
+    startsWith(Resource_Code, "4218029") ~ "Unknown Grouse",
+    startsWith(Resource_Code, "42180402") ~ "Rock Ptarmigan", ##ptarmigan always broken down?
+    startsWith(Resource_Code, "42180404") ~ "Willow Ptarmigan",
+    startsWith(Resource_Code, "4218049") ~ "Unknown Ptarmigan",
+    startsWith(Resource_Code, "421899") ~ "Unknown Upland Game Birds",
+    startsWith(Resource_Code, "430214") ~ "Mallard", 
+    startsWith(Resource_Code, "430299") ~ "Unknown Duck",
+    startsWith(Resource_Code, "43040408") ~ "Lesser Canada Geese",
+    startsWith(Resource_Code, "4304049") ~ "Unknown Canada Geese",
+    startsWith(Resource_Code, "430499") ~ "Unknown Geese",
+    startsWith(Resource_Code, "43060") ~ "Swan",
+    startsWith(Resource_Code, "43069") ~ "Unknown Swan",
+    startsWith(Resource_Code, "430802") ~ "Sandhill Crane",
+    startsWith(Resource_Code, "430899") ~ "Unknown Crane",
+    startsWith(Resource_Code, "431004") ~ "Black Oystercatcher",
+    startsWith(Resource_Code, "43109901" ) ~ "Unknown Small Shorebird",
+    startsWith(Resource_Code, "43109902") ~ "Unknown Large Shorebird",
+    startsWith(Resource_Code, "431210") ~ "Guillemot",
+    startsWith(Resource_Code, "43121204") ~ "Glaucous Winged Gull", ##
+    startsWith(Resource_Code, "43121299") ~ "Unknown Gull",
+    startsWith(Resource_Code, "4312160") ~ "Loon",
+    startsWith(Resource_Code, "4312169") ~ "Unknown Loon",
+    startsWith(Resource_Code, "43121802") ~ "Common Murre", ##same value as the murre eggs? is the only breakdown for the murre... 
+    startsWith(Resource_Code, "4312260") ~ "Tern",
+    startsWith(Resource_Code, "4312269") ~ "Unknown Tern",
+    startsWith(Resource_Code, "43129") ~ "Unknown Seabird",
+    startsWith(Resource_Code, "431802") ~ "Grouse",
+    startsWith(Resource_Code, "4318029") ~ "Unknown Grouse",
+    startsWith(Resource_Code, "4318040") ~ "Ptarmigan",
+    startsWith(Resource_Code, "4318049") ~ "Unknown Ptarmigan",
+  )) %>%
+  mutate(Type = case_when(
+    startsWith(Resource_Code, "41") ~ "Adult",
+    startsWith(Resource_Code, "42") ~ "Adult", 
+    startsWith(Resource_Code, "43") ~ "Egg",
+  ))
+
+be_str <- be %>%
+  distinct(Habitat, General_Category, General_Category_lvl2, Family, Genus, Species,  Resource_Code, Resource_Name, Season, Type)
+
+be_sp_list <- be %>%
+  filter(!is.na(Species)) %>%
+  filter(is.na(Season)) %>%
+  distinct(Habitat, General_Category, General_Category_lvl2, Family, Genus, Species)
+
+##do the species within families add up? only break down is in small land mammals
+be_fam_sum_test_func <- function(x){
+  fam_db <- x %>%
+    filter(is.na(Season)) %>%
+    filter(is.na(Species)) %>%
+    group_by(Site_Year_Code, Family, Type) %>%
+    summarise_at(vars(Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest), sum, na.rm = TRUE) %>%
+    rename_with(~paste0(., "_db_sum"), Reported_Pounds_Harvested:Percent_Of_Total_Harvest)
+  fam_calc <- x %>%
+    filter(is.na(Season)) %>%
+    filter(Species != "NA") %>%
+    group_by(Site_Year_Code, Family, Type) %>%
+    summarise_at(vars(Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest), sum, na.rm = TRUE) %>%
+    rename_with(~paste0(., "_fam_sum"), Reported_Pounds_Harvested:Percent_Of_Total_Harvest)
+  fam_sum <- inner_join(fam_db, fam_calc, by = c("Site_Year_Code", "Family", "Type")) %>%
+    select(Site_Year_Code, Family, Type, sort(names(.)))
+} 
+
+be_fam_sum_test <- split(be, paste0(be$Site_Year_Code)) %>%
+  map(be_fam_sum_test_func) %>%
+  bind_rows()
+
+be_fam_diff_test <- be_fam_sum_test %>%
+  group_by(Site_Year_Code, Family, Type) %>%
+  mutate(est_total_lb_harv_diff = Estimated_Total_Pounds_Harvested_db_sum - Estimated_Total_Pounds_Harvested_fam_sum) %>%
+  mutate(est_amount_harv_diff = Estimated_Amount_Harvested_db_sum - Estimated_Amount_Harvested_fam_sum) %>%
+  mutate(mean_lb_perhousehold_diff = Mean_Pounds_Per_Household_db_sum - Mean_Pounds_Per_Household_fam_sum) %>%
+  mutate(num_res_harv_diff = Number_Of_Resource_Harvested_db_sum - Number_Of_Resource_Harvested_fam_sum) %>%
+  mutate(percap_lb_harv_diff = Percapita_Pounds_Harvested_db_sum - Percapita_Pounds_Harvested_fam_sum) %>%
+  mutate(per_total_harv_diff = Percent_Of_Total_Harvest_db_sum - Percent_Of_Total_Harvest_fam_sum) %>%
+  mutate(rep_lb_harv_diff = Reported_Pounds_Harvested_db_sum - Reported_Pounds_Harvested_fam_sum) %>%
+  select(Site_Year_Code, Family, Type, est_total_lb_harv_diff, est_amount_harv_diff, mean_lb_perhousehold_diff, num_res_harv_diff, percap_lb_harv_diff, per_total_harv_diff,  rep_lb_harv_diff)
+
+str(be_fam_diff_test)
+##determine where magnitude is > +/- 2
+be_fam_diff_2 <- be_fam_diff_test %>%
+  filter(if_any(est_total_lb_harv_diff:rep_lb_harv_diff, ~ .x > 2))
+
+be_fam_diff_3 <- be_fam_diff_test %>%
+  filter(if_any(est_total_lb_harv_diff:rep_lb_harv_diff, ~ .x < -2))
+be_fam_diff <- rbind(be_fam_diff_2, be_fam_diff_3) %>%##these are not going to be mutually exclusive... some rows could be >2 some less than >2
+  distinct(Site_Year_Code, Family, Type, .keep_all = TRUE)
+
+
+
+test <- be %>%
+  filter(Site_Year_Code == "Angoon_1984") %>%
+  filter(Family == "Geese")
+
+##want to select genus level data if not broken down further, but keep species level if genus is broken down further.. 
+##could i group by site_year_code, then filter out species not na and then species na but not genus na... ?? 
+test2 <- be %>%
+  group_by(Site_Year_Code) %>%
+  filter(is.na(Season)) %>%
+  filter(!is.na(Species))
+
+test3 <- be %>%
+  group_by(Site_Year_Code) %>%
+  filter(is.na(Season)) %>%
+  filter(is.na(Species)) %>%
+  filter(!is.na(Genus))
+
+test4 <- 
+##no still not right.. 
 
 ##OLD CODE -------------------
 ##this function removes the total family sum, and the gear specific rows, so takes the already calculated sum within each species, and if there are multiple of each speices (e.g., herring roe, it takes the sum of those)
