@@ -26,13 +26,14 @@ survey_demographics <- read_excel("CSIS_SurveyData_Demographics.xlsx", sheet = 2
 df_comp <- df %>%
   filter(Site_Year_Code %in% survey_demographics$Site_Year_Code) %>% ##selects only years where a comprehensive survey was done
   filter(!grepl("Marine Mammals", Project_Name)) %>% ##this removes data from targeted marine mammal surveys done in same year as comprehensive survey
-  select(Site_Year_Code, Resource_Code, Resource_Name, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest)
+  select(Site_Year_Code, Project_Name, Resource_Code, Resource_Name, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest, Conversion_Units_To_Pounds,Resource_Harvest_Units ) %>%
+  left_join(survey_demographics %>% select(Site_Year_Code, Est_Comm_Population), by = "Site_Year_Code")
 
 ##reorganize dataframe to make categories, levels
 
 ##start with fish
 ##start with fish
-###1) FISH ------------------
+#1) FISH ------------------
 fish_code <- "1"
 fish <- df_comp %>% 
   filter(str_detect(Resource_Code, '^1')) 
@@ -146,7 +147,7 @@ fish <- fish %>%
     startsWith(Resource_Code, "12409") ~ "Unknown Tuna/Mackerel",
     startsWith(Resource_Code, "125002") ~ "Arctic Char",
     startsWith(Resource_Code, "125004") ~ "Brook Trout", 
-    startsWith(Resource_Code, "125006") ~ "Dolly Varden",
+    startsWith(Resource_Code, "1250060") ~ "Dolly Varden",
     startsWith(Resource_Code, "1250069") ~ "Dolly Varden - unknown", ##what does this mean?
     startsWith(Resource_Code, "1252") ~ "Grayling",
     startsWith(Resource_Code, "1254") ~ "Pike",
@@ -183,7 +184,12 @@ fish <- fish %>%
     startsWith(Resource_Code, "12300602") ~ "Red Irish Lord",
   ))
 
+str(fish)
 ##this function removes the total family sum, and the gear specific rows, so takes the already calculated sum within each species, and if there are multiple of each speices (e.g., herring roe, it takes the sum of those)
+##want don't want to add conversion units, resource harvest units or estimated community population
+fish$Conversion_Units_To_Pounds <- as.character(fish$Conversion_Units_To_Pounds)
+fish$Est_Comm_Population <- as.character(fish$Est_Comm_Population)
+str(fish)
 fish_func <- function(x){
   df_prep <- x
   family_total <- df_prep %>%
@@ -195,15 +201,51 @@ fish_func <- function(x){
     distinct()
 }
 
-fish_test_2 <- split(fish, paste0(fish$Site_Year_Code)) %>%
+fish_test_1 <- split(fish, paste0(fish$Site_Year_Code)) %>%
   map(fish_func) %>%
   bind_rows() %>%
-  select(Site_Year_Code, Habitat, General_Category, General_Category_lvl2, Family, Species, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest)
+  select(Project_Name, Site_Year_Code, Habitat, General_Category, General_Category_lvl2, Family, Species, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population)
+
+##Resolve the Irish Lord issue
+##Irish lord is only fish w/ additional category level, yet years before 1985 do not have the extra category, need to remove irish lord level (as is duplicate of red irish lord from sites after 1984)
+##Communities w/ irish lord but no red irish lord breakdown: angoon 1984, haines 1983, klawock 1984 klukwan 1983, tenakee springs 1984, yakutat 1984
+
+fish_test_2 <- fish_test_1 %>%
+  filter(Site_Year_Code != "Angoon_1984") %>%
+  filter(Site_Year_Code != "Haines_1983") %>%
+  filter(Site_Year_Code != "Klawock_1984") %>%
+  filter(Site_Year_Code != "Klukwan_1983") %>%
+  filter(Site_Year_Code != "Tenakee Springs_1984") %>%
+  filter(Site_Year_Code != "Yakutat_1984") %>%
+  filter(Species != "Irish Lord")
+
+fish_test_3 <- fish_test_1 %>%
+  filter(Site_Year_Code %in% c("Angoon_1984", "Haines_1983", "Klawock_1984", "Klukwan_1983", "Tenakee Springs_1984", "Yakutat_1984")) 
+
+fish_test_4 <- rbind(fish_test_2, fish_test_3)
+
+##Resolve the Dolly Varden Issue
+##Klukwan_2014 dolly varden -- kind of a mess, need to figure out but data looks messed up  - Yakutat 2015 and Klukwan 2014 are the only ones with this dolly varden unknown species -- see notes in excel sheet
+##    - For both of these places, the dolly varden-unknown looks like the right data (at least for these 7 variables..), these are the only two sites with this dv unknown, so my feeling is select the dv unknown for these two sites.. 
+fish_test_5 <- fish_test_4 %>%
+  filter(Site_Year_Code %in% c("Klukwan_2014", "Yakutat_2015")) %>%
+  filter(Species != "Dolly Varden") 
+fish_test_5$Species[fish_test_5$Species == "Dolly Varden - unknown"] <- "Dolly Varden"  
+
+fish_test_6 <- fish_test_4 %>%
+  filter(Site_Year_Code != "Klukwan_2014") %>%
+  filter(Site_Year_Code != "Yakutat_2015")
+
+##This is now the final, cleaned fish data w/ 1 row for each species at the lowest species level, but ignoring gear type (includes conversion units, harvest units, and population size so if want to later can go back and re-calculate estimates, and or adjust values based on updated conversion units)
+fish_final <- rbind(fish_test_5, fish_test_6) 
+
+##Note: I may go back and try and calculate these values myself from the beginning, as I am wary, but am moving forward this way for now. 
+
+#clean up environment
+rm(fish_test_1, fish_test_2, fish_test_3, fish_test_4, fish_test_5, fish_test_6)
 
 
-##this still gives me the irish lord and dolly varden issue
-
-#2) Land Mammals ------------------
+#2) LAND MAMMALS ------------------
 land_mammal_code <- "2"
 
 lm <- df_comp %>% 
@@ -287,6 +329,8 @@ lm <- lm %>%
     startsWith(Resource_Code, "2299") ~ "Unknown Small Land Mammals/Furbearers"
   )) 
 
+lm$Conversion_Units_To_Pounds <- as.character(lm$Conversion_Units_To_Pounds)
+lm$Est_Comm_Population <- as.character(lm$Est_Comm_Population)
 lm_func <- function(x){
   df_prep <- x
   family_total <- df_prep %>%
@@ -298,15 +342,21 @@ lm_func <- function(x){
     distinct()
 }
 
-lm_test <- split(lm, paste0(lm$Site_Year_Code)) %>%
+##
+lm_final <- split(lm, paste0(lm$Site_Year_Code)) %>%
   map(lm_func) %>%
   bind_rows() %>%
-  select(Site_Year_Code, Habitat, General_Category, General_Category_lvl2, Family, Species, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest)
+  select(Project_Name, Site_Year_Code, Habitat, General_Category, General_Category_lvl2, Family, Species, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population)
+##Note: there are some small land mammals where there are # of resources harvested, but no estimated weight, so will need to decide if we want to go and determine conversion units and then calculate estimated weight
+##I feel like an intermediate solution oculd be to determine estimated dressed weight for these species where this has occurred, so not needing to re-do all convserions, but for these particular cases to have some  estimate of weight that is comparable to the other estimates  
+##This doesn't solve the issue that some of the conversion estimates are likely mistakes in the database (e.g., brown bear conversion used for black bear conversion but this is an option)
+##Or clean up and fix conversion factors by project/species, add in ones where it is 0 based on literature, and then recalculate estimated weights based on # reported
+##However, can not fix the rows where the # reported is 0, however these all have an estimated amount harvested, so can calculate that way (not sure where these values came from but they are there)
 
-#angoon_1984 <- lm %>%
-#  filter(Site_Year_Code == "Angoon_1984")
+#lm_final_na_resharvested <- lm_final %>%
+#  filter(is.na(Number_Of_Resource_Harvested))
 
-###MARINE MAMMALS ------------------
+#3) MARINE MAMMALS ------------------
 marine_mammal_code <- "3"
 
 mm <- df_comp %>% 
@@ -315,7 +365,6 @@ mm <- df_comp %>%
 mm$Resource_Code  <- format(mm$Resource_Code, scientific = FALSE)
 mm$Resource_Code <- as.character(mm$Resource_Code) 
 str(mm)
-
 
 mm <- mm %>%
   mutate(Habitat = "Marine") %>%
@@ -353,6 +402,8 @@ mm <- mm %>%
     startsWith(Resource_Code, "3099") ~ "Unknown Marine Mammals",
   ))
 
+mm$Conversion_Units_To_Pounds <- as.character(mm$Conversion_Units_To_Pounds)
+mm$Est_Comm_Population <- as.character(mm$Est_Comm_Population)
 mm_func <- function(x){
   df_prep <- x
   family_total <- df_prep %>%
@@ -364,18 +415,15 @@ mm_func <- function(x){
     distinct()
 }
 
-mm_test <- split(mm, paste0(mm$Site_Year_Code)) %>%
+mm_final <- split(mm, paste0(mm$Site_Year_Code)) %>%
   map(mm_func) %>%
   bind_rows() %>%
-  filter(Resource_Name != "Harbor Seal (saltwater)") %>%
+  filter(Resource_Name != "Harbor Seal (saltwater)") %>% ##removed harbor seal (saltwater) and fur seal (other) as always a replicate when it does come up
   filter(Resource_Name != "Fur Seal (other)") %>%
-  select(Site_Year_Code, Habitat, General_Category, General_Category_lvl2, Family, Species, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest)
-  
+  select(Project_Name, Site_Year_Code, Habitat, General_Category, General_Category_lvl2, Family, Species, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population)
 
-##removed harbor seal (saltwater) and fur seal (other) as always a replicate when it does come up
-mm_test
 
-###4) BIRDS AND EGGS -----------------
+#4) BIRDS AND EGGS -----------------
 
 birds_eggs_code <- "4"
 
@@ -411,7 +459,7 @@ be <- be %>%
     startsWith(Resource_Code, "4114") ~ "Heron",
     startsWith(Resource_Code, "4218") ~ "Upland Game Birds",
     startsWith(Resource_Code, "4288") ~ "Unknown Other Birds", ##is this. the right place to put this? 
-    startsWith(Resource_Code, "4302") ~" Ducks",
+    startsWith(Resource_Code, "4302") ~ "Ducks",
     startsWith(Resource_Code, "4304") ~ "Geese",
     startsWith(Resource_Code, "4306") ~ "Swan",
     startsWith(Resource_Code, "4308") ~ "Crane",
@@ -579,29 +627,42 @@ be <- be %>%
     startsWith(Resource_Code, "43") ~ "Egg",
   ))
 
-##for now, working at the genus level, as this will be consistent, can come back to try and id lower in the taxonomy for certain birds if needed
 
-be_func <- function(x){
-  df_prep <- x
-  family_total <- df_prep %>%
-    filter(is.na(Season)) %>%
-    filter(!is.na(Genus)) %>%
-    group_by(Genus) %>%
-    mutate_if(is.numeric, sum) %>%
-    #mutate_if(is.character, funs(paste(unique(.), collapse = "_"))) %>%
-    distinct()
-}
+##are there other groups that are only identified to a higher level like family that i am missing..????
 
-be_test <- split(be, paste0(be$Site_Year_Code)) %>%
-  map(be_func) %>%
-  bind_rows()
+be$Conversion_Units_To_Pounds <- as.character(be$Conversion_Units_To_Pounds)
+be$Est_Comm_Population <- as.character(be$Est_Comm_Population)
 
-##this also does not work JESUSUSSS FUCCCKKKKKk - come back to the birds this is driving me nuts
-test <- be %>%
-  filter(Site_Year_Code == "Angoon_1984") 
+be_test <- be %>%
+  filter(is.na(Season)) %>%
+  filter(!is.na(Family)) %>%
+  group_by(Site_Year_Code, Family) %>%
+  filter(!Family %in% Family[!is.na(Genus)]) ##filters out familys where genus is not NA -- so i think these are only families where further genus level does not exist
 
-##5) MARINE INVERTEBRATES -----------------
+be_test_a <- be %>%
+  filter(is.na(Season)) %>%
+  filter(!is.na(Genus)) %>%
+  group_by(Site_Year_Code, Family, Genus) %>%
+  filter(!Genus %in% Genus[!is.na(Species)])
 
+be_test_b <- be %>%
+  filter(is.na(Season)) %>%
+  filter(!is.na(Species))
+
+
+be_final <- rbind(be_test, be_test_a, be_test_b) %>%
+  select(Project_Name, Site_Year_Code, Habitat, General_Category, General_Category_lvl2, Family, Genus, Species, Type, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population) %>%
+  mutate(Genus = coalesce(Genus, Family)) %>%
+  mutate(Species = coalesce(Species, Genus)) %>%
+  select(Project_Name, Site_Year_Code, Habitat, General_Category, General_Category_lvl2, Family, Species, Type, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population) 
+  
+##note: removed genus level so that can join to other main groups that don't have this level, if genus is missing, it is now in the species name
+
+
+ # group_by(Project_Name, Site_Year_Code, Habitat, General_Category, Family, Species, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population) %>%
+#  summarise(across(where(is.numeric), sum)) this is not quite working, do this later.. 
+
+#5) MARINE INVERTEBRATES -----------------
 marine_inverts_code <- "5"
 
 mi <- df_comp %>% 
@@ -679,7 +740,6 @@ mi <- mi %>%
     startsWith(Resource_Code, "5040") ~ "Whelk",
     startsWith(Resource_Code, "5099") ~ "Unknown Marine Invertebrates",
   )) %>%
-  )) %>%
   mutate(Species = case_when(
     startsWith(Resource_Code, "5002") ~ "Abalone",
     startsWith(Resource_Code, "500404") ~ "Red (large) Chiton",
@@ -700,6 +760,7 @@ mi <- mi %>%
     startsWith(Resource_Code, "50100804") ~ "Brown King Crab",
     startsWith(Resource_Code, "50100808") ~ "Red King Crab",
     startsWith(Resource_Code, "50100899") ~ "Unknown King Crab",
+    startsWith(Resource_Code, "50101200") ~ "Tanner Crab",
     startsWith(Resource_Code, "50101202") ~ "Tanner Crab, Bairdi", ##tanner crab also has summary level
     startsWith(Resource_Code, "5010129") ~ "Unknown Tanner Crab",
     startsWith(Resource_Code, "50109") ~ "Unknown Crab",
@@ -726,7 +787,7 @@ mi <- mi %>%
     startsWith(Resource_Code, "5099") ~ "Unknown Marine Invertebrates",
   )) %>%
   mutate(Habitat = case_when(
-    grepl("King Crab", Species) ~ "Marine",
+    grepl("King Crab", Genus) ~ "Marine",
     startsWith(Family, "Octopus") ~ "Marine",
     startsWith(Family, "Scallop") ~ "Marine", 
     startsWith(Family, "Shrimp") ~ "Marine",
@@ -747,30 +808,55 @@ mi <- mi %>%
     startsWith(Family, "Oyster") ~ "Marine",
     startsWith(Family, "Starfish") ~ "Nearshore",
     startsWith(Family, "Unknown Marine Invert") ~ "Marine",
+    startsWith(Family, "Whelk") ~ "Nearshore",
   ))
 
+mi$Conversion_Units_To_Pounds <- as.character(mi$Conversion_Units_To_Pounds)
+mi$Est_Comm_Population <- as.character(mi$Est_Comm_Population)
+str(mi)
 mi_func <- function(x){
   df_prep <- x
   family_total <- df_prep %>%
     filter(is.na(Fishing_Gear_Type)) %>%
-    filter(!is.na(Species)) %>%
+    filter(!is.na(Genus)) %>%
     group_by(Species) %>%
     mutate_if(is.numeric, sum) %>%
     #mutate_if(is.character, funs(paste(unique(.), collapse = "_"))) %>%
     distinct()
 }
 
-mi_test <- split(mi, paste0(mi$Site_Year_Code)) %>%
+mi_test_1 <- split(mi, paste0(mi$Site_Year_Code)) %>%
   map(mi_func) %>%
   bind_rows() %>%
-  select(Site_Year_Code, Habitat, General_Category, General_Category_lvl2, Family, Species, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest)
+  select(Project_Name, Site_Year_Code, Habitat, General_Category, General_Category_lvl2, Family, Genus, Species, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population) %>%
+  separate(Site_Year_Code, c("Site", "Year"), "_" )
 
+##king crab -- surveys before 1990 are not broken down further, so do these separately
+##tanner crab -- only ever broken down into biardi or unknown, so am just keeping the tanner crab level
+##doing king and tanner separately as taking different approach 
+mi_test_2 <- mi_test_1 %>%
+  filter(Year < "1990") %>%
+  filter(Genus != "Tanner Crab") 
+mi_test_2$Species <- mi_test_2$Species %>% replace_na("King Crab")
+  ##replace na in species column to king crab.. ?
+
+mi_test_3 <- mi_test_1 %>%
+  filter(Year > "1990") %>%
+  filter(Genus != "Tanner Crab") %>%
+  filter(!is.na(Species))
+
+mi_test_4 <- mi_test_1 %>%
+  filter(Species == "Tanner Crab") 
+##remove genus later after solve crab issue
+mi_final <- rbind(mi_test_2, mi_test_3, mi_test_4) 
+  
+##when is king and tanner crab broken down and when not? 
 ##issue with king crab and tanner crab, sometimes broken down further, sometimes not.. 
 
 test <- mi %>%
   filter(Site_Year_Code == "Angoon_1984")
 
-##6) VEGETATION --------------------
+#6) VEGETATION --------------------
 
 veg_code <- "6"
 
@@ -788,11 +874,14 @@ veg <- veg %>%
   mutate(General_Category_lvl2 = "Vegetation") %>% ##don't think has another general cat
   mutate(Family = case_when(
     startsWith(Resource_Code, "6010") ~ "Berries",
-    startsWith(Resource_Code, "6020") ~ "Plants/Greens/Mushrooms",
+    startsWith(Resource_Code, "6020400") ~ "Mushrooms", 
+    startsWith(Resource_Code, "602046") ~ "Mushrooms",
+    startsWith(Resource_Code, "6020") ~ "Plants/Greens", 
+ ##want to break this down and separate this more... or maybe just add other functional traits but this is very broad
     startsWith(Resource_Code, "6030") ~ "Seaweed/Kelp",
     startsWith(Resource_Code, "6040") ~ "Wood", ##wood will have to be removed for diversity calculations
     startsWith(Resource_Code, "6050") ~ "Coal", ##remove for diversity calc
-    startsWith(Resource_Code, "6053") ~ "Kelp for Fertilizer", ##remove for diversity calc
+    startsWith(Resource_Code, "6053") ~ "Seaweed/Kelp", ##remove for diversity calc
   )) %>%
   mutate(Species = case_when(
     startsWith(Resource_Code, "601002") ~ "Blueberry",
@@ -835,7 +924,7 @@ veg <- veg %>%
     startsWith(Resource_Code, "603008") ~ "Sea Ribbons",
     startsWith(Resource_Code, "603010") ~ "Giant Kelp",
     startsWith(Resource_Code, "603012") ~ "Alaria",
-    startsWith(Resource_Code, "603090") ~ "Seaweed/Kelp Used for Fertilizer", ##This should also not be considered in diversity calcuations 
+    startsWith(Resource_Code, "603090") ~ "Unknown Seaweed", ##made the seaweed/kelp for fertilizer just unknown seaweed, as don't know which seaweed species but is not a new species 
     startsWith(Resource_Code, "603099") ~ "Unknown Seaweed",
     startsWith(Resource_Code, "604011") ~ "Alder",
     startsWith(Resource_Code, "604099") ~ "Other Wood",
@@ -860,11 +949,12 @@ veg <- veg %>%
     startsWith(Resource_Code, "604004") ~ "Roots",
     startsWith(Resource_Code, "602044") ~ "Stinkweed",
     startsWith(Resource_Code, "602048") ~ "Unknown Greens from Land",
-    startsWith(Resource_Code, "60204604") ~ "Chaga", ##one higher level is fungus, is chaga always fungus or is sometimes fingus reported and not chaga?
+    startsWith(Resource_Code, "60204604") ~ "Chaga", ##one higher level is fungus, is chaga always fungus or is sometimes fingus reported and not chaga? - 
+    startsWith(Resource_Code, "6020460") ~ "Fungus",
     startsWith(Resource_Code, "602052") ~ "Wild Chives",
     startsWith(Resource_Code, "604013") ~ "Willow",
     startsWith(Resource_Code, "6050") ~ "Coal",
-    startsWith(Resource_Code, "6053") ~ "Kelp for Fertilizer",
+    startsWith(Resource_Code, "6053") ~ "Unknown Kelp", ##Made kelp for fertilizer unknown kelp, as it is not a different species, have retained fertilizer in the use category
   )) %>%
   mutate(Harvest_Type = case_when(
     endsWith(Resource_Code, "2") ~ "Non Commercial",
@@ -873,7 +963,14 @@ veg <- veg %>%
   mutate(Habitat = case_when(
     grepl("Kelp", Family) ~ "Nearshore",
     !grepl("Kelp", Family) ~ "Terrestrial",
-  ))
+  )) %>%
+mutate(Use = case_when(
+  grepl("Fertilizer", Resource_Name) ~ "Fertilizer",
+))
+
+
+veg$Conversion_Units_To_Pounds <- as.character(veg$Conversion_Units_To_Pounds)
+veg$Est_Comm_Population <- as.character(veg$Est_Comm_Population)
 
 veg_func <- function(x){
   df_prep <- x
@@ -886,11 +983,21 @@ veg_func <- function(x){
     distinct()
 }
 
-veg_test <- split(veg, paste0(veg$Site_Year_Code)) %>%
+veg_final <- split(veg, paste0(veg$Site_Year_Code)) %>%
   map(veg_func) %>%
   bind_rows() %>%
-  select(Site_Year_Code, Habitat, General_Category, General_Category_lvl2, Family, Species, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest)
+  select(Site_Year_Code, Habitat, General_Category, General_Category_lvl2, Family, Species, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest) %>%
+  filter(Species != "Fungus") %>%##fungus and chaga only recorded in Yakutat_2015, where it is a duplicate, so will filter out the fungus row
+  distinct(.keep_all = TRUE) ##gets rid of duplicate unknown seaweed row
 
-##only 1 mushroom record in whole SE dataset? others are unknown mushrooms all grouped together -- will need to think about how do we handle unknowns?
+
+
+  
+
 ##Note: for now, have decided to go to the level of each species, and use the existing per capita harvets and total estimated lbs harvested to move forward with trying to establish food web approach.
 ##
+#Join all dataframes together ----------
+df_final <- rbind(fish_final, lm_final, mm_final, be_final, mi_final, veg_final)
+
+write.csv(df_final, "intermediate_files/harvest_data_clean.csv")
+##note: will need to check that didn't remove any family level IDs where it was just not broken down further in earlier surveys...this did happen for birds but i dont think elsewhere where i didn't catch it but need to make sure

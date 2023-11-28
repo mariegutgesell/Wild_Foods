@@ -50,7 +50,8 @@ ct_test <- df %>%
   filter(Site_Year_Code == "Angoon_1996") 
 ##no, separate surveys conducted. and values not identical, as survey protocols are different, and not all communities/years have the targeted marine survey, best to focus on only data from comprehensive survey
 
-
+mushrooms <- df %>%
+  filter(grepl("Mushroom", Resource_Name))
   
 
 ##or could you change orientation so gear type goes long? or make a separate dataframe that has gear type as column
@@ -174,8 +175,8 @@ fish <- fish %>%
     startsWith(Resource_Code, "12409") ~ "Unknown Tuna/Mackerel",
     startsWith(Resource_Code, "125002") ~ "Arctic Char",
     startsWith(Resource_Code, "125004") ~ "Brook Trout", 
-    startsWith(Resource_Code, "125006") ~ "Dolly Varden",
-    startsWith(Resource_Code, "1250069") ~ "Dolly Varden - unknown", ##what does this mean?
+    startsWith(Resource_Code, "1250060") ~ "Dolly Varden",
+    startsWith(Resource_Code, "1250069") ~ "Dolly Varden", ##what does this mean?
     startsWith(Resource_Code, "1252") ~ "Grayling",
     startsWith(Resource_Code, "1254") ~ "Pike",
     startsWith(Resource_Code, "125802") ~ "Green Sturgeon", 
@@ -410,14 +411,22 @@ fam_diff <- rbind(fam_diff_2, fam_diff_3) %>%
 il <- fish %>%
   filter(Species == "Irish Lord" | Species == "Red Irish Lord")
 
+##communities w/ irish lord but no red irish lord breakdown: angoon 1984, haines 1983, klawock 1984 klukwan 1983, tenakee springs 1984, yakutat 1984
+##so essentially for the irish lord, any community sampled before 1985 did not have breakdown into red irish lord
+
+
 ##conversion factors for fish
 fish_cf <- fish %>%
-  select(Site_Year_Code, Project_Name, Family, Species, Roe_Collection_Type, Fishing_Gear_Type, Resource_Harvest_Units, Conversion_Units_To_Pounds) %>%
-  distinct(Site_Year_Code, Project_Name, Species, Resource_Harvest_Units, Conversion_Units_To_Pounds, .keep_all = TRUE)
+  select(Project_Name, Family, Species, Roe_Collection_Type, Fishing_Gear_Type, Resource_Harvest_Units, Conversion_Units_To_Pounds) %>%
+  distinct(Project_Name, Species, Resource_Harvest_Units, Conversion_Units_To_Pounds, .keep_all = TRUE)
 
 test <- fish %>%
   select(Habitat, Site_Year_Code, General_Category, General_Category_lvl2, Family, Species, Roe_Collection_Type, Fishing_Gear_Type, Resource_Harvest_Units, Conversion_Units_To_Pounds, Number_Of_Resource_Harvested, Reported_Pounds_Harvested) %>%
   filter(Site_Year_Code == "Klukwan_2014")
+
+##how many species do we not have a # of reported fish?
+##but there are also a bunch with inaccurate reported number..no this is for the family sum, so if working from the species level this should be fine
+
   
 #2) Land Mammals ------------------
 land_mammal_code <- "2"
@@ -907,11 +916,12 @@ be_sp_list <- be %>%
   filter(is.na(Season)) %>%
   distinct(Habitat, General_Category, General_Category_lvl2, Family, Genus, Species)
 
-##do the species within families add up? only break down is in small land mammals
+##do the species within families add up? 
 be_fam_sum_test_func <- function(x){
   fam_db <- x %>%
     filter(is.na(Season)) %>%
     filter(is.na(Species)) %>%
+    filter(is.na(Genus)) %>%
     group_by(Site_Year_Code, Family, Type) %>%
     summarise_at(vars(Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest), sum, na.rm = TRUE) %>%
     rename_with(~paste0(., "_db_sum"), Reported_Pounds_Harvested:Percent_Of_Total_Harvest)
@@ -950,11 +960,17 @@ be_fam_diff_3 <- be_fam_diff_test %>%
 be_fam_diff <- rbind(be_fam_diff_2, be_fam_diff_3) %>%##these are not going to be mutually exclusive... some rows could be >2 some less than >2
   distinct(Site_Year_Code, Family, Type, .keep_all = TRUE)
 
-
+setwd("~/Desktop/Wild Foods Repo/")
+write.csv(be_fam_diff, "intermediate_files/be_family_sum_large_differences.csv")  
 
 test <- be %>%
-  filter(Site_Year_Code == "Angoon_1984") %>%
-  filter(Family == "Geese")
+  filter(Site_Year_Code == "Angoon_2012") %>%
+  filter(Family == "Ducks")
+
+
+##Reasons why not adding up at:
+##
+
 
 ##want to select genus level data if not broken down further, but keep species level if genus is broken down further.. 
 ##could i group by site_year_code, then filter out species not na and then species na but not genus na... ?? 
@@ -971,6 +987,351 @@ test3 <- be %>%
 
 test4 <- 
 ##no still not right.. 
+  
+##5) MARINE INVERTEBRATES -----------------
+marine_inverts_code <- "5"
+
+mi <- df_comp %>% 
+  filter(str_detect(Resource_Code, '^5')) 
+
+mi$Resource_Code  <- format(mi$Resource_Code, scientific = FALSE)
+mi$Resource_Code <- as.character(mi$Resource_Code) 
+str(mi)
+
+mi <- mi %>%
+  mutate(Fishing_Gear_Type = case_when(
+    endsWith(Resource_Code, "1") ~ "CF_Retention", ##CF_retention
+    endsWith(Resource_Code, "2") ~ "Non Commercial Gear", 
+  )) %>%
+  mutate(General_Category = "Marine Invertebrates") %>%
+  mutate(General_Category_lvl2 = "Marine Invertebrates") %>%
+  mutate(Family = case_when(
+    startsWith(Resource_Code, "5002") ~ "Abalone",
+    startsWith(Resource_Code, "5004") ~ "Chiton",
+    startsWith(Resource_Code, "5006") ~ "Clam",
+    startsWith(Resource_Code, "5008") ~ "Cockle",
+    startsWith(Resource_Code, "5010") ~ "Crab",
+    startsWith(Resource_Code, "5012") ~ "Geoduck",
+    startsWith(Resource_Code, "5018") ~ "Limpet",
+    startsWith(Resource_Code, "5020") ~ "Mussel",
+    startsWith(Resource_Code, "5022") ~ "Octopus",
+    startsWith(Resource_Code, "5024") ~ "Oyster",
+    startsWith(Resource_Code, "5026") ~ "Scallop",
+    startsWith(Resource_Code, "5030") ~ "Sea Cucumber",
+    startsWith(Resource_Code, "5032") ~ "Sea Urchin",
+    startsWith(Resource_Code, "5034") ~ "Shrimp",
+    startsWith(Resource_Code, "5037") ~ "Starfish",
+    startsWith(Resource_Code, "5038") ~ "Squid",
+    startsWith(Resource_Code, "5040") ~ "Whelk",
+    startsWith(Resource_Code, "5099") ~ "Unknown Marine Invertebrates",
+  )) %>%
+  mutate(Genus = case_when(
+    startsWith(Resource_Code, "5002") ~ "Abalone",
+    startsWith(Resource_Code, "500404") ~ "Red (large) Chiton",
+    startsWith(Resource_Code, "500408") ~ "Black (small) Chiton",
+    startsWith(Resource_Code, "500499") ~ "Unknown Chiton",
+    startsWith(Resource_Code, "500602") ~ "Butter Clam",
+    startsWith(Resource_Code, "500606") ~ "Horse Clam",
+    startsWith(Resource_Code, "500608") ~ "Pacific Littleneck Clam",
+    startsWith(Resource_Code, "500610") ~ "Pinkneck Clam",
+    startsWith(Resource_Code, "500612") ~ "Razor Clam",
+    startsWith(Resource_Code, "50069") ~ "Unknown Clam",
+    startsWith(Resource_Code, "500802") ~ "Basket Cockle",
+    startsWith(Resource_Code, "500804") ~ "Heart Cockle",
+    startsWith(Resource_Code, "500899") ~ "Unknown Cockle",
+    startsWith(Resource_Code, "501002") ~ "Box Crab",
+    startsWith(Resource_Code, "501004") ~ "Dungeness Crab",
+    startsWith(Resource_Code, "501008") ~ "King Crab", ##are the king crabs always broken down? do we need another level here?
+    startsWith(Resource_Code, "501012") ~ "Tanner Crab", ##tanner crab also has summary level
+    startsWith(Resource_Code, "50109") ~ "Unknown Crab",
+    startsWith(Resource_Code, "5012") ~ "Geoduck",
+    startsWith(Resource_Code, "5014") ~ "Limpet",
+    startsWith(Resource_Code, "502002") ~ "Blue Mussel",
+    startsWith(Resource_Code, "502099") ~ "Unknown Mussel",
+    startsWith(Resource_Code, "5022") ~ "Octopus",
+    startsWith(Resource_Code, "50240") ~ "Oyster",
+    startsWith(Resource_Code, "50249") ~ "Unknown Oyster",
+    startsWith(Resource_Code, "502602") ~ "Weathervane Scallop",
+    startsWith(Resource_Code, "502604") ~ "Rock Scallops",
+    startsWith(Resource_Code, "502699") ~ "Unknown Scallop",
+    startsWith(Resource_Code, "503004") ~ "Yein Sea Cucumber",
+    startsWith(Resource_Code, "503099") ~ "Unknown Sea Cucumber",
+    startsWith(Resource_Code, "503202") ~ "Green Sea Urchin",
+    startsWith(Resource_Code, "503204") ~ "Red Sea Urchin",
+    startsWith(Resource_Code, "503206") ~ "Purple Sea Urchin",
+    startsWith(Resource_Code, "50329") ~ "Unknown Sea Urchin",
+    startsWith(Resource_Code, "5034") ~ "Shrimp",
+    startsWith(Resource_Code, "5037") ~ "Starfish",
+    startsWith(Resource_Code, "5038") ~ "Squid",
+    startsWith(Resource_Code, "5040") ~ "Whelk",
+    startsWith(Resource_Code, "5099") ~ "Unknown Marine Invertebrates",
+  )) %>%
+  mutate(Species = case_when(
+    startsWith(Resource_Code, "5002") ~ "Abalone",
+    startsWith(Resource_Code, "500404") ~ "Red (large) Chiton",
+    startsWith(Resource_Code, "500408") ~ "Black (small) Chiton",
+    startsWith(Resource_Code, "500499") ~ "Unknown Chiton",
+    startsWith(Resource_Code, "500602") ~ "Butter Clam",
+    startsWith(Resource_Code, "500606") ~ "Horse Clam",
+    startsWith(Resource_Code, "500608") ~ "Pacific Littleneck Clam",
+    startsWith(Resource_Code, "500610") ~ "Pinkneck Clam",
+    startsWith(Resource_Code, "500612") ~ "Razor Clam",
+    startsWith(Resource_Code, "50069") ~ "Unknown Clam",
+    startsWith(Resource_Code, "500802") ~ "Basket Cockle",
+    startsWith(Resource_Code, "500804") ~ "Heart Cockle",
+    startsWith(Resource_Code, "500899") ~ "Unknown Cockle",
+    startsWith(Resource_Code, "501002") ~ "Box Crab",
+    startsWith(Resource_Code, "501004") ~ "Dungeness Crab",
+    startsWith(Resource_Code, "50100802") ~ "Blue King Crab", ##are the king crabs always broken down? do we need another level here?
+    startsWith(Resource_Code, "50100804") ~ "Brown King Crab",
+    startsWith(Resource_Code, "50100808") ~ "Red King Crab",
+    startsWith(Resource_Code, "50100899") ~ "Unknown King Crab",
+    startsWith(Resource_Code, "50101202") ~ "Tanner Crab, Bairdi", ##tanner crab also has summary level
+    startsWith(Resource_Code, "5010129") ~ "Unknown Tanner Crab",
+    startsWith(Resource_Code, "50109") ~ "Unknown Crab",
+    startsWith(Resource_Code, "5012") ~ "Geoduck",
+    startsWith(Resource_Code, "5014") ~ "Limpet",
+    startsWith(Resource_Code, "502002") ~ "Blue Mussel",
+    startsWith(Resource_Code, "502099") ~ "Unknown Mussel",
+    startsWith(Resource_Code, "5022") ~ "Octopus",
+    startsWith(Resource_Code, "50240") ~ "Oyster",
+    startsWith(Resource_Code, "50249") ~ "Unknown Oyster",
+    startsWith(Resource_Code, "502602") ~ "Weathervane Scallop",
+    startsWith(Resource_Code, "502604") ~ "Rock Scallops",
+    startsWith(Resource_Code, "502699") ~ "Unknown Scallop",
+    startsWith(Resource_Code, "503004") ~ "Yein Sea Cucumber",
+    startsWith(Resource_Code, "503099") ~ "Unknown Sea Cucumber",
+    startsWith(Resource_Code, "503202") ~ "Green Sea Urchin",
+    startsWith(Resource_Code, "503204") ~ "Red Sea Urchin",
+    startsWith(Resource_Code, "503206") ~ "Purple Sea Urchin",
+    startsWith(Resource_Code, "50329") ~ "Unknown Sea Urchin",
+    startsWith(Resource_Code, "5034") ~ "Shrimp",
+    startsWith(Resource_Code, "5037") ~ "Starfish",
+    startsWith(Resource_Code, "5038") ~ "Squid",
+    startsWith(Resource_Code, "5040") ~ "Whelk",
+    startsWith(Resource_Code, "5099") ~ "Unknown Marine Invertebrates",
+  )) %>%
+  mutate(Habitat = case_when(
+    grepl("King Crab", Species) ~ "Marine",
+    startsWith(Family, "Octopus") ~ "Marine",
+    startsWith(Family, "Scallop") ~ "Marine", 
+    startsWith(Family, "Shrimp") ~ "Marine",
+    grepl("Tanner Crab", Species) ~ "Marine",
+    startsWith(Family, "Abalone") ~ "Nearshore",
+    startsWith(Family, "Chiton") ~ "Nearshore",
+    startsWith(Family, "Clam") ~ "Nearshore",
+    startsWith(Family, "Cockle") ~ "Nearshore",
+    startsWith(Species, "Dungeness") ~ "Nearshore",
+    startsWith(Family, "Geoduck") ~ "Nearshore",
+    startsWith(Family, "Limpet") ~ "Nearshore",
+    startsWith(Family, "Mussel") ~ "Nearshore",
+    startsWith(Family, "Sea Cucumber") ~ "Nearshore",
+    startsWith(Family, "Sea Urchin") ~ "Nearshore",
+    startsWith(Family, "Squid") ~ "Marine", 
+    startsWith(Species, "Box Crab") ~ "Marine",
+    startsWith(Species, "Unknown Crab") ~ "Marine",
+    startsWith(Family, "Oyster") ~ "Marine",
+    startsWith(Family, "Starfish") ~ "Nearshore",
+    startsWith(Family, "Unknown Marine Invert") ~ "Marine",
+  ))
+
+
+mi_str <- mi %>%
+  distinct(Habitat, General_Category, General_Category_lvl2, Family, Genus, Species,  Resource_Code, Resource_Name, Fishing_Gear_Type)
+
+mi_sp_list <- mi %>%
+  filter(!is.na(Species)) %>%
+  filter(is.na(Fishing_Gear_Type)) %>%
+  distinct(Habitat, General_Category, General_Category_lvl2, Family, Genus, Species)
+
+##do the species within families add up? 
+mi_fam_sum_test_func <- function(x){
+  fam_db <- x %>%
+    filter(is.na(Fishing_Gear_Type)) %>%
+    filter(is.na(Genus)) %>%
+    group_by(Site_Year_Code, Family) %>%
+    summarise_at(vars(Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest), sum, na.rm = TRUE) %>%
+    rename_with(~paste0(., "_db_sum"), Reported_Pounds_Harvested:Percent_Of_Total_Harvest)
+  fam_calc <- x %>%
+    filter(is.na(Fishing_Gear_Type)) %>%
+    filter(Genus != "NA") %>%
+    group_by(Site_Year_Code, Family) %>%
+    summarise_at(vars(Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest), sum, na.rm = TRUE) %>%
+    rename_with(~paste0(., "_fam_sum"), Reported_Pounds_Harvested:Percent_Of_Total_Harvest)
+  fam_sum <- inner_join(fam_db, fam_calc, by = c("Site_Year_Code", "Family")) %>%
+    select(Site_Year_Code, Family, sort(names(.)))
+} 
+
+mi_fam_sum_test <- split(mi, paste0(mi$Site_Year_Code)) %>%
+  map(mi_fam_sum_test_func) %>%
+  bind_rows()
+
+mi_fam_diff_test <- mi_fam_sum_test %>%
+  group_by(Site_Year_Code, Family) %>%
+  mutate(est_total_lb_harv_diff = Estimated_Total_Pounds_Harvested_db_sum - Estimated_Total_Pounds_Harvested_fam_sum) %>%
+  mutate(est_amount_harv_diff = Estimated_Amount_Harvested_db_sum - Estimated_Amount_Harvested_fam_sum) %>%
+  mutate(mean_lb_perhousehold_diff = Mean_Pounds_Per_Household_db_sum - Mean_Pounds_Per_Household_fam_sum) %>%
+  mutate(num_res_harv_diff = Number_Of_Resource_Harvested_db_sum - Number_Of_Resource_Harvested_fam_sum) %>%
+  mutate(percap_lb_harv_diff = Percapita_Pounds_Harvested_db_sum - Percapita_Pounds_Harvested_fam_sum) %>%
+  mutate(per_total_harv_diff = Percent_Of_Total_Harvest_db_sum - Percent_Of_Total_Harvest_fam_sum) %>%
+  mutate(rep_lb_harv_diff = Reported_Pounds_Harvested_db_sum - Reported_Pounds_Harvested_fam_sum) %>%
+  select(Site_Year_Code, Family, est_total_lb_harv_diff, est_amount_harv_diff, mean_lb_perhousehold_diff, num_res_harv_diff, percap_lb_harv_diff, per_total_harv_diff,  rep_lb_harv_diff)
+
+str(mi_fam_diff_test)
+##determine where magnitude is > +/- 2
+mi_fam_diff_2 <- mi_fam_diff_test %>%
+  filter(if_any(est_total_lb_harv_diff:rep_lb_harv_diff, ~ .x > 2))
+
+mi_fam_diff_3 <- mi_fam_diff_test %>%
+  filter(if_any(est_total_lb_harv_diff:rep_lb_harv_diff, ~ .x < -2))
+mi_fam_diff <- rbind(mi_fam_diff_2, mi_fam_diff_3) %>%##these are not going to be mutually exclusive... some rows could be >2 some less than >2
+  distinct(Site_Year_Code, Family, .keep_all = TRUE)
+
+##trying to figure out why such a large magnitude of differences:
+#setwd("~/Desktop/Wild Foods Repo/")
+#write.csv(mi_fam_diff, "intermediate_files/mi_family_sum_large_differences.csv")  
+
+test <- mi %>%
+  filter(Family == "Crab")
+
+
+
+##Crabs not broken down: surveys done before 1990 -- Angoon_1984,Angoon_1987, Beecher Pass_1987, Coffman Cove_1987, Craig_1987, Edna Bay_1987, Elfin Cove_1987, Gustavus_1987,  Haines_1983, Haines_1987, Hollis_1987, Hoonah_1985, Hoonah_1987, Hydaburg_1987, Hyder_1987, Kake_1985, Kake_1987, Kasaan_1987
+
+##Reasons for large differences
+##1. Crabs -- king crab and tanner crab are broken down further sometimes, so where broken down further, need to remove that intermediate genus summary line
+###Seeming like king crab only not broken down in early years.. can then take same approach as irish lord
+##for tanner crab, it is either unknown tanner crab or tanner crab - biardi, i think makes most sense to just keep the tanner crab level 
+###Note: unknown tanner crab is a subsection of tanner crab... fuckng stupid 
+##2. Family level sum of total estimated amount and/or reported number harvested are the weights, not the sum of # of individuals, this will be resolved when removing that family level sum line
+##3. Minor addition errors at the family level, removing this level will fix these issues 
+
+
+##6) VEGETATION --------------------
+
+veg_code <- "6"
+
+veg <- df_comp %>% 
+  filter(str_detect(Resource_Code, '^6')) 
+
+veg$Resource_Code  <- format(veg$Resource_Code, scientific = FALSE)
+veg$Resource_Code <- as.character(veg$Resource_Code) 
+str(veg)
+sp_veg <- veg %>%
+  distinct(Resource_Code, Resource_Name)
+
+veg <- veg %>%
+  mutate(General_Category = "Vegetation") %>%
+  mutate(General_Category_lvl2 = "Vegetation") %>% ##don't think has another general cat
+  mutate(Family = case_when(
+    startsWith(Resource_Code, "6010") ~ "Berries",
+    startsWith(Resource_Code, "6020400") ~ "Mushrooms", 
+    startsWith(Resource_Code, "602046") ~ "Mushrooms",
+    startsWith(Resource_Code, "6020") ~ "Plants/Greens", 
+    ##want to break this down and separate this more... or maybe just add other functional traits but this is very broad
+    startsWith(Resource_Code, "6030") ~ "Seaweed/Kelp",
+    startsWith(Resource_Code, "6040") ~ "Wood", ##wood will have to be removed for diversity calculations
+    startsWith(Resource_Code, "6050") ~ "Coal", ##remove for diversity calc
+    startsWith(Resource_Code, "6053") ~ "Seaweed/Kelp", ##remove for diversity calc
+  )) %>%
+  mutate(Species = case_when(
+    startsWith(Resource_Code, "601002") ~ "Blueberry",
+    startsWith(Resource_Code, "601004") ~ "Low Bush Cranberry",
+    startsWith(Resource_Code, "601006") ~ "High Bush Cranberry",
+    startsWith(Resource_Code, "601008") ~ "Elderberry",
+    startsWith(Resource_Code, "601010") ~ "Gooseberry",
+    startsWith(Resource_Code, "601012") ~ "Currants",
+    startsWith(Resource_Code, "601014") ~ "Huckleberry",
+    startsWith(Resource_Code, "601016") ~ "Cloud Berry",
+    startsWith(Resource_Code, "601018") ~ "Nagoonberry",
+    startsWith(Resource_Code, "601020") ~ "Raspberry",
+    startsWith(Resource_Code, "601022") ~ "Salmonberry",
+    startsWith(Resource_Code, "601024") ~ "Soapberry",
+    startsWith(Resource_Code, "601026") ~ "Strawberry",
+    startsWith(Resource_Code, "601028") ~ "Thimbleberry",
+    startsWith(Resource_Code, "601032") ~ "Twisted Stalk Berry (Watermelon Berry)",
+    startsWith(Resource_Code, "602002") ~ "Beach Asparagus",
+    startsWith(Resource_Code, "602004") ~ "Goose Tongue",
+    startsWith(Resource_Code, "602006") ~ "Wild Rhubarb",
+    startsWith(Resource_Code, "602009") ~ "Eskimo Potato",
+    startsWith(Resource_Code, "602012") ~ "Devils Club",
+    startsWith(Resource_Code, "602014") ~ "Fiddlehead Ferns",
+    startsWith(Resource_Code, "602016") ~ "Nettle",
+    startsWith(Resource_Code, "602018") ~ "Hudson Bay Tea",
+    startsWith(Resource_Code, "602020") ~ "Indian Rice",
+    startsWith(Resource_Code, "602022") ~ "Mint",
+    startsWith(Resource_Code, "602024") ~ "Salmonberry Shoots", ##when thinking about diversity, is this really another species?
+    startsWith(Resource_Code, "602026") ~ "Skunk Cabbage",
+    startsWith(Resource_Code, "602028") ~ "Sourdock",
+    startsWith(Resource_Code, "602030") ~ "Spruce Tips",
+    startsWith(Resource_Code, "602032") ~ "Wild Celery",
+    startsWith(Resource_Code, "602034") ~ "Wild Parsley",
+    startsWith(Resource_Code, "602036") ~ "Wild Rose Hips",
+    startsWith(Resource_Code, "602038") ~ "Other Wild Greens", #would we include this in diversity estimates? may need. to also filter out other
+    startsWith(Resource_Code, "602040") ~ "Unknown Mushrooms", ##would we include this in diversity estimates?
+    startsWith(Resource_Code, "603002") ~ "Black Seaweed",
+    startsWith(Resource_Code, "603004") ~ "Bull Kelp",
+    startsWith(Resource_Code, "603006") ~ "Red Seaweed",
+    startsWith(Resource_Code, "603008") ~ "Sea Ribbons",
+    startsWith(Resource_Code, "603010") ~ "Giant Kelp",
+    startsWith(Resource_Code, "603012") ~ "Alaria",
+    startsWith(Resource_Code, "603090") ~ "Unknown Seaweed", ##made the seaweed/kelp for fertilizer just unknown seaweed, as don't know which seaweed species but is not a new species 
+    startsWith(Resource_Code, "603099") ~ "Unknown Seaweed",
+    startsWith(Resource_Code, "604011") ~ "Alder",
+    startsWith(Resource_Code, "604099") ~ "Other Wood",
+    startsWith(Resource_Code, "601007") ~ "Crowberry",
+    startsWith(Resource_Code, "602010") ~ "Other Beach Greens",
+    startsWith(Resource_Code, "602027") ~ "Dandelion Greens",
+    startsWith(Resource_Code, "602037") ~ "Yarrow",
+    startsWith(Resource_Code, "602041") ~ "Sorrel",
+    startsWith(Resource_Code, "602042") ~ "Fireweed",
+    startsWith(Resource_Code, "602043") ~ "Plantain",
+    startsWith(Resource_Code, "603014") ~ "Red Laver (Dulse)",
+    startsWith(Resource_Code, "603016") ~ "Bladder Wrack",
+    startsWith(Resource_Code, "604005") ~ "Spruce Pitch",
+    startsWith(Resource_Code, "601030") ~ "Blackberry",
+    startsWith(Resource_Code, "601099") ~ "Other Wild Berry",
+    startsWith(Resource_Code, "602025") ~ "Lambs Quarter",
+    startsWith(Resource_Code, "604008") ~ "Spruce",
+    startsWith(Resource_Code, "604010") ~ "Cottonwood",
+    startsWith(Resource_Code, "601034") ~ "Serviceberry",
+    startsWith(Resource_Code, "602008") ~ "Wild Sweet Potato",
+    startsWith(Resource_Code, "604002") ~"Bark",
+    startsWith(Resource_Code, "604004") ~ "Roots",
+    startsWith(Resource_Code, "602044") ~ "Stinkweed",
+    startsWith(Resource_Code, "602048") ~ "Unknown Greens from Land",
+    startsWith(Resource_Code, "60204604") ~ "Chaga", ##one higher level is fungus, is chaga always fungus or is sometimes fingus reported and not chaga? - 
+    startsWith(Resource_Code, "6020460") ~ "Fungus",
+    startsWith(Resource_Code, "602052") ~ "Wild Chives",
+    startsWith(Resource_Code, "604013") ~ "Willow",
+    startsWith(Resource_Code, "6050") ~ "Coal",
+    startsWith(Resource_Code, "6053") ~ "Unknown Kelp", ##Made kelp for fertilizer unknown kelp, as it is not a different species, have retained fertilizer in the use category
+  )) %>%
+  mutate(Harvest_Type = case_when(
+    endsWith(Resource_Code, "2") ~ "Non Commercial",
+    endsWith(Resource_Code, "1") ~ "Commercial",
+  )) %>% 
+  mutate(Habitat = case_when(
+    grepl("Kelp", Family) ~ "Nearshore",
+    !grepl("Kelp", Family) ~ "Terrestrial",
+  )) %>%
+  mutate(Use = case_when(
+    grepl("Fertilizer", Resource_Name) ~ "Fertilizer",
+  ))
+
+veg_str <- veg %>%
+  distinct(Habitat, General_Category, General_Category_lvl2, Family, Species,  Resource_Code, Resource_Name, Harvest_Type, Use)
+
+veg_sp_list <- mi %>%
+  filter(!is.na(Species)) %>%
+  filter(is.na(Fishing_Gear_Type)) %>%
+  distinct(Habitat, General_Category, General_Category_lvl2, Family, Genus, Species)
+
+##i changed the categories slightly to separate out mushrooms and added the kelp/seaweed for fertilizer to the seaweed/kelp cateogry, so things won't directly add up but just want to check the fungus/mushrooms thing, otehrwise this is all good to go
+test <- veg %>%
+  filter(Family == "Mushrooms")
+##fungus and chaga only recorded in Yakutat_2015, where it is a duplicate, so will filter out the fungus row
+
 
 ##OLD CODE -------------------
 ##this function removes the total family sum, and the gear specific rows, so takes the already calculated sum within each species, and if there are multiple of each speices (e.g., herring roe, it takes the sum of those)
