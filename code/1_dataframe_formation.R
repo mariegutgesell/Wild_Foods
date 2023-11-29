@@ -466,7 +466,7 @@ be <- be %>%
     startsWith(Resource_Code, "4310") ~ "Shorebird",
     startsWith(Resource_Code, "4312") ~ "Seabirds and Loons",
     startsWith(Resource_Code, "4318") ~ "Upland Game Birds",
-    startsWith(Resource_Code, "4399") ~ "Unknown",
+    startsWith(Resource_Code, "4399") ~ "Unknown Eggs",
   )) %>% 
   mutate(Genus = case_when(
     startsWith(Resource_Code, "410202") ~ "Bufflehead",
@@ -654,13 +654,16 @@ be_final <- rbind(be_test, be_test_a, be_test_b) %>%
   select(Project_Name, Site_Year_Code, Habitat, General_Category, General_Category_lvl2, Family, Genus, Species, Type, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population) %>%
   mutate(Genus = coalesce(Genus, Family)) %>%
   mutate(Species = coalesce(Species, Genus)) %>%
-  select(Project_Name, Site_Year_Code, Habitat, General_Category, General_Category_lvl2, Family, Species, Type, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population) 
+  select(Project_Name, Site_Year_Code, Habitat, General_Category, General_Category_lvl2, Family, Species, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population)
+
   
 ##note: removed genus level so that can join to other main groups that don't have this level, if genus is missing, it is now in the species name
 
+##add eggs and adults together
+#be_final <- be_final %>%
+#   group_by(Project_Name, Site_Year_Code, Habitat, General_Category, Family, Species, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population) %>%
+#   summarise(across(where(is.numeric), sum))
 
- # group_by(Project_Name, Site_Year_Code, Habitat, General_Category, Family, Species, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population) %>%
-#  summarise(across(where(is.numeric), sum)) this is not quite working, do this later.. 
 
 #5) MARINE INVERTEBRATES -----------------
 marine_inverts_code <- "5"
@@ -848,7 +851,10 @@ mi_test_3 <- mi_test_1 %>%
 mi_test_4 <- mi_test_1 %>%
   filter(Species == "Tanner Crab") 
 ##remove genus later after solve crab issue
-mi_final <- rbind(mi_test_2, mi_test_3, mi_test_4) 
+mi_final <- rbind(mi_test_2, mi_test_3, mi_test_4) %>%
+  unite(Site_Year_Code, c(Site, Year), sep = "_", remove = TRUE) %>%
+  select(Project_Name, Site_Year_Code, Habitat, General_Category, General_Category_lvl2, Family, Species, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population)
+
   
 ##when is king and tanner crab broken down and when not? 
 ##issue with king crab and tanner crab, sometimes broken down further, sometimes not.. 
@@ -986,18 +992,18 @@ veg_func <- function(x){
 veg_final <- split(veg, paste0(veg$Site_Year_Code)) %>%
   map(veg_func) %>%
   bind_rows() %>%
-  select(Site_Year_Code, Habitat, General_Category, General_Category_lvl2, Family, Species, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest) %>%
+  select(Project_Name, Site_Year_Code, Habitat, General_Category, General_Category_lvl2, Family, Species, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population) %>%
   filter(Species != "Fungus") %>%##fungus and chaga only recorded in Yakutat_2015, where it is a duplicate, so will filter out the fungus row
   distinct(.keep_all = TRUE) ##gets rid of duplicate unknown seaweed row
 
 
 
-  
-
 ##Note: for now, have decided to go to the level of each species, and use the existing per capita harvets and total estimated lbs harvested to move forward with trying to establish food web approach.
 ##
 #Join all dataframes together ----------
-df_final <- rbind(fish_final, lm_final, mm_final, be_final, mi_final, veg_final)
+df_final <- rbind(fish_final, lm_final, mm_final, be_final, mi_final, veg_final) %>%
+  filter(!if_all(Reported_Pounds_Harvested:Percent_Of_Total_Harvest, ~ .x == 0)) ##remove rows where all values are 0 (nothing was harvested)
 
 write.csv(df_final, "intermediate_files/harvest_data_clean.csv")
 ##note: will need to check that didn't remove any family level IDs where it was just not broken down further in earlier surveys...this did happen for birds but i dont think elsewhere where i didn't catch it but need to make sure
+

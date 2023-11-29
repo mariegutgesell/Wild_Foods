@@ -747,7 +747,7 @@ be <- be %>%
     startsWith(Resource_Code, "4310") ~ "Shorebird",
     startsWith(Resource_Code, "4312") ~ "Seabirds and Loons",
     startsWith(Resource_Code, "4318") ~ "Upland Game Birds",
-    startsWith(Resource_Code, "4399") ~ "Unknown",
+    startsWith(Resource_Code, "4399") ~ "Unknown Eggs",
   )) %>% 
   mutate(Genus = case_when(
     startsWith(Resource_Code, "410202") ~ "Bufflehead",
