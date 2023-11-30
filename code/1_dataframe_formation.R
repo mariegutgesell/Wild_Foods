@@ -483,7 +483,7 @@ be <- be %>%
     startsWith(Resource_Code, "410228") ~ "Scoter", ##scoter always broken down?
     startsWith(Resource_Code, "410232") ~ "Teal", ##teal always broken down?
     startsWith(Resource_Code, "410236") ~ "Wigeon", ##wigeon always broken down?
-    startsWith(Resource_Code, "410299") ~ "Unknown Ducks",
+    startsWith(Resource_Code, "410299") ~ "Unknown Duck",
     startsWith(Resource_Code, "410402") ~ "Brant",
     startsWith(Resource_Code, "410404") ~ "Canada Geese", ##canada geese always broken down?
     startsWith(Resource_Code, "410406") ~ "Emperor Geese",
@@ -558,7 +558,7 @@ be <- be %>%
     startsWith(Resource_Code, "41023299") ~ "Unknown Teal",
     startsWith(Resource_Code, "41023602") ~ "American Wigeon", ##wigeon always broken down?
     startsWith(Resource_Code, "41023699") ~ "Unknown Wigeon",
-    startsWith(Resource_Code, "410299") ~ "Unknown Ducks",
+    startsWith(Resource_Code, "410299") ~ "Unknown Duck",
     startsWith(Resource_Code, "410402") ~ "Brant",
     startsWith(Resource_Code, "41040406") ~ "Dusky Canada Geese", ##canada geese always broken down?
     startsWith(Resource_Code, "41040408") ~ "Lesser Canada Geese",
@@ -628,7 +628,7 @@ be <- be %>%
   ))
 
 
-##are there other groups that are only identified to a higher level like family that i am missing..????
+##are there other groups that are only identified to a higher level like family that i am missing..???? yes...need to re do this. 
 
 be$Conversion_Units_To_Pounds <- as.character(be$Conversion_Units_To_Pounds)
 be$Est_Comm_Population <- as.character(be$Est_Comm_Population)
@@ -688,7 +688,7 @@ mi <- mi %>%
     startsWith(Resource_Code, "5006") ~ "Clam",
     startsWith(Resource_Code, "5008") ~ "Cockle",
     startsWith(Resource_Code, "5010") ~ "Crab",
-    startsWith(Resource_Code, "5012") ~ "Geoduck",
+    startsWith(Resource_Code, "5012") ~ "Clam",
     startsWith(Resource_Code, "5018") ~ "Limpet",
     startsWith(Resource_Code, "5020") ~ "Mussel",
     startsWith(Resource_Code, "5022") ~ "Octopus",
@@ -721,7 +721,7 @@ mi <- mi %>%
     startsWith(Resource_Code, "501008") ~ "King Crab", ##are the king crabs always broken down? do we need another level here?
     startsWith(Resource_Code, "501012") ~ "Tanner Crab", ##tanner crab also has summary level
     startsWith(Resource_Code, "50109") ~ "Unknown Crab",
-    startsWith(Resource_Code, "5012") ~ "Geoduck",
+    startsWith(Resource_Code, "5012") ~ "Geoduck Clam",
     startsWith(Resource_Code, "5014") ~ "Limpet",
     startsWith(Resource_Code, "502002") ~ "Blue Mussel",
     startsWith(Resource_Code, "502099") ~ "Unknown Mussel",
@@ -767,7 +767,7 @@ mi <- mi %>%
     startsWith(Resource_Code, "50101202") ~ "Tanner Crab, Bairdi", ##tanner crab also has summary level
     startsWith(Resource_Code, "5010129") ~ "Unknown Tanner Crab",
     startsWith(Resource_Code, "50109") ~ "Unknown Crab",
-    startsWith(Resource_Code, "5012") ~ "Geoduck",
+    startsWith(Resource_Code, "5012") ~ "Geoduck Clam",
     startsWith(Resource_Code, "5014") ~ "Limpet",
     startsWith(Resource_Code, "502002") ~ "Blue Mussel",
     startsWith(Resource_Code, "502099") ~ "Unknown Mussel",
@@ -833,6 +833,9 @@ mi_test_1 <- split(mi, paste0(mi$Site_Year_Code)) %>%
   bind_rows() %>%
   select(Project_Name, Site_Year_Code, Habitat, General_Category, General_Category_lvl2, Family, Genus, Species, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population) %>%
   separate(Site_Year_Code, c("Site", "Year"), "_" )
+##the issue with this, is that if a higher level is not there but it was reported, eg. scallops, this makes that information lost.. maybe take the approach you did for the birds for everything.. 
+
+
 
 ##king crab -- surveys before 1990 are not broken down further, so do these separately
 ##tanner crab -- only ever broken down into biardi or unknown, so am just keeping the tanner crab level

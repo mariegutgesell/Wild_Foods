@@ -229,6 +229,8 @@ fish_test <- fish %>%
   group_by(Site_Year_Code) %>%
   count()
   
+test2 <- fish %>%
+  filter(Family == "Lamprey")
 ##have 65 separate food webs to construct :D 
 
 ##function to test whether sum of gear types within species matches with sum value already given in database
