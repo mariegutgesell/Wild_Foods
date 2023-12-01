@@ -48,14 +48,14 @@ fish <- fish %>%
     endsWith(Resource_Code, "2") ~ "Rod_Reel", ##Rod and Real
     endsWith(Resource_Code, "3") ~ "Other_Gear", ##Other Gear
   )) %>%
-  mutate(General_Category = case_when(
+  mutate(Taxa_lvl1 = case_when(
     startsWith(Resource_Code, "1") ~ "Fish",
   )) %>%
-  mutate(General_Category_lvl2 = case_when(
+  mutate(Taxa_lvl2 = case_when(
     startsWith(Resource_Code, "11") ~ "Salmon",
     startsWith(Resource_Code, "12") ~ "Non-Salmon Fish",
   )) %>%
-  mutate(Family = case_when(
+  mutate(Taxa_lvl3 = case_when(
     startsWith(Resource_Code, "11") ~ "Oncorhynchus",
     startsWith(Resource_Code, "1202") ~ "Clupeidae",
     startsWith(Resource_Code, "1203") ~ "Clupeidae",
@@ -86,7 +86,39 @@ fish <- fish %>%
     startsWith(Resource_Code, "1248") ~ "Burbot",
     startsWith(Resource_Code, "1256") ~ "Sheefish",
   )) %>%
-  mutate(Species = case_when(
+  mutate(Taxa_lvl4 = case_when(
+    startsWith(Resource_Code, "11") ~ "Oncorhynchus",
+    startsWith(Resource_Code, "1202") ~ "Clupeidae",
+    startsWith(Resource_Code, "1203") ~ "Clupeidae",
+    startsWith(Resource_Code, "1204") ~ "Osmeridae",
+    startsWith(Resource_Code, "1206") ~ "Bass", ##only groups are sea bass and unknown bass, but they could belong to different families? 
+    startsWith(Resource_Code, "1208") ~ "Blenny", 
+    startsWith(Resource_Code, "1210") ~ "Gadidae", ##what species sum up the cods?
+    startsWith(Resource_Code, "1212") ~ "Eel",
+    startsWith(Resource_Code, "1214") ~ "Flounder",
+    startsWith(Resource_Code, "1216") ~ "Hexagrammidae",
+    startsWith(Resource_Code, "1218") ~ "Halibut",
+    startsWith(Resource_Code, "1220") ~ "Lamprey",
+    startsWith(Resource_Code, "1222") ~ "Perch", 
+    startsWith(Resource_Code, "1226") ~ "Rockfish",
+    startsWith(Resource_Code, "1228") ~ "Sablefish",
+    startsWith(Resource_Code, "123006") ~ "Irish Lord",
+    startsWith(Resource_Code, "1230") ~ "Sculpin",
+    startsWith(Resource_Code, "1232") ~ "Shark",
+    startsWith(Resource_Code, "1234") ~ "Skates",
+    startsWith(Resource_Code, "1236") ~ "Sole",
+    startsWith(Resource_Code, "1240") ~ "Tuna_Mackerel",
+    startsWith(Resource_Code, "1250") ~ "Char",
+    startsWith(Resource_Code, "1252") ~ "Grayling",
+    startsWith(Resource_Code, "1254") ~ "Pike",
+    startsWith(Resource_Code, "1258") ~ "Sturgeon",
+    startsWith(Resource_Code, "1262") ~ "Trout",
+    startsWith(Resource_Code, "1264") ~ "Whitefish",
+    startsWith(Resource_Code, "129") ~ "Unknown Non-Salmon Fish",
+    startsWith(Resource_Code, "1248") ~ "Burbot",
+    startsWith(Resource_Code, "1256") ~ "Sheefish",
+  )) %>%
+  mutate(Taxa_lvl5 = case_when(
     startsWith(Resource_Code, "111") ~ "Chum Salmon",
     startsWith(Resource_Code, "112") ~ "Coho Salmon",
     startsWith(Resource_Code, "113") ~ "Chinook Salmon",
@@ -133,7 +165,7 @@ fish <- fish %>%
     startsWith(Resource_Code, "1228") ~ "Sablefish (black cod)", 
     startsWith(Resource_Code, "123002") ~ "Buffalo Sculpin", 
     startsWith(Resource_Code, "123004") ~ "Bullhead Sculpin",
-    startsWith(Resource_Code, "12300600") ~ "Irish Lord",
+    #startsWith(Resource_Code, "12300600") ~ "Irish Lord",
     startsWith(Resource_Code, "12300602") ~ "Red Irish Lord",
     startsWith(Resource_Code, "12309") ~ "Unknown Sculpin",
     startsWith(Resource_Code, "123202") ~ "Dogfish",
@@ -165,13 +197,13 @@ fish <- fish %>%
     startsWith(Resource_Code, "1256") ~ "Sheefish",
   )) %>%
   mutate(Habitat = case_when(
-    startsWith(General_Category_lvl2, "Salmon") ~ "Freshwater_Anadromous",
-    startsWith(Family, "Osmeridae") ~ "Freshwater_Anadromous",
-    startsWith(Family, "Char") ~ "Freshwater_Anadromous",
-    startsWith(Family, "Trout") ~ "Freshwater_Anadromous",
-    startsWith(Family, "Whitefish") ~ "Freshwater_Anadromous",
-    startsWith(Species, "Herring Roe") ~ "Nearshore",
-    startsWith(General_Category_lvl2, "Non-Salmon") ~ "Marine",
+    startsWith(Taxa_lvl2, "Salmon") ~ "Freshwater_Anadromous",
+    startsWith(Taxa_lvl3, "Osmeridae") ~ "Freshwater_Anadromous",
+    startsWith(Taxa_lvl3, "Char") ~ "Freshwater_Anadromous",
+    startsWith(Taxa_lvl3, "Trout") ~ "Freshwater_Anadromous",
+    startsWith(Taxa_lvl3, "Whitefish") ~ "Freshwater_Anadromous",
+    startsWith(Taxa_lvl5, "Herring Roe") ~ "Nearshore",
+    startsWith(Taxa_lvl2, "Non-Salmon") ~ "Marine",
   )) %>%
   mutate(Roe_Collection_Type = case_when(
     startsWith(Resource_Code, "120302") ~ "Unspecified",
@@ -179,70 +211,65 @@ fish <- fish %>%
     startsWith(Resource_Code, "120306") ~ "Spawn on Kelp",
     startsWith(Resource_Code, "120308") ~ "Roe on Hair Seaweed",
     startsWith(Resource_Code, "120310") ~ "Roe in Hemlock Branches",
-  )) %>%
-  mutate(Species_lvl2 = case_when(
-    startsWith(Resource_Code, "12300602") ~ "Red Irish Lord",
   ))
-
+fish_str <- fish %>%
+  distinct(Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Resource_Code, Resource_Name, Fishing_Gear_Type, Roe_Collection_Type)
 str(fish)
-##this function removes the total family sum, and the gear specific rows, so takes the already calculated sum within each species, and if there are multiple of each speices (e.g., herring roe, it takes the sum of those)
-##want don't want to add conversion units, resource harvest units or estimated community population
+#change these to character so dont get added 
 fish$Conversion_Units_To_Pounds <- as.character(fish$Conversion_Units_To_Pounds)
 fish$Est_Comm_Population <- as.character(fish$Est_Comm_Population)
 str(fish)
-fish_func <- function(x){
-  df_prep <- x
-  family_total <- df_prep %>%
-    filter(Fishing_Gear_Type == "NA") %>%
-    filter(!is.na(Species)) %>%
-    group_by(Species) %>%
-    mutate_if(is.numeric, sum) %>%
-    mutate_if(is.character, funs(paste(unique(.), collapse = "_"))) %>%
-    distinct()
-}
+##select rows where the family level is not broken down further in a certain year/community
+fish1 <- fish %>%
+  filter(Fishing_Gear_Type == "NA") %>%
+  filter(!is.na(Taxa_lvl3)) %>%
+  group_by(Site_Year_Code, Taxa_lvl3) %>%
+  filter(!Taxa_lvl3 %in% Taxa_lvl3[!is.na(Taxa_lvl4)]) ##filters out familys where genus is not NA -- so i think these are only families where further genus level does not exist (i.e., family is the lowest level ID for that year/community)
 
-fish_test_1 <- split(fish, paste0(fish$Site_Year_Code)) %>%
-  map(fish_func) %>%
-  bind_rows() %>%
-  select(Project_Name, Site_Year_Code, Habitat, General_Category, General_Category_lvl2, Family, Species, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population)
+##select rows where the genus level is not broken down further for a certain year/community
+fish2 <- fish %>%
+  filter(Fishing_Gear_Type == "NA") %>%
+  filter(!is.na(Taxa_lvl4)) %>%
+  group_by(Site_Year_Code, Taxa_lvl3, Taxa_lvl4) %>%
+  filter(!Taxa_lvl4 %in% Taxa_lvl4[!is.na(Taxa_lvl5)])
 
-##Resolve the Irish Lord issue
-##Irish lord is only fish w/ additional category level, yet years before 1985 do not have the extra category, need to remove irish lord level (as is duplicate of red irish lord from sites after 1984)
-##Communities w/ irish lord but no red irish lord breakdown: angoon 1984, haines 1983, klawock 1984 klukwan 1983, tenakee springs 1984, yakutat 1984
+##select rows where species level is not broken down further for a certain year/community 
+fish3 <- fish %>%
+  filter(Fishing_Gear_Type == "NA") %>%
+  filter(!is.na(Taxa_lvl5))
 
-fish_test_2 <- fish_test_1 %>%
-  filter(Site_Year_Code != "Angoon_1984") %>%
-  filter(Site_Year_Code != "Haines_1983") %>%
-  filter(Site_Year_Code != "Klawock_1984") %>%
-  filter(Site_Year_Code != "Klukwan_1983") %>%
-  filter(Site_Year_Code != "Tenakee Springs_1984") %>%
-  filter(Site_Year_Code != "Yakutat_1984") %>%
-  filter(Species != "Irish Lord")
+fish4 <- rbind(fish1, fish2, fish3)
 
-fish_test_3 <- fish_test_1 %>%
-  filter(Site_Year_Code %in% c("Angoon_1984", "Haines_1983", "Klawock_1984", "Klukwan_1983", "Tenakee Springs_1984", "Yakutat_1984")) 
-
-fish_test_4 <- rbind(fish_test_2, fish_test_3)
 
 ##Resolve the Dolly Varden Issue
-##Klukwan_2014 dolly varden -- kind of a mess, need to figure out but data looks messed up  - Yakutat 2015 and Klukwan 2014 are the only ones with this dolly varden unknown species -- see notes in excel sheet
+##Yakutat 2015 and Klukwan 2014 are the only ones with this dolly varden unknown species, and it is a duplicate of the dolly varden row in these communities/years
 ##    - For both of these places, the dolly varden-unknown looks like the right data (at least for these 7 variables..), these are the only two sites with this dv unknown, so my feeling is select the dv unknown for these two sites.. 
-fish_test_5 <- fish_test_4 %>%
+##select the two year-communities that have the dolly varden unknown, and then are removing the two rows that are just dolly varden name, keep dolly-varden unknown and then change name to dolly varden (makes sure we don't have duplicated data)
+fish5 <- fish4 %>%
   filter(Site_Year_Code %in% c("Klukwan_2014", "Yakutat_2015")) %>%
-  filter(Species != "Dolly Varden") 
-fish_test_5$Species[fish_test_5$Species == "Dolly Varden - unknown"] <- "Dolly Varden"  
+  filter(Taxa_lvl5 != "Dolly Varden") 
+fish5$Taxa_lvl5[fish5$Taxa_lvl5 == "Dolly Varden - unknown"] <- "Dolly Varden"  
 
-fish_test_6 <- fish_test_4 %>%
+##select all other sites and then will bind this back together 
+fish6 <- fish4 %>%
   filter(Site_Year_Code != "Klukwan_2014") %>%
   filter(Site_Year_Code != "Yakutat_2015")
 
-##This is now the final, cleaned fish data w/ 1 row for each species at the lowest species level, but ignoring gear type (includes conversion units, harvest units, and population size so if want to later can go back and re-calculate estimates, and or adjust values based on updated conversion units)
-fish_final <- rbind(fish_test_5, fish_test_6) 
+fish7 <- rbind(fish5, fish6) %>%
+  select(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population) %>%
+  mutate(Taxa_lvl4 = coalesce(Taxa_lvl4, Taxa_lvl3)) %>%
+  mutate(Taxa_lvl5 = coalesce(Taxa_lvl5, Taxa_lvl4))
+  
+##sum rows where is same species in community/year (e.g., multiple types of herring roe)
+fish_final <- fish7 %>%
+  group_by(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population) %>%
+  summarise(across(where(is.numeric), sum))
+  
 
 ##Note: I may go back and try and calculate these values myself from the beginning, as I am wary, but am moving forward this way for now. 
 
 #clean up environment
-rm(fish_test_1, fish_test_2, fish_test_3, fish_test_4, fish_test_5, fish_test_6)
+rm(fish1, fish2, fish3, fish4, fish5, fish6, fish7)
 
 
 #2) LAND MAMMALS ------------------
@@ -262,12 +289,12 @@ lm <- lm %>%
     endsWith(Resource_Code, "2") ~ "Female", 
     endsWith(Resource_Code, "9") ~ "Unknown",
   )) %>%
-  mutate(General_Category = "Land Mammals") %>%
-  mutate(General_Category_lvl2 = case_when(
+  mutate(Taxa_lvl1 = "Land Mammals") %>%
+  mutate(Taxa_lvl2 = case_when(
     startsWith(Resource_Code, "21") ~ "Large Land Mammals",
     startsWith(Resource_Code, "22") ~ "Small Land Mammals",
   )) %>%
-  mutate(Family = case_when( ##since the mammals aren't broken down into families (no sums at that level, will just make family and species the same.. )
+  mutate(Taxa_lvl3 = case_when( ##only small land mammals are broken down further 
     startsWith(Resource_Code, "2106") ~ "Black Bear",
     startsWith(Resource_Code, "2108") ~ "Brown Bear",
     startsWith(Resource_Code, "2110") ~ "Caribou",
@@ -296,7 +323,36 @@ lm <- lm %>%
     startsWith(Resource_Code, "2199") ~ "Unknown Large Land Mammal",
     startsWith(Resource_Code, "2299") ~ "Unknown Small Land Mammals/Furbearers"
   )) %>%
-  mutate(Species = case_when( ##since the mammals aren't broken down into families (no sums at that level, will just make family and species the same.. )
+  mutate(Taxa_lvl4 = case_when( ##no "genus" level for land mammals, so keeping this the same as the family, but doing this so matches with other large categories as want to retain that info
+    startsWith(Resource_Code, "2106") ~ "Black Bear",
+    startsWith(Resource_Code, "2108") ~ "Brown Bear",
+    startsWith(Resource_Code, "2110") ~ "Caribou",
+    startsWith(Resource_Code, "2112") ~ "Deer",
+    startsWith(Resource_Code, "2114") ~ "Elk", 
+    startsWith(Resource_Code, "2116") ~ "Goat", 
+    startsWith(Resource_Code, "2118") ~ "Moose",
+    startsWith(Resource_Code, "2122") ~ "Dall Sheep",
+    startsWith(Resource_Code, "2202") ~ "Beaver",
+    startsWith(Resource_Code, "2204") ~ "Coyote",
+    startsWith(Resource_Code, "2208") ~ "Fox", 
+    startsWith(Resource_Code, "2210") ~ "Hare",
+    startsWith(Resource_Code, "2212") ~ "Land Otter",
+    startsWith(Resource_Code, "2216") ~ "Lynx",
+    startsWith(Resource_Code, "2218") ~ "Marmot",
+    startsWith(Resource_Code, "2220") ~ "Marten",
+    startsWith(Resource_Code, "2222") ~ "Mink",
+    startsWith(Resource_Code, "2224") ~ "Muskrat",
+    startsWith(Resource_Code, "2226") ~ "Porcupine", 
+    startsWith(Resource_Code, "2228") ~ "Squirrel", 
+    startsWith(Resource_Code, "2230") ~ "Weasel",
+    startsWith(Resource_Code, "2232") ~ "Wolf",
+    startsWith(Resource_Code, "2234" ) ~ "Wolverine",
+    startsWith(Resource_Code, "2120") ~ "Muskox",
+    startsWith(Resource_Code, "2104") ~ "Bison", 
+    startsWith(Resource_Code, "2199") ~ "Unknown Large Land Mammal",
+    startsWith(Resource_Code, "2299") ~ "Unknown Small Land Mammals/Furbearers"
+  )) %>%
+  mutate(Taxa_lvl5 = case_when( ##only small mammals broken down further
     startsWith(Resource_Code, "2106") ~ "Black Bear",
     startsWith(Resource_Code, "2108") ~ "Brown Bear",
     startsWith(Resource_Code, "2110") ~ "Caribou",
@@ -331,22 +387,37 @@ lm <- lm %>%
 
 lm$Conversion_Units_To_Pounds <- as.character(lm$Conversion_Units_To_Pounds)
 lm$Est_Comm_Population <- as.character(lm$Est_Comm_Population)
-lm_func <- function(x){
-  df_prep <- x
-  family_total <- df_prep %>%
-    filter(is.na(Sex)) %>%
-    filter(!is.na(Species)) %>%
-    group_by(Species) %>%
-    mutate_if(is.numeric, sum) %>%
-    mutate_if(is.character, funs(paste(unique(.), collapse = "_"))) %>%
-    distinct()
-}
 
-##
-lm_final <- split(lm, paste0(lm$Site_Year_Code)) %>%
-  map(lm_func) %>%
-  bind_rows() %>%
-  select(Project_Name, Site_Year_Code, Habitat, General_Category, General_Category_lvl2, Family, Species, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population)
+##select rows where the family level is not broken down further in a certain year/community
+lm1 <- lm %>%
+  filter(is.na(Sex)) %>%
+  filter(!is.na(Taxa_lvl3)) %>%
+  group_by(Site_Year_Code, Taxa_lvl3) %>%
+  filter(!Taxa_lvl3 %in% Taxa_lvl3[!is.na(Taxa_lvl4)]) ##filters out familys where genus is not NA -- so i think these are only families where further genus level does not exist (i.e., family is the lowest level ID for that year/community)
+
+##select rows where the genus level is not broken down further for a certain year/community
+lm2 <- lm %>%
+  filter(is.na(Sex)) %>%
+  filter(!is.na(Taxa_lvl4)) %>%
+  group_by(Site_Year_Code, Taxa_lvl3, Taxa_lvl4) %>%
+  filter(!Taxa_lvl4 %in% Taxa_lvl4[!is.na(Taxa_lvl5)])
+
+##select rows where species level is not broken down further for a certain year/community 
+lm3 <- lm %>%
+  filter(is.na(Sex)) %>%
+  filter(!is.na(Taxa_lvl5))
+
+lm4 <- rbind(lm1, lm2, lm3) %>%
+  select(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population) %>%
+  mutate(Taxa_lvl4 = coalesce(Taxa_lvl4, Taxa_lvl3)) %>%
+  mutate(Taxa_lvl5 = coalesce(Taxa_lvl5, Taxa_lvl4))
+
+lm_final <- lm4 %>%
+  group_by(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population) %>%
+  summarise(across(where(is.numeric), sum))
+
+#clean up environment
+rm(lm1, lm2, lm3, lm4)
 ##Note: there are some small land mammals where there are # of resources harvested, but no estimated weight, so will need to decide if we want to go and determine conversion units and then calculate estimated weight
 ##I feel like an intermediate solution oculd be to determine estimated dressed weight for these species where this has occurred, so not needing to re-do all convserions, but for these particular cases to have some  estimate of weight that is comparable to the other estimates  
 ##This doesn't solve the issue that some of the conversion estimates are likely mistakes in the database (e.g., brown bear conversion used for black bear conversion but this is an option)
@@ -373,23 +444,30 @@ mm <- mm %>%
     grepl("Male", Resource_Name) ~ "Male",
     grepl("Female", Resource_Name) ~ "Female",
   )) %>%
-  mutate(General_Category = "Marine Mammals") %>%
-  mutate(General_Category_lvl2 = case_when( ##don't have a category level 2, so leaving it as marine mammals.. 
+  mutate(Taxa_lvl1 = "Marine Mammals") %>%
+  mutate(Taxa_lvl2 = case_when( ##don't have a category level 2, so leaving it as marine mammals.. 
     startsWith(Resource_Code, "30") ~ "Marine Mammals",
   )) %>%
-  mutate(Family = case_when(
+  mutate(Taxa_lvl3 = case_when(
     startsWith(Resource_Code, "3008") ~ "Seal", 
     startsWith(Resource_Code, "3010") ~ "Sea Otter",
     startsWith(Resource_Code, "3012") ~ "Stellar Sea Lion",
     startsWith(Resource_Code, "3016") ~ "Whale",
     startsWith(Resource_Code, "3099") ~ "Unknown Marine Mammals",
     startsWith(Resource_Code, "3014") ~ "Walrus",
-    
   )) %>%
-  mutate(Species = case_when(
-    startsWith(Resource_Code, "300804") ~ "Fur Seal", 
+  mutate(Taxa_lvl4 = case_when( ##keeping this as "genus" level, just to match to other categories 
+    startsWith(Resource_Code, "3008") ~ "Seal", 
+    startsWith(Resource_Code, "3010") ~ "Sea Otter",
+    startsWith(Resource_Code, "3012") ~ "Stellar Sea Lion",
+    startsWith(Resource_Code, "3016") ~ "Whale",
+    startsWith(Resource_Code, "3099") ~ "Unknown Marine Mammals",
+    startsWith(Resource_Code, "3014") ~ "Walrus",
+  )) %>%
+  mutate(Taxa_lvl5 = case_when(
+    startsWith(Resource_Code, "30080400") ~ "Fur Seal", 
     startsWith(Resource_Code, "30080404") ~ "Fur Seal (other)", ##what is a fur seal other?? 
-    startsWith(Resource_Code, "300806") ~ "Harbor Seal",
+    startsWith(Resource_Code, "30080600") ~ "Harbor Seal",
     startsWith(Resource_Code, "30080604") ~ "Harbour Seal (saltwater)", ##is this a different habitat? can it be captured that way? as not really different species
     startsWith(Resource_Code, "300899") ~ "Unknown Seal",
     startsWith(Resource_Code, "300888") ~ "Unknown Seal Oil",
@@ -404,24 +482,38 @@ mm <- mm %>%
 
 mm$Conversion_Units_To_Pounds <- as.character(mm$Conversion_Units_To_Pounds)
 mm$Est_Comm_Population <- as.character(mm$Est_Comm_Population)
-mm_func <- function(x){
-  df_prep <- x
-  family_total <- df_prep %>%
-    filter(is.na(Sex)) %>%
-    filter(!is.na(Species)) %>%
-    group_by(Species) %>%
-    mutate_if(is.numeric, sum) %>%
-    #mutate_if(is.character, funs(paste(unique(.), collapse = "_"))) %>%
-    distinct()
-}
 
-mm_final <- split(mm, paste0(mm$Site_Year_Code)) %>%
-  map(mm_func) %>%
-  bind_rows() %>%
-  filter(Resource_Name != "Harbor Seal (saltwater)") %>% ##removed harbor seal (saltwater) and fur seal (other) as always a replicate when it does come up
-  filter(Resource_Name != "Fur Seal (other)") %>%
-  select(Project_Name, Site_Year_Code, Habitat, General_Category, General_Category_lvl2, Family, Species, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population)
+##select rows where the family level is not broken down further in a certain year/community
+mm1 <- mm %>%
+  filter(is.na(Sex)) %>%
+  filter(!is.na(Taxa_lvl3)) %>%
+  group_by(Site_Year_Code, Taxa_lvl3) %>%
+  filter(!Taxa_lvl3 %in% Taxa_lvl3[!is.na(Taxa_lvl4)]) ##filters out familys where genus is not NA -- so i think these are only families where further genus level does not exist (i.e., family is the lowest level ID for that year/community)
 
+##select rows where the genus level is not broken down further for a certain year/community
+mm2 <- mm %>%
+  filter(is.na(Sex)) %>%
+  filter(!is.na(Taxa_lvl4)) %>%
+  group_by(Site_Year_Code, Taxa_lvl3, Taxa_lvl4) %>%
+  filter(!Taxa_lvl4 %in% Taxa_lvl4[!is.na(Taxa_lvl5)])
+
+##select rows where species level is not broken down further for a certain year/community 
+mm3 <- mm %>%
+  filter(is.na(Sex)) %>%
+  filter(!is.na(Taxa_lvl5))
+
+mm4 <- rbind(mm1, mm2, mm3) %>%
+  select(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population) %>%
+  mutate(Taxa_lvl4 = coalesce(Taxa_lvl4, Taxa_lvl3)) %>%
+  mutate(Taxa_lvl5 = coalesce(Taxa_lvl5, Taxa_lvl4)) %>%
+  filter(Taxa_lvl5 != "Harbor Seal (saltwater)") %>% ##removed harbor seal (saltwater) and fur seal (other) as always a replicate when it does come up
+  filter(Taxa_lvl5 != "Fur Seal (other)")
+  
+mm_final <- mm4 %>%
+  group_by(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population) %>%
+  summarise(across(where(is.numeric), sum))
+
+rm(mm1, mm2, mm3, mm4)
 
 #4) BIRDS AND EGGS -----------------
 
@@ -443,13 +535,13 @@ be <- be %>%
     grepl("Spring", Resource_Name) ~ "Spring",
     grepl("Season Unknown", Resource_Name) ~ "Unknown",
   )) %>%
-  mutate(General_Category = "Birds and Eggs") %>%
-  mutate(General_Category_lvl2 = case_when(
+  mutate(Taxa_lvl1 = "Birds and Eggs") %>%
+  mutate(Taxa_lvl2 = case_when(
     startsWith(Resource_Code, "41") ~ "Migratory Birds",
     startsWith(Resource_Code, "42") ~ "Other Birds", 
     startsWith(Resource_Code, "43") ~ "Bird Eggs",
   )) %>%
-  mutate(Family = case_when(
+  mutate(Taxa_lvl3 = case_when(
     startsWith(Resource_Code, "4102") ~ "Ducks",
     startsWith(Resource_Code, "4104") ~ "Geese",
     startsWith(Resource_Code, "4106") ~ "Swan",
@@ -468,24 +560,24 @@ be <- be %>%
     startsWith(Resource_Code, "4318") ~ "Upland Game Birds",
     startsWith(Resource_Code, "4399") ~ "Unknown Eggs",
   )) %>% 
-  mutate(Genus = case_when(
+  mutate(Taxa_lvl4 = case_when(
     startsWith(Resource_Code, "410202") ~ "Bufflehead",
     startsWith(Resource_Code, "410204") ~ "Canvasback",
     startsWith(Resource_Code, "410208") ~ "Gadwall",
-    startsWith(Resource_Code, "410210") ~ "Goldeneye", ##need to check, is goldeneye always broken down? or are there times when only goldeneye is recorded and not further broken down? 
+    startsWith(Resource_Code, "410210") ~ "Goldeneye", 
     startsWith(Resource_Code, "410212") ~ "Harlequin",
     startsWith(Resource_Code, "410214") ~ "Mallard",
-    startsWith(Resource_Code, "410216") ~ "Merganser", ##merganser always broken down?
+    startsWith(Resource_Code, "410216") ~ "Merganser", 
     startsWith(Resource_Code, "410218") ~ "Long-tailed Duck (Oldsquaw)",
     startsWith(Resource_Code, "410220") ~ "Northern Pintail",
     startsWith(Resource_Code, "410222") ~ "Redhead Duck",
-    startsWith(Resource_Code, "410226") ~ "Scaup", ##scaup always broken down?
-    startsWith(Resource_Code, "410228") ~ "Scoter", ##scoter always broken down?
-    startsWith(Resource_Code, "410232") ~ "Teal", ##teal always broken down?
-    startsWith(Resource_Code, "410236") ~ "Wigeon", ##wigeon always broken down?
+    startsWith(Resource_Code, "410226") ~ "Scaup", 
+    startsWith(Resource_Code, "410228") ~ "Scoter", 
+    startsWith(Resource_Code, "410232") ~ "Teal", 
+    startsWith(Resource_Code, "410236") ~ "Wigeon", 
     startsWith(Resource_Code, "410299") ~ "Unknown Duck",
     startsWith(Resource_Code, "410402") ~ "Brant",
-    startsWith(Resource_Code, "410404") ~ "Canada Geese", ##canada geese always broken down?
+    startsWith(Resource_Code, "410404") ~ "Canada Geese", 
     startsWith(Resource_Code, "410406") ~ "Emperor Geese",
     startsWith(Resource_Code, "410408") ~ "Snow Geese",
     startsWith(Resource_Code, "410410") ~ "White-fronted Geese",
@@ -495,25 +587,25 @@ be <- be %>%
     startsWith(Resource_Code, "410802") ~ "Sandhill Crane",
     startsWith(Resource_Code, "411002") ~ "Wilson's Snipe",
     startsWith(Resource_Code, "411004") ~ "Black Oystercatcher",
-    startsWith(Resource_Code, "411099") ~ "Unknown Shorebirds", ##do they always break down unknown into large/small?
+    startsWith(Resource_Code, "411099") ~ "Unknown Shorebirds", 
     startsWith(Resource_Code, "411204") ~ "Cormorants",
-    startsWith(Resource_Code, "411208") ~ "Grebe", ##grebe always broken down?
+    startsWith(Resource_Code, "411208") ~ "Grebe", 
     startsWith(Resource_Code, "411210") ~ "Guillemot",
-    startsWith(Resource_Code, "411212") ~ "Gull",  ##different species than the glaucous winged gull?
+    startsWith(Resource_Code, "411212") ~ "Gull",  
     startsWith(Resource_Code, "411216") ~ "Loon",
     startsWith(Resource_Code, "411222") ~ "Puffin",
     startsWith(Resource_Code, "411226") ~ "Tern",
     startsWith(Resource_Code, "411299") ~ "Unknown Seabirds",
     startsWith(Resource_Code, "4114") ~ "Great Blue Heron",
-    startsWith(Resource_Code, "421802") ~ "Grouse", ##grouse always broken down?
-    startsWith(Resource_Code, "421804") ~ "Ptarmigan", ##ptarmigan always broken down?
+    startsWith(Resource_Code, "421802") ~ "Grouse", 
+    startsWith(Resource_Code, "421804") ~ "Ptarmigan", 
     startsWith(Resource_Code, "421899") ~ "Unknown Upland Game Birds",
     startsWith(Resource_Code, "430214") ~ "Mallard", 
     startsWith(Resource_Code, "430299") ~ "Unknown Duck",
     startsWith(Resource_Code, "430404") ~ "Canada Geese",
     startsWith(Resource_Code, "430499") ~ "Unknown Geese",
     startsWith(Resource_Code, "43060") ~ "Swan",
-    startsWith(Resource_Code, "43069") ~ "Unknown Swan", ##kind of confused by the eggs, need to think about how to organize and will i separate them in a food web? 
+    startsWith(Resource_Code, "43069") ~ "Unknown Swan", 
     startsWith(Resource_Code, "430802") ~ "Sandhill Crane",
     startsWith(Resource_Code, "430899") ~ "Unknown Crane",
     startsWith(Resource_Code, "431004") ~ "Black Oystercatcher",
@@ -524,7 +616,7 @@ be <- be %>%
     startsWith(Resource_Code, "43121299") ~ "Unknown Gull",
     startsWith(Resource_Code, "4312160") ~ "Loon",
     startsWith(Resource_Code, "4312169") ~ "Unknown Loon",
-    startsWith(Resource_Code, "43121802") ~ "Common Murre", ##same value as the murre eggs? is the only breakdown for the murre... 
+    startsWith(Resource_Code, "43121802") ~ "Common Murre",  
     startsWith(Resource_Code, "4312260") ~ "Tern",
     startsWith(Resource_Code, "4312269") ~ "Unknown Tern",
     startsWith(Resource_Code, "43129") ~ "Unknown Seabird",
@@ -532,35 +624,35 @@ be <- be %>%
     startsWith(Resource_Code, "4318029") ~ "Unknown Grouse",
     startsWith(Resource_Code, "4318040") ~ "Ptarmigan",
     startsWith(Resource_Code, "4318049") ~ "Unknown Ptarmigan",
-  )) %>%##should i add an intermediate level? maybe..as there seem to be fair amount that have another level of categorization... 
-  mutate(Species = case_when(
+  )) %>%
+  mutate(Taxa_lvl5 = case_when(
     startsWith(Resource_Code, "410202") ~ "Bufflehead",
     startsWith(Resource_Code, "410204") ~ "Canvasback",
     startsWith(Resource_Code, "410208") ~ "Gadwall",
-    startsWith(Resource_Code, "41021002") ~ "Barrows Goldeneye", ##need to check, is goldeneye always broken down? or are there times when only goldeneye is recorded and not further broken down? 
+    startsWith(Resource_Code, "41021002") ~ "Barrows Goldeneye", 
     startsWith(Resource_Code, "41021004") ~ "Common Goldeneye",
     startsWith(Resource_Code, "4102109") ~ "Unknown Goldeneye",
     startsWith(Resource_Code, "410212") ~ "Harlequin",
     startsWith(Resource_Code, "410214") ~ "Mallard",
-    startsWith(Resource_Code, "41021602") ~ "Common Merganser", ##merganser always broken down?
+    startsWith(Resource_Code, "41021602") ~ "Common Merganser",
     startsWith(Resource_Code, "41021604") ~ "Red-Breasted Merganser",
     startsWith(Resource_Code, "41021699") ~ "Unknown Merganser",
     startsWith(Resource_Code, "410218") ~ "Long-tailed Duck (Oldsquaw)",
     startsWith(Resource_Code, "410220") ~ "Northern Pintail",
     startsWith(Resource_Code, "410222") ~ "Redhead Duck",
-    startsWith(Resource_Code, "41022602") ~ "Greater Scaup", ##scaup always broken down?
+    startsWith(Resource_Code, "41022602") ~ "Greater Scaup",
     startsWith(Resource_Code, "41022604") ~"Lesser Scaup",
     startsWith(Resource_Code, "41022699") ~ "Unknown Scaup",
-    startsWith(Resource_Code, "41022804") ~ "Surf Scoter", ##scoter always broken down?
+    startsWith(Resource_Code, "41022804") ~ "Surf Scoter", 
     startsWith(Resource_Code, "41022806") ~ "White-winged Scoter",
     startsWith(Resource_Code, "41022899") ~ "Unknown Scoter",
-    startsWith(Resource_Code, "41023206") ~ "Green-Winged Teal", ##teal always broken down?
+    startsWith(Resource_Code, "41023206") ~ "Green-Winged Teal", 
     startsWith(Resource_Code, "41023299") ~ "Unknown Teal",
-    startsWith(Resource_Code, "41023602") ~ "American Wigeon", ##wigeon always broken down?
+    startsWith(Resource_Code, "41023602") ~ "American Wigeon", 
     startsWith(Resource_Code, "41023699") ~ "Unknown Wigeon",
     startsWith(Resource_Code, "410299") ~ "Unknown Duck",
     startsWith(Resource_Code, "410402") ~ "Brant",
-    startsWith(Resource_Code, "41040406") ~ "Dusky Canada Geese", ##canada geese always broken down?
+    startsWith(Resource_Code, "41040406") ~ "Dusky Canada Geese", 
     startsWith(Resource_Code, "41040408") ~ "Lesser Canada Geese",
     startsWith(Resource_Code, "4104041") ~ "Vancouver Canada Geese",
     startsWith(Resource_Code, "41040499") ~ "Unknown Canada Geese",
@@ -573,14 +665,14 @@ be <- be %>%
     startsWith(Resource_Code, "410802") ~ "Sandhill Crane",
     startsWith(Resource_Code, "411002") ~ "Wilson's Snipe",
     startsWith(Resource_Code, "411004") ~ "Black Oystercatcher",
-    startsWith(Resource_Code, "41109901") ~ "Unknown Small Shorebirds", ##do they always break down unknown into large/small?
+    startsWith(Resource_Code, "41109901") ~ "Unknown Small Shorebirds", 
     startsWith(Resource_Code, "41109902") ~ "Unknown Large Shorebirds",
     startsWith(Resource_Code, "411204") ~ "Cormorants",
-    startsWith(Resource_Code, "41120802") ~ "Horned Grebe", ##grebe always broken down?
+    startsWith(Resource_Code, "41120802") ~ "Horned Grebe", 
     startsWith(Resource_Code, "41120804") ~ "Red Necked Grebe",
     startsWith(Resource_Code, "41120899") ~ "Unknown Grebe",
     startsWith(Resource_Code, "411210") ~ "Guillemot",
-    startsWith(Resource_Code, "411212") ~ "Gull",  ##different species than the glaucous winged gull?
+    startsWith(Resource_Code, "411212") ~ "Gull",  
     startsWith(Resource_Code, "4112160") ~ "Loon",
     startsWith(Resource_Code, "4112169") ~ "Unknown Loon",
     startsWith(Resource_Code, "4112220") ~ "Puffin",
@@ -588,82 +680,74 @@ be <- be %>%
     startsWith(Resource_Code, "411226") ~ "Tern",
     startsWith(Resource_Code, "411299") ~ "Unknown Seabird",
     startsWith(Resource_Code, "4114") ~ "Great Blue Heron",
-    startsWith(Resource_Code, "42180202") ~ "Spruce Grouse", ##grouse always broken down?
+    startsWith(Resource_Code, "42180202") ~ "Spruce Grouse", 
     startsWith(Resource_Code, "42180206") ~ "Ruffed Grouse",
     startsWith(Resource_Code, "4218029") ~ "Unknown Grouse",
-    startsWith(Resource_Code, "42180402") ~ "Rock Ptarmigan", ##ptarmigan always broken down?
+    startsWith(Resource_Code, "42180402") ~ "Rock Ptarmigan", 
     startsWith(Resource_Code, "42180404") ~ "Willow Ptarmigan",
     startsWith(Resource_Code, "4218049") ~ "Unknown Ptarmigan",
     startsWith(Resource_Code, "421899") ~ "Unknown Upland Game Birds",
-    startsWith(Resource_Code, "430214") ~ "Mallard", 
-    startsWith(Resource_Code, "430299") ~ "Unknown Duck",
-    startsWith(Resource_Code, "43040408") ~ "Lesser Canada Geese",
-    startsWith(Resource_Code, "4304049") ~ "Unknown Canada Geese",
-    startsWith(Resource_Code, "430499") ~ "Unknown Geese",
-    startsWith(Resource_Code, "43060") ~ "Swan",
-    startsWith(Resource_Code, "43069") ~ "Unknown Swan",
-    startsWith(Resource_Code, "430802") ~ "Sandhill Crane",
-    startsWith(Resource_Code, "430899") ~ "Unknown Crane",
-    startsWith(Resource_Code, "431004") ~ "Black Oystercatcher",
-    startsWith(Resource_Code, "43109901" ) ~ "Unknown Small Shorebird",
-    startsWith(Resource_Code, "43109902") ~ "Unknown Large Shorebird",
-    startsWith(Resource_Code, "431210") ~ "Guillemot",
-    startsWith(Resource_Code, "43121204") ~ "Glaucous Winged Gull", ##
-    startsWith(Resource_Code, "43121299") ~ "Unknown Gull",
-    startsWith(Resource_Code, "4312160") ~ "Loon",
-    startsWith(Resource_Code, "4312169") ~ "Unknown Loon",
-    startsWith(Resource_Code, "43121802") ~ "Common Murre", ##same value as the murre eggs? is the only breakdown for the murre... 
-    startsWith(Resource_Code, "4312260") ~ "Tern",
-    startsWith(Resource_Code, "4312269") ~ "Unknown Tern",
-    startsWith(Resource_Code, "431299") ~ "Unknown Seabird",
-    startsWith(Resource_Code, "431802") ~ "Grouse",
-    startsWith(Resource_Code, "4318029") ~ "Unknown Grouse",
-    startsWith(Resource_Code, "4318040") ~ "Ptarmigan",
-    startsWith(Resource_Code, "4318049") ~ "Unknown Ptarmigan",
-  )) %>%
-  mutate(Type = case_when(
-    startsWith(Resource_Code, "41") ~ "Adult",
-    startsWith(Resource_Code, "42") ~ "Adult", 
-    startsWith(Resource_Code, "43") ~ "Egg",
-  ))
+    startsWith(Resource_Code, "430214") ~ "Mallard Egg", 
+    startsWith(Resource_Code, "430299") ~ "Unknown Duck Egg",
+    startsWith(Resource_Code, "43040408") ~ "Lesser Canada Geese Egg",
+    startsWith(Resource_Code, "4304049") ~ "Unknown Canada Geese Egg",
+    startsWith(Resource_Code, "430499") ~ "Unknown Geese Egg",
+    startsWith(Resource_Code, "43060") ~ "Swan Egg",
+    startsWith(Resource_Code, "43069") ~ "Unknown Swan Egg",
+    startsWith(Resource_Code, "430802") ~ "Sandhill Crane Egg",
+    startsWith(Resource_Code, "430899") ~ "Unknown Crane Egg",
+    startsWith(Resource_Code, "431004") ~ "Black Oystercatcher Egg",
+    startsWith(Resource_Code, "43109901" ) ~ "Unknown Small Shorebird Egg",
+    startsWith(Resource_Code, "43109902") ~ "Unknown Large Shorebird Egg",
+    startsWith(Resource_Code, "431210") ~ "Guillemot Egg",
+    startsWith(Resource_Code, "43121204") ~ "Glaucous Winged Gull Egg", ##
+    startsWith(Resource_Code, "43121299") ~ "Unknown Gull Egg",
+    startsWith(Resource_Code, "4312160") ~ "Loon Egg",
+    startsWith(Resource_Code, "4312169") ~ "Unknown Loon Egg",
+    startsWith(Resource_Code, "43121802") ~ "Common Murre Egg", 
+    startsWith(Resource_Code, "4312260") ~ "Tern Egg",
+    startsWith(Resource_Code, "4312269") ~ "Unknown Tern Egg",
+    startsWith(Resource_Code, "431299") ~ "Unknown Seabird Egg",
+    startsWith(Resource_Code, "431802") ~ "Grouse Egg",
+    startsWith(Resource_Code, "4318029") ~ "Unknown Grouse Egg",
+    startsWith(Resource_Code, "4318040") ~ "Ptarmigan Egg",
+    startsWith(Resource_Code, "4318049") ~ "Unknown Ptarmigan Egg",
+  )) 
 
 
 ##are there other groups that are only identified to a higher level like family that i am missing..???? yes...need to re do this. 
-
 be$Conversion_Units_To_Pounds <- as.character(be$Conversion_Units_To_Pounds)
 be$Est_Comm_Population <- as.character(be$Est_Comm_Population)
 
-be_test <- be %>%
+be1 <- be %>%
   filter(is.na(Season)) %>%
-  filter(!is.na(Family)) %>%
-  group_by(Site_Year_Code, Family) %>%
-  filter(!Family %in% Family[!is.na(Genus)]) ##filters out familys where genus is not NA -- so i think these are only families where further genus level does not exist
+  filter(!is.na(Taxa_lvl3)) %>%
+  group_by(Site_Year_Code, Taxa_lvl3) %>%
+  filter(!Taxa_lvl3 %in% Taxa_lvl3[!is.na(Taxa_lvl4)]) ##filters out familys where genus is not NA -- so i think these are only families where further genus level does not exist
 
-be_test_a <- be %>%
+be2 <- be %>%
   filter(is.na(Season)) %>%
-  filter(!is.na(Genus)) %>%
-  group_by(Site_Year_Code, Family, Genus) %>%
-  filter(!Genus %in% Genus[!is.na(Species)])
+  filter(!is.na(Taxa_lvl4)) %>%
+  group_by(Site_Year_Code, Taxa_lvl3, Taxa_lvl4) %>%
+  filter(!Taxa_lvl4 %in% Taxa_lvl4[!is.na(Taxa_lvl5)])
 
-be_test_b <- be %>%
+be3 <- be %>%
   filter(is.na(Season)) %>%
-  filter(!is.na(Species))
+  filter(!is.na(Taxa_lvl5))
 
 
-be_final <- rbind(be_test, be_test_a, be_test_b) %>%
-  select(Project_Name, Site_Year_Code, Habitat, General_Category, General_Category_lvl2, Family, Genus, Species, Type, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population) %>%
-  mutate(Genus = coalesce(Genus, Family)) %>%
-  mutate(Species = coalesce(Species, Genus)) %>%
-  select(Project_Name, Site_Year_Code, Habitat, General_Category, General_Category_lvl2, Family, Species, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population)
+be4 <- rbind(be1, be2, be3) %>%
+  select(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population) %>%
+  mutate(Taxa_lvl4 = coalesce(Taxa_lvl4, Taxa_lvl3)) %>%
+  mutate(Taxa_lvl5 = coalesce(Taxa_lvl5, Taxa_lvl4)) %>%
+  distinct() ## for sitka_2013 for some reason the large and small shorebirds are duplicated, just removing these (only duplicate row)
 
-  
-##note: removed genus level so that can join to other main groups that don't have this level, if genus is missing, it is now in the species name
 
-##add eggs and adults together
-#be_final <- be_final %>%
-#   group_by(Project_Name, Site_Year_Code, Habitat, General_Category, Family, Species, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population) %>%
-#   summarise(across(where(is.numeric), sum))
+be_final <- be4 %>%
+  group_by(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population) %>%
+  summarise(across(where(is.numeric), sum))
 
+rm(be1, be2, be3, be4)
 
 #5) MARINE INVERTEBRATES -----------------
 marine_inverts_code <- "5"
@@ -680,9 +764,9 @@ mi <- mi %>%
     endsWith(Resource_Code, "1") ~ "CF_Retention", ##CF_retention
     endsWith(Resource_Code, "2") ~ "Non Commercial Gear", 
   )) %>%
-  mutate(General_Category = "Marine Invertebrates") %>%
-  mutate(General_Category_lvl2 = "Marine Invertebrates") %>%
-  mutate(Family = case_when(
+  mutate(Taxa_lvl1 = "Marine Invertebrates") %>%
+  mutate(Taxa_lvl2 = "Marine Invertebrates") %>%
+  mutate(Taxa_lvl3 = case_when(
     startsWith(Resource_Code, "5002") ~ "Abalone",
     startsWith(Resource_Code, "5004") ~ "Chiton",
     startsWith(Resource_Code, "5006") ~ "Clam",
@@ -702,7 +786,7 @@ mi <- mi %>%
     startsWith(Resource_Code, "5040") ~ "Whelk",
     startsWith(Resource_Code, "5099") ~ "Unknown Marine Invertebrates",
   )) %>%
-  mutate(Genus = case_when(
+  mutate(Taxa_lvl4 = case_when(
     startsWith(Resource_Code, "5002") ~ "Abalone",
     startsWith(Resource_Code, "500404") ~ "Red (large) Chiton",
     startsWith(Resource_Code, "500408") ~ "Black (small) Chiton",
@@ -734,7 +818,7 @@ mi <- mi %>%
     startsWith(Resource_Code, "503004") ~ "Yein Sea Cucumber",
     startsWith(Resource_Code, "503099") ~ "Unknown Sea Cucumber",
     startsWith(Resource_Code, "503202") ~ "Green Sea Urchin",
-    startsWith(Resource_Code, "503204") ~ "Read Sea Urchin",
+    startsWith(Resource_Code, "503204") ~ "Red Sea Urchin",
     startsWith(Resource_Code, "504306") ~ "Purple Sea Urchin",
     startsWith(Resource_Code, "50329") ~ "Unknown Sea Urchin",
     startsWith(Resource_Code, "5034") ~ "Shrimp",
@@ -743,7 +827,7 @@ mi <- mi %>%
     startsWith(Resource_Code, "5040") ~ "Whelk",
     startsWith(Resource_Code, "5099") ~ "Unknown Marine Invertebrates",
   )) %>%
-  mutate(Species = case_when(
+  mutate(Taxa_lvl5 = case_when(
     startsWith(Resource_Code, "5002") ~ "Abalone",
     startsWith(Resource_Code, "500404") ~ "Red (large) Chiton",
     startsWith(Resource_Code, "500408") ~ "Black (small) Chiton",
@@ -763,7 +847,6 @@ mi <- mi %>%
     startsWith(Resource_Code, "50100804") ~ "Brown King Crab",
     startsWith(Resource_Code, "50100808") ~ "Red King Crab",
     startsWith(Resource_Code, "50100899") ~ "Unknown King Crab",
-    startsWith(Resource_Code, "50101200") ~ "Tanner Crab",
     startsWith(Resource_Code, "50101202") ~ "Tanner Crab, Bairdi", ##tanner crab also has summary level
     startsWith(Resource_Code, "5010129") ~ "Unknown Tanner Crab",
     startsWith(Resource_Code, "50109") ~ "Unknown Crab",
@@ -780,7 +863,7 @@ mi <- mi %>%
     startsWith(Resource_Code, "503004") ~ "Yein Sea Cucumber",
     startsWith(Resource_Code, "503099") ~ "Unknown Sea Cucumber",
     startsWith(Resource_Code, "503202") ~ "Green Sea Urchin",
-    startsWith(Resource_Code, "503204") ~ "Read Sea Urchin",
+    startsWith(Resource_Code, "503204") ~ "Red Sea Urchin",
     startsWith(Resource_Code, "504306") ~ "Purple Sea Urchin",
     startsWith(Resource_Code, "50329") ~ "Unknown Sea Urchin",
     startsWith(Resource_Code, "5034") ~ "Shrimp",
@@ -790,81 +873,62 @@ mi <- mi %>%
     startsWith(Resource_Code, "5099") ~ "Unknown Marine Invertebrates",
   )) %>%
   mutate(Habitat = case_when(
-    grepl("King Crab", Genus) ~ "Marine",
-    startsWith(Family, "Octopus") ~ "Marine",
-    startsWith(Family, "Scallop") ~ "Marine", 
-    startsWith(Family, "Shrimp") ~ "Marine",
-    grepl("Tanner Crab", Species) ~ "Marine",
-    startsWith(Family, "Abalone") ~ "Nearshore",
-    startsWith(Family, "Chiton") ~ "Nearshore",
-    startsWith(Family, "Clam") ~ "Nearshore",
-    startsWith(Family, "Cockle") ~ "Nearshore",
-    startsWith(Species, "Dungeness") ~ "Nearshore",
-    startsWith(Family, "Geoduck") ~ "Nearshore",
-    startsWith(Family, "Limpet") ~ "Nearshore",
-    startsWith(Family, "Mussel") ~ "Nearshore",
-    startsWith(Family, "Sea Cucumber") ~ "Nearshore",
-    startsWith(Family, "Sea Urchin") ~ "Nearshore",
-    startsWith(Family, "Squid") ~ "Marine", 
-    startsWith(Species, "Box Crab") ~ "Marine",
-    startsWith(Species, "Unknown Crab") ~ "Marine",
-    startsWith(Family, "Oyster") ~ "Marine",
-    startsWith(Family, "Starfish") ~ "Nearshore",
-    startsWith(Family, "Unknown Marine Invert") ~ "Marine",
-    startsWith(Family, "Whelk") ~ "Nearshore",
+    grepl("King Crab", Taxa_lvl4) ~ "Marine",
+    startsWith(Taxa_lvl3, "Octopus") ~ "Marine",
+    startsWith(Taxa_lvl3, "Scallop") ~ "Marine", 
+    startsWith(Taxa_lvl3, "Shrimp") ~ "Marine",
+    grepl("Tanner Crab", Taxa_lvl5) ~ "Marine",
+    startsWith(Taxa_lvl3, "Abalone") ~ "Nearshore",
+    startsWith(Taxa_lvl3, "Chiton") ~ "Nearshore",
+    startsWith(Taxa_lvl3, "Clam") ~ "Nearshore",
+    startsWith(Taxa_lvl3, "Cockle") ~ "Nearshore",
+    startsWith(Taxa_lvl5, "Dungeness") ~ "Nearshore",
+    startsWith(Taxa_lvl3, "Geoduck") ~ "Nearshore",
+    startsWith(Taxa_lvl3, "Limpet") ~ "Nearshore",
+    startsWith(Taxa_lvl3, "Mussel") ~ "Nearshore",
+    startsWith(Taxa_lvl3, "Sea Cucumber") ~ "Nearshore",
+    startsWith(Taxa_lvl3, "Sea Urchin") ~ "Nearshore",
+    startsWith(Taxa_lvl3, "Squid") ~ "Marine", 
+    startsWith(Taxa_lvl5, "Box Crab") ~ "Marine",
+    startsWith(Taxa_lvl5, "Unknown Crab") ~ "Marine",
+    startsWith(Taxa_lvl3, "Oyster") ~ "Marine",
+    startsWith(Taxa_lvl3, "Starfish") ~ "Nearshore",
+    startsWith(Taxa_lvl3, "Unknown Marine Invert") ~ "Marine",
+    startsWith(Taxa_lvl3, "Whelk") ~ "Nearshore",
   ))
 
 mi$Conversion_Units_To_Pounds <- as.character(mi$Conversion_Units_To_Pounds)
 mi$Est_Comm_Population <- as.character(mi$Est_Comm_Population)
 str(mi)
-mi_func <- function(x){
-  df_prep <- x
-  family_total <- df_prep %>%
-    filter(is.na(Fishing_Gear_Type)) %>%
-    filter(!is.na(Genus)) %>%
-    group_by(Species) %>%
-    mutate_if(is.numeric, sum) %>%
-    #mutate_if(is.character, funs(paste(unique(.), collapse = "_"))) %>%
-    distinct()
-}
+##select rows where the family level is not broken down further in a certain year/community
+mi1 <- mi %>%
+  filter(is.na(Fishing_Gear_Type)) %>%
+  filter(!is.na(Taxa_lvl3)) %>%
+  group_by(Site_Year_Code, Taxa_lvl3) %>%
+  filter(!Taxa_lvl3 %in% Taxa_lvl3[!is.na(Taxa_lvl4)]) ##filters out familys where genus is not NA -- so i think these are only families where further genus level does not exist (i.e., family is the lowest level ID for that year/community)
 
-mi_test_1 <- split(mi, paste0(mi$Site_Year_Code)) %>%
-  map(mi_func) %>%
-  bind_rows() %>%
-  select(Project_Name, Site_Year_Code, Habitat, General_Category, General_Category_lvl2, Family, Genus, Species, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population) %>%
-  separate(Site_Year_Code, c("Site", "Year"), "_" )
-##the issue with this, is that if a higher level is not there but it was reported, eg. scallops, this makes that information lost.. maybe take the approach you did for the birds for everything.. 
+##select rows where the genus level is not broken down further for a certain year/community
+mi2 <- mi %>%
+  filter(is.na(Fishing_Gear_Type)) %>%
+  filter(!is.na(Taxa_lvl4)) %>%
+  group_by(Site_Year_Code, Taxa_lvl3, Taxa_lvl4) %>%
+  filter(!Taxa_lvl4 %in% Taxa_lvl4[!is.na(Taxa_lvl5)])
 
+##select rows where species level is not broken down further for a certain year/community 
+mi3 <- mi %>%
+  filter(is.na(Fishing_Gear_Type)) %>%
+  filter(!is.na(Taxa_lvl5))
 
+mi4 <- rbind(mi1, mi2, mi3) %>%
+  select(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population) %>%
+  mutate(Taxa_lvl4 = coalesce(Taxa_lvl4, Taxa_lvl3)) %>%
+  mutate(Taxa_lvl5 = coalesce(Taxa_lvl5, Taxa_lvl4)) 
 
-##king crab -- surveys before 1990 are not broken down further, so do these separately
-##tanner crab -- only ever broken down into biardi or unknown, so am just keeping the tanner crab level
-##doing king and tanner separately as taking different approach 
-mi_test_2 <- mi_test_1 %>%
-  filter(Year < "1990") %>%
-  filter(Genus != "Tanner Crab") 
-mi_test_2$Species <- mi_test_2$Species %>% replace_na("King Crab")
-  ##replace na in species column to king crab.. ?
+mi_final <- mi4 %>%
+  group_by(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population) %>%
+  summarise(across(where(is.numeric), sum))
 
-mi_test_3 <- mi_test_1 %>%
-  filter(Year > "1990") %>%
-  filter(Genus != "Tanner Crab") %>%
-  filter(!is.na(Species))
-
-mi_test_4 <- mi_test_1 %>%
-  filter(Species == "Tanner Crab") 
-##remove genus later after solve crab issue
-mi_final <- rbind(mi_test_2, mi_test_3, mi_test_4) %>%
-  unite(Site_Year_Code, c(Site, Year), sep = "_", remove = TRUE) %>%
-  select(Project_Name, Site_Year_Code, Habitat, General_Category, General_Category_lvl2, Family, Species, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population)
-
-  
-##when is king and tanner crab broken down and when not? 
-##issue with king crab and tanner crab, sometimes broken down further, sometimes not.. 
-
-test <- mi %>%
-  filter(Site_Year_Code == "Angoon_1984")
-
+rm(mi1, mi2, mi3, mi4)
 #6) VEGETATION --------------------
 
 veg_code <- "6"
@@ -879,9 +943,9 @@ sp_veg <- veg %>%
   distinct(Resource_Code, Resource_Name)
 
 veg <- veg %>%
-  mutate(General_Category = "Vegetation") %>%
-  mutate(General_Category_lvl2 = "Vegetation") %>% ##don't think has another general cat
-  mutate(Family = case_when(
+  mutate(Taxa_lvl1 = "Vegetation") %>%
+  mutate(Taxa_lvl2 = "Vegetation") %>% ##don't think has another general cat
+  mutate(Taxa_lvl3 = case_when(
     startsWith(Resource_Code, "6010") ~ "Berries",
     startsWith(Resource_Code, "6020400") ~ "Mushrooms", 
     startsWith(Resource_Code, "602046") ~ "Mushrooms",
@@ -889,10 +953,20 @@ veg <- veg %>%
  ##want to break this down and separate this more... or maybe just add other functional traits but this is very broad
     startsWith(Resource_Code, "6030") ~ "Seaweed/Kelp",
     startsWith(Resource_Code, "6040") ~ "Wood", ##wood will have to be removed for diversity calculations
+    startsWith(Resource_Code, "6050") ~ "Coal", ##remove for any food web work
+    startsWith(Resource_Code, "6053") ~ "Seaweed/Kelp", ##remove for diversity calc
+  )) %>% 
+  mutate(Taxa_lvl4 = case_when(   ##may want to break this down and separate this more... or maybe just add other functional traits but this is very broad, putting this level in to match 
+    startsWith(Resource_Code, "6010") ~ "Berries",
+    startsWith(Resource_Code, "6020400") ~ "Mushrooms", 
+    startsWith(Resource_Code, "602046") ~ "Mushrooms",
+    startsWith(Resource_Code, "6020") ~ "Plants/Greens", 
+    startsWith(Resource_Code, "6030") ~ "Seaweed/Kelp",
+    startsWith(Resource_Code, "6040") ~ "Wood", ##wood will have to be removed for diversity calculations
     startsWith(Resource_Code, "6050") ~ "Coal", ##remove for diversity calc
     startsWith(Resource_Code, "6053") ~ "Seaweed/Kelp", ##remove for diversity calc
   )) %>%
-  mutate(Species = case_when(
+  mutate(Taxa_lvl5 = case_when(
     startsWith(Resource_Code, "601002") ~ "Blueberry",
     startsWith(Resource_Code, "601004") ~ "Low Bush Cranberry",
     startsWith(Resource_Code, "601006") ~ "High Bush Cranberry",
@@ -959,7 +1033,6 @@ veg <- veg %>%
     startsWith(Resource_Code, "602044") ~ "Stinkweed",
     startsWith(Resource_Code, "602048") ~ "Unknown Greens from Land",
     startsWith(Resource_Code, "60204604") ~ "Chaga", ##one higher level is fungus, is chaga always fungus or is sometimes fingus reported and not chaga? - 
-    startsWith(Resource_Code, "6020460") ~ "Fungus",
     startsWith(Resource_Code, "602052") ~ "Wild Chives",
     startsWith(Resource_Code, "604013") ~ "Willow",
     startsWith(Resource_Code, "6050") ~ "Coal",
@@ -970,8 +1043,8 @@ veg <- veg %>%
     endsWith(Resource_Code, "1") ~ "Commercial",
   )) %>% 
   mutate(Habitat = case_when(
-    grepl("Kelp", Family) ~ "Nearshore",
-    !grepl("Kelp", Family) ~ "Terrestrial",
+    grepl("Kelp", Taxa_lvl3) ~ "Nearshore",
+    !grepl("Kelp", Taxa_lvl3) ~ "Terrestrial",
   )) %>%
 mutate(Use = case_when(
   grepl("Fertilizer", Resource_Name) ~ "Fertilizer",
@@ -981,32 +1054,44 @@ mutate(Use = case_when(
 veg$Conversion_Units_To_Pounds <- as.character(veg$Conversion_Units_To_Pounds)
 veg$Est_Comm_Population <- as.character(veg$Est_Comm_Population)
 
-veg_func <- function(x){
-  df_prep <- x
-  family_total <- df_prep %>%
-    filter(is.na(Harvest_Type)) %>%
-    filter(!is.na(Species)) %>%
-    group_by(Species) %>%
-    mutate_if(is.numeric, sum) %>%
-    #mutate_if(is.character, funs(paste(unique(.), collapse = "_"))) %>%
-    distinct()
-}
+##select rows where the family level is not broken down further in a certain year/community
+veg1 <- veg %>%
+  filter(is.na(Harvest_Type)) %>%
+  filter(!is.na(Taxa_lvl3)) %>%
+  group_by(Site_Year_Code, Taxa_lvl3) %>%
+  filter(!Taxa_lvl3 %in% Taxa_lvl3[!is.na(Taxa_lvl4)]) ##filters out familys where genus is not NA -- so i think these are only families where further genus level does not exist (i.e., family is the lowest level ID for that year/community)
 
-veg_final <- split(veg, paste0(veg$Site_Year_Code)) %>%
-  map(veg_func) %>%
-  bind_rows() %>%
-  select(Project_Name, Site_Year_Code, Habitat, General_Category, General_Category_lvl2, Family, Species, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population) %>%
-  filter(Species != "Fungus") %>%##fungus and chaga only recorded in Yakutat_2015, where it is a duplicate, so will filter out the fungus row
-  distinct(.keep_all = TRUE) ##gets rid of duplicate unknown seaweed row
+##select rows where the genus level is not broken down further for a certain year/community
+veg2 <- veg %>%
+  filter(is.na(Harvest_Type)) %>%
+  filter(!is.na(Taxa_lvl4)) %>%
+  group_by(Site_Year_Code, Taxa_lvl3, Taxa_lvl4) %>%
+  filter(!Taxa_lvl4 %in% Taxa_lvl4[!is.na(Taxa_lvl5)])
 
+##select rows where species level is not broken down further for a certain year/community 
+veg3 <- veg %>%
+  filter(is.na(Harvest_Type)) %>%
+  filter(!is.na(Taxa_lvl5))
 
+veg4 <- rbind(veg1, veg2, veg3) %>%
+  select(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population) %>%
+  mutate(Taxa_lvl4 = coalesce(Taxa_lvl4, Taxa_lvl3)) %>%
+  mutate(Taxa_lvl5 = coalesce(Taxa_lvl5, Taxa_lvl4)) %>%
+  distinct()
 
+veg_final <- veg4 %>%
+  group_by(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population) %>%
+  summarise(across(where(is.numeric), sum))
+
+rm(veg1, veg2, veg3, veg4)
 ##Note: for now, have decided to go to the level of each species, and use the existing per capita harvets and total estimated lbs harvested to move forward with trying to establish food web approach.
 ##
 #Join all dataframes together ----------
 df_final <- rbind(fish_final, lm_final, mm_final, be_final, mi_final, veg_final) %>%
   filter(!if_all(Reported_Pounds_Harvested:Percent_Of_Total_Harvest, ~ .x == 0)) ##remove rows where all values are 0 (nothing was harvested)
 
+setwd("~/Desktop/Wild Foods Repo/")
 write.csv(df_final, "intermediate_files/harvest_data_clean.csv")
 ##note: will need to check that didn't remove any family level IDs where it was just not broken down further in earlier surveys...this did happen for birds but i dont think elsewhere where i didn't catch it but need to make sure
 
+##for now keeping eggs and adults separate (same w/ roe in fish) as these have different trophic levels... can add later if want to, or remove egg/roe part of name for species richness.. need to think about how to do that still anyway
