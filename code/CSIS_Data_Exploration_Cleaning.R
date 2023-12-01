@@ -1146,6 +1146,9 @@ mi_sp_list <- mi %>%
   filter(is.na(Fishing_Gear_Type)) %>%
   distinct(Habitat, General_Category, General_Category_lvl2, Family, Genus, Species)
 
+test <- mi %>%
+  filter(Family == "Scallop")
+
 ##do the species within families add up? 
 mi_fam_sum_test_func <- function(x){
   fam_db <- x %>%
