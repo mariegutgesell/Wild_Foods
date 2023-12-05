@@ -62,7 +62,7 @@ fish <- fish %>%
     startsWith(Resource_Code, "1204") ~ "Osmeridae",
     startsWith(Resource_Code, "1206") ~ "Bass", ##only groups are sea bass and unknown bass, but they could belong to different families? 
     startsWith(Resource_Code, "1208") ~ "Blenny", 
-    startsWith(Resource_Code, "1210") ~ "Gadidae", ##what species sum up the cods?
+    startsWith(Resource_Code, "1210") ~ "Gadiformes", ##what species sum up the cods?
     startsWith(Resource_Code, "1212") ~ "Eel",
     startsWith(Resource_Code, "1214") ~ "Flounder",
     startsWith(Resource_Code, "1216") ~ "Hexagrammidae",
@@ -93,7 +93,7 @@ fish <- fish %>%
     startsWith(Resource_Code, "1204") ~ "Osmeridae",
     startsWith(Resource_Code, "1206") ~ "Bass", ##only groups are sea bass and unknown bass, but they could belong to different families? 
     startsWith(Resource_Code, "1208") ~ "Blenny", 
-    startsWith(Resource_Code, "1210") ~ "Gadidae", ##what species sum up the cods?
+    startsWith(Resource_Code, "1210") ~ "Gadiformes", ##what species sum up the cods?
     startsWith(Resource_Code, "1212") ~ "Eel",
     startsWith(Resource_Code, "1214") ~ "Flounder",
     startsWith(Resource_Code, "1216") ~ "Hexagrammidae",
@@ -141,7 +141,7 @@ fish <- fish %>%
     startsWith(Resource_Code, "121008") ~ "Pacific Tom Cod",
     startsWith(Resource_Code, "121012") ~ "Walleye Pollock (whiting)",
     startsWith(Resource_Code, "121006") ~ "Pacific (silver) hake",
-    startsWith(Resource_Code, "12109") ~ "Unknown Cod",
+    startsWith(Resource_Code, "12109") ~ "Unknown Gadiformes",
     startsWith(Resource_Code, "1212") ~ "Eel",
     startsWith(Resource_Code, "12140") ~ "Flounder",
     startsWith(Resource_Code, "12149") ~ "Unknown Flounder",
@@ -506,7 +506,7 @@ mm4 <- rbind(mm1, mm2, mm3) %>%
   select(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population) %>%
   mutate(Taxa_lvl4 = coalesce(Taxa_lvl4, Taxa_lvl3)) %>%
   mutate(Taxa_lvl5 = coalesce(Taxa_lvl5, Taxa_lvl4)) %>%
-  filter(Taxa_lvl5 != "Harbor Seal (saltwater)") %>% ##removed harbor seal (saltwater) and fur seal (other) as always a replicate when it does come up
+  filter(Taxa_lvl5 != "Harbour Seal (saltwater)") %>% ##removed harbor seal (saltwater) and fur seal (other) as always a replicate when it does come up
   filter(Taxa_lvl5 != "Fur Seal (other)")
   
 mm_final <- mm4 %>%
@@ -542,7 +542,7 @@ be <- be %>%
     startsWith(Resource_Code, "43") ~ "Bird Eggs",
   )) %>%
   mutate(Taxa_lvl3 = case_when(
-    startsWith(Resource_Code, "4102") ~ "Ducks",
+    startsWith(Resource_Code, "4102") ~ "Duck",
     startsWith(Resource_Code, "4104") ~ "Geese",
     startsWith(Resource_Code, "4106") ~ "Swan",
     startsWith(Resource_Code, "4108") ~ "Crane",
@@ -551,13 +551,13 @@ be <- be %>%
     startsWith(Resource_Code, "4114") ~ "Heron",
     startsWith(Resource_Code, "4218") ~ "Upland Game Birds",
     startsWith(Resource_Code, "4288") ~ "Unknown Other Birds", ##is this. the right place to put this? 
-    startsWith(Resource_Code, "4302") ~ "Ducks",
-    startsWith(Resource_Code, "4304") ~ "Geese",
-    startsWith(Resource_Code, "4306") ~ "Swan",
-    startsWith(Resource_Code, "4308") ~ "Crane",
-    startsWith(Resource_Code, "4310") ~ "Shorebird",
-    startsWith(Resource_Code, "4312") ~ "Seabirds and Loons",
-    startsWith(Resource_Code, "4318") ~ "Upland Game Birds",
+    startsWith(Resource_Code, "4302") ~ "Duck Eggs",
+    startsWith(Resource_Code, "4304") ~ "Geese Eggs",
+    startsWith(Resource_Code, "4306") ~ "Swan Eggs",
+    startsWith(Resource_Code, "4308") ~ "Crane Eggs",
+    startsWith(Resource_Code, "4310") ~ "Shorebird Eggs",
+    startsWith(Resource_Code, "4312") ~ "Seabirds and Loon Eggs",
+    startsWith(Resource_Code, "4318") ~ "Upland Game Bird Eggs",
     startsWith(Resource_Code, "4399") ~ "Unknown Eggs",
   )) %>% 
   mutate(Taxa_lvl4 = case_when(
@@ -600,30 +600,30 @@ be <- be %>%
     startsWith(Resource_Code, "421802") ~ "Grouse", 
     startsWith(Resource_Code, "421804") ~ "Ptarmigan", 
     startsWith(Resource_Code, "421899") ~ "Unknown Upland Game Birds",
-    startsWith(Resource_Code, "430214") ~ "Mallard", 
-    startsWith(Resource_Code, "430299") ~ "Unknown Duck",
-    startsWith(Resource_Code, "430404") ~ "Canada Geese",
-    startsWith(Resource_Code, "430499") ~ "Unknown Geese",
-    startsWith(Resource_Code, "43060") ~ "Swan",
-    startsWith(Resource_Code, "43069") ~ "Unknown Swan", 
-    startsWith(Resource_Code, "430802") ~ "Sandhill Crane",
+    startsWith(Resource_Code, "430214") ~ "Mallard Eggs", 
+    startsWith(Resource_Code, "430299") ~ "Unknown Duck Eggs",
+    startsWith(Resource_Code, "430404") ~ "Canada Geese Eggs",
+    startsWith(Resource_Code, "430499") ~ "Unknown Geese Eggs",
+    startsWith(Resource_Code, "43060") ~ "Swan Eggs",
+    startsWith(Resource_Code, "43069") ~ "Unknown Swan Eggs", 
+    startsWith(Resource_Code, "430802") ~ "Sandhill Crane Eggs",
     startsWith(Resource_Code, "430899") ~ "Unknown Crane",
-    startsWith(Resource_Code, "431004") ~ "Black Oystercatcher",
-    startsWith(Resource_Code, "43109901" ) ~ "Unknown Small Shorebird",
-    startsWith(Resource_Code, "43109902") ~ "Unknown Large Shorebird",
-    startsWith(Resource_Code, "431210") ~ "Guillemot",
-    startsWith(Resource_Code, "43121204") ~ "Glaucous Winged Gull", ##
-    startsWith(Resource_Code, "43121299") ~ "Unknown Gull",
-    startsWith(Resource_Code, "4312160") ~ "Loon",
-    startsWith(Resource_Code, "4312169") ~ "Unknown Loon",
-    startsWith(Resource_Code, "43121802") ~ "Common Murre",  
-    startsWith(Resource_Code, "4312260") ~ "Tern",
-    startsWith(Resource_Code, "4312269") ~ "Unknown Tern",
-    startsWith(Resource_Code, "43129") ~ "Unknown Seabird",
-    startsWith(Resource_Code, "431802") ~ "Grouse",
-    startsWith(Resource_Code, "4318029") ~ "Unknown Grouse",
-    startsWith(Resource_Code, "4318040") ~ "Ptarmigan",
-    startsWith(Resource_Code, "4318049") ~ "Unknown Ptarmigan",
+    startsWith(Resource_Code, "431004") ~ "Black Oystercatcher Eggs",
+    startsWith(Resource_Code, "43109901" ) ~ "Unknown Small Shorebird Eggs",
+    startsWith(Resource_Code, "43109902") ~ "Unknown Large Shorebird Eggs",
+    startsWith(Resource_Code, "431210") ~ "Guillemot Eggs",
+    startsWith(Resource_Code, "43121204") ~ "Glaucous Winged Gull Eggs", ##
+    startsWith(Resource_Code, "43121299") ~ "Unknown Gull Eggs",
+    startsWith(Resource_Code, "4312160") ~ "Loon Eggs",
+    startsWith(Resource_Code, "4312169") ~ "Unknown Loon Eggs",
+    startsWith(Resource_Code, "43121802") ~ "Common Murre Eggs",  
+    startsWith(Resource_Code, "4312260") ~ "Tern Eggs",
+    startsWith(Resource_Code, "4312269") ~ "Unknown Tern Eggs",
+    startsWith(Resource_Code, "43129") ~ "Unknown Seabird Eggs",
+    startsWith(Resource_Code, "431802") ~ "Grouse Eggs",
+    startsWith(Resource_Code, "4318029") ~ "Unknown Grouse Eggs",
+    startsWith(Resource_Code, "4318040") ~ "Ptarmigan Eggs",
+    startsWith(Resource_Code, "4318049") ~ "Unknown Ptarmigan Eggs",
   )) %>%
   mutate(Taxa_lvl5 = case_when(
     startsWith(Resource_Code, "410202") ~ "Bufflehead",
@@ -687,31 +687,31 @@ be <- be %>%
     startsWith(Resource_Code, "42180404") ~ "Willow Ptarmigan",
     startsWith(Resource_Code, "4218049") ~ "Unknown Ptarmigan",
     startsWith(Resource_Code, "421899") ~ "Unknown Upland Game Birds",
-    startsWith(Resource_Code, "430214") ~ "Mallard Egg", 
-    startsWith(Resource_Code, "430299") ~ "Unknown Duck Egg",
-    startsWith(Resource_Code, "43040408") ~ "Lesser Canada Geese Egg",
-    startsWith(Resource_Code, "4304049") ~ "Unknown Canada Geese Egg",
-    startsWith(Resource_Code, "430499") ~ "Unknown Geese Egg",
-    startsWith(Resource_Code, "43060") ~ "Swan Egg",
-    startsWith(Resource_Code, "43069") ~ "Unknown Swan Egg",
-    startsWith(Resource_Code, "430802") ~ "Sandhill Crane Egg",
-    startsWith(Resource_Code, "430899") ~ "Unknown Crane Egg",
-    startsWith(Resource_Code, "431004") ~ "Black Oystercatcher Egg",
-    startsWith(Resource_Code, "43109901" ) ~ "Unknown Small Shorebird Egg",
-    startsWith(Resource_Code, "43109902") ~ "Unknown Large Shorebird Egg",
-    startsWith(Resource_Code, "431210") ~ "Guillemot Egg",
-    startsWith(Resource_Code, "43121204") ~ "Glaucous Winged Gull Egg", ##
-    startsWith(Resource_Code, "43121299") ~ "Unknown Gull Egg",
-    startsWith(Resource_Code, "4312160") ~ "Loon Egg",
-    startsWith(Resource_Code, "4312169") ~ "Unknown Loon Egg",
-    startsWith(Resource_Code, "43121802") ~ "Common Murre Egg", 
-    startsWith(Resource_Code, "4312260") ~ "Tern Egg",
-    startsWith(Resource_Code, "4312269") ~ "Unknown Tern Egg",
-    startsWith(Resource_Code, "431299") ~ "Unknown Seabird Egg",
-    startsWith(Resource_Code, "431802") ~ "Grouse Egg",
-    startsWith(Resource_Code, "4318029") ~ "Unknown Grouse Egg",
-    startsWith(Resource_Code, "4318040") ~ "Ptarmigan Egg",
-    startsWith(Resource_Code, "4318049") ~ "Unknown Ptarmigan Egg",
+    startsWith(Resource_Code, "430214") ~ "Mallard Eggs", 
+    startsWith(Resource_Code, "430299") ~ "Unknown Duck Eggs",
+    startsWith(Resource_Code, "43040408") ~ "Lesser Canada Geese Eggs",
+    startsWith(Resource_Code, "4304049") ~ "Unknown Canada Geese Eggs",
+    startsWith(Resource_Code, "430499") ~ "Unknown Geese Eggs",
+    startsWith(Resource_Code, "43060") ~ "Swan Eggs",
+    startsWith(Resource_Code, "43069") ~ "Unknown Swan Eggs",
+    startsWith(Resource_Code, "430802") ~ "Sandhill Crane Eggs",
+    startsWith(Resource_Code, "430899") ~ "Unknown Crane Eggs",
+    startsWith(Resource_Code, "431004") ~ "Black Oystercatcher Eggs",
+    startsWith(Resource_Code, "43109901" ) ~ "Unknown Small Shorebird Eggs",
+    startsWith(Resource_Code, "43109902") ~ "Unknown Large Shorebird Eggs",
+    startsWith(Resource_Code, "431210") ~ "Guillemot Eggs",
+    startsWith(Resource_Code, "43121204") ~ "Glaucous Winged Gull Eggs", ##
+    startsWith(Resource_Code, "43121299") ~ "Unknown Gull Eggs",
+    startsWith(Resource_Code, "4312160") ~ "Loon Eggs",
+    startsWith(Resource_Code, "4312169") ~ "Unknown Loon Eggs",
+    startsWith(Resource_Code, "43121802") ~ "Common Murre Eggs", 
+    startsWith(Resource_Code, "4312260") ~ "Tern Eggs",
+    startsWith(Resource_Code, "4312269") ~ "Unknown Tern Eggs",
+    startsWith(Resource_Code, "431299") ~ "Unknown Seabird Eggs",
+    startsWith(Resource_Code, "431802") ~ "Grouse Eggs",
+    startsWith(Resource_Code, "4318029") ~ "Unknown Grouse Eggs",
+    startsWith(Resource_Code, "4318040") ~ "Ptarmigan Eggs",
+    startsWith(Resource_Code, "4318049") ~ "Unknown Ptarmigan Eggs",
   )) 
 
 
@@ -1092,6 +1092,5 @@ df_final <- rbind(fish_final, lm_final, mm_final, be_final, mi_final, veg_final)
 
 setwd("~/Desktop/Wild Foods Repo/")
 write.csv(df_final, "intermediate_files/harvest_data_clean.csv")
-##note: will need to check that didn't remove any family level IDs where it was just not broken down further in earlier surveys...this did happen for birds but i dont think elsewhere where i didn't catch it but need to make sure
 
 ##for now keeping eggs and adults separate (same w/ roe in fish) as these have different trophic levels... can add later if want to, or remove egg/roe part of name for species richness.. need to think about how to do that still anyway
