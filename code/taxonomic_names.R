@@ -22,6 +22,9 @@ sp_list <- df %>%
   distinct(Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4_b, Taxa_lvl5_b, Habitat) 
 
 
+
+
+
 ##I think Sea bass are the same as black rockfish
 
 test <- df %>%
