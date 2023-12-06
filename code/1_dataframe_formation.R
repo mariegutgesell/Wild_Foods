@@ -602,7 +602,7 @@ be <- be %>%
     startsWith(Resource_Code, "43060") ~ "Swan Eggs",
     startsWith(Resource_Code, "43069") ~ "Unknown Swan Eggs", 
     startsWith(Resource_Code, "430802") ~ "Sandhill Crane Eggs",
-    startsWith(Resource_Code, "430899") ~ "Unknown Crane",
+    startsWith(Resource_Code, "430899") ~ "Unknown Crane Eggs",
     startsWith(Resource_Code, "431004") ~ "Black Oystercatcher Eggs",
     startsWith(Resource_Code, "43109901" ) ~ "Unknown Small Shorebird Eggs",
     startsWith(Resource_Code, "43109902") ~ "Unknown Large Shorebird Eggs",
