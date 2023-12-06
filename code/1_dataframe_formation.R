@@ -1074,8 +1074,10 @@ rm(veg1, veg2, veg3)
 ##
 #Join all dataframes together ----------
 df_final <- rbind(fish_final, lm_final, mm_final, be_final, mi_final, veg_final) %>%
-  select(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Resource_Code, Resource_Name, Sampled_households:Most_Rep_Year, Conversion_Units_To_Pounds, Resource_Harvest_Units, Percent_Using:Percapita_Pounds_Harvested, Number_Of_Resource_Harvested:Mean_Grams_Percapita_Harvest) %>%
-  filter(!if_all(Percent_Using:Mean_Grams_Percapita_Harvest, ~ .x == 0)) ##remove rows where all values are 0 (nothing was harvested or shared in community)
+  select(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Resource_Code, Resource_Name, Sampled_households:Most_Rep_Year, Conversion_Units_To_Pounds, Resource_Harvest_Units, Percent_Using:Percapita_Pounds_Harvested, Number_Of_Resource_Harvested:Mean_Grams_Percapita_Harvest) #%>%
+#  filter(!if_all(Percent_Using:Mean_Grams_Percapita_Harvest, ~ .x == 0)) ##remove rows where all values are 0 (nothing was harvested or shared in community)
+##don't want to do any filtering or summing, so can just use this dataframe for any subsequent analysis, and don't need to keep coming back to this script - do later when wanted
+
 
 setwd("~/Desktop/Wild Foods Repo/")
 write.csv(df_final, "intermediate_files/harvest_data_clean.csv")
