@@ -59,7 +59,7 @@ fish <- fish %>%
     startsWith(Resource_Code, "11") ~ "Oncorhynchus",
     startsWith(Resource_Code, "1202") ~ "Herring",
     startsWith(Resource_Code, "1203") ~ "Herring",
-    startsWith(Resource_Code, "1204") ~ "Osmeridae",
+    startsWith(Resource_Code, "1204") ~ "Smelt",
     startsWith(Resource_Code, "1206") ~ "Bass", ##only groups are sea bass and unknown bass, but they could belong to different families? 
     startsWith(Resource_Code, "1208") ~ "Blenny", 
     startsWith(Resource_Code, "1210") ~ "Gadiformes", ##what species sum up the cods?
@@ -90,7 +90,7 @@ fish <- fish %>%
     startsWith(Resource_Code, "11") ~ "Oncorhynchus",
     startsWith(Resource_Code, "1202") ~ "Herring",
     startsWith(Resource_Code, "1203") ~ "Herring Roe",
-    startsWith(Resource_Code, "1204") ~ "Osmeridae",
+    startsWith(Resource_Code, "1204") ~ "Smelt",
     startsWith(Resource_Code, "1206") ~ "Bass", ##only groups are sea bass and unknown bass, but they could belong to different families? 
     startsWith(Resource_Code, "1208") ~ "Blenny", 
     startsWith(Resource_Code, "1210") ~ "Gadiformes", ##what species sum up the cods?
@@ -206,7 +206,7 @@ fish <- fish %>%
     startsWith(Taxa_lvl3, "Char") ~ "Freshwater_Anadromous",
     startsWith(Taxa_lvl3, "Trout") ~ "Freshwater_Anadromous",
     startsWith(Taxa_lvl3, "Whitefish") ~ "Freshwater_Anadromous",
-    startsWith(Taxa_lvl5, "Herring Roe") ~ "Nearshore",
+    startsWith(Taxa_lvl4, "Herring Roe") ~ "Nearshore",
     startsWith(Taxa_lvl2, "Non-Salmon") ~ "Marine",
   )) %>%
   mutate(Roe_Collection_Type = case_when(
