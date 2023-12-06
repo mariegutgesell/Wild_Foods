@@ -26,8 +26,8 @@ survey_demographics <- read_excel("CSIS_SurveyData_Demographics.xlsx", sheet = 2
 df_comp <- df %>%
   filter(Site_Year_Code %in% survey_demographics$Site_Year_Code) %>% ##selects only years where a comprehensive survey was done
   filter(!grepl("Marine Mammals", Project_Name)) %>% ##this removes data from targeted marine mammal surveys done in same year as comprehensive survey
-  select(Site_Year_Code, Project_Name, Resource_Code, Resource_Name, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest, Conversion_Units_To_Pounds,Resource_Harvest_Units ) %>%
-  left_join(survey_demographics %>% select(Site_Year_Code, Est_Comm_Population), by = "Site_Year_Code")
+  select(Site_Year_Code, Project_Name, Resource_Code, Resource_Name, Percent_Using:Estimated_Amount_Harvested, Percent_Of_Total_Harvest, Mean_Grams_Per_Capita_Use:Mean_Grams_Percapita_Harvest) %>%
+  left_join(survey_demographics, by = "Site_Year_Code")
 
 ##reorganize dataframe to make categories, levels
 
@@ -57,8 +57,8 @@ fish <- fish %>%
   )) %>%
   mutate(Taxa_lvl3 = case_when(
     startsWith(Resource_Code, "11") ~ "Oncorhynchus",
-    startsWith(Resource_Code, "1202") ~ "Clupeidae",
-    startsWith(Resource_Code, "1203") ~ "Clupeidae",
+    startsWith(Resource_Code, "1202") ~ "Herring",
+    startsWith(Resource_Code, "1203") ~ "Herring",
     startsWith(Resource_Code, "1204") ~ "Osmeridae",
     startsWith(Resource_Code, "1206") ~ "Bass", ##only groups are sea bass and unknown bass, but they could belong to different families? 
     startsWith(Resource_Code, "1208") ~ "Blenny", 
@@ -88,8 +88,8 @@ fish <- fish %>%
   )) %>%
   mutate(Taxa_lvl4 = case_when(
     startsWith(Resource_Code, "11") ~ "Oncorhynchus",
-    startsWith(Resource_Code, "1202") ~ "Clupeidae",
-    startsWith(Resource_Code, "1203") ~ "Clupeidae",
+    startsWith(Resource_Code, "1202") ~ "Herring",
+    startsWith(Resource_Code, "1203") ~ "Herring Roe",
     startsWith(Resource_Code, "1204") ~ "Osmeridae",
     startsWith(Resource_Code, "1206") ~ "Bass", ##only groups are sea bass and unknown bass, but they could belong to different families? 
     startsWith(Resource_Code, "1208") ~ "Blenny", 
@@ -128,7 +128,11 @@ fish <- fish %>%
     startsWith(Resource_Code, "118") ~ "Salmon Roe",
     startsWith(Resource_Code, "119") ~ "Unknown Salmon",
     startsWith(Resource_Code, "1202") ~ "Herring",
-    startsWith(Resource_Code, "1203") ~ "Herring Roe", ##note: this is broken down into different types and locations of herring spawn, herring sac roe, etc. do we need to go this specified? I don't think so
+    startsWith(Resource_Code, "120302") ~ "Herring Roe",
+    startsWith(Resource_Code, "120304") ~ "Herring Roe", 
+    startsWith(Resource_Code, "120306") ~ "Herring Roe", 
+    startsWith(Resource_Code, "120308") ~ "Herring Roe", 
+    startsWith(Resource_Code, "120310") ~ "Herring Roe", ##note: this is broken down into different types and locations of herring spawn, herring sac roe, etc. do we need to go this specified? I don't think so
     startsWith(Resource_Code, "120402") ~ "Capelin (grunion)",
     startsWith(Resource_Code, "120404") ~ "Eulachon (hooligan, candlefish",
     startsWith(Resource_Code, "120408") ~ "Surf Smelt",
@@ -216,8 +220,8 @@ fish_str <- fish %>%
   distinct(Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Resource_Code, Resource_Name, Fishing_Gear_Type, Roe_Collection_Type)
 str(fish)
 #change these to character so dont get added 
-fish$Conversion_Units_To_Pounds <- as.character(fish$Conversion_Units_To_Pounds)
-fish$Est_Comm_Population <- as.character(fish$Est_Comm_Population)
+#fish$Conversion_Units_To_Pounds <- as.character(fish$Conversion_Units_To_Pounds)
+#fish$Est_Comm_Population <- as.character(fish$Est_Comm_Population)
 str(fish)
 ##select rows where the family level is not broken down further in a certain year/community
 fish1 <- fish %>%
@@ -255,21 +259,16 @@ fish6 <- fish4 %>%
   filter(Site_Year_Code != "Klukwan_2014") %>%
   filter(Site_Year_Code != "Yakutat_2015")
 
-fish7 <- rbind(fish5, fish6) %>%
-  select(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population) %>%
+fish_final <- rbind(fish5, fish6) %>%
+  select(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Resource_Code, Resource_Name, Percent_Using:Mean_Grams_Percapita_Harvest, Sampled_households:Most_Rep_Year) %>%
   mutate(Taxa_lvl4 = coalesce(Taxa_lvl4, Taxa_lvl3)) %>%
   mutate(Taxa_lvl5 = coalesce(Taxa_lvl5, Taxa_lvl4))
   
-##sum rows where is same species in community/year (e.g., multiple types of herring roe)
-fish_final <- fish7 %>%
-  group_by(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population) %>%
-  summarise(across(where(is.numeric), sum))
   
-
 ##Note: I may go back and try and calculate these values myself from the beginning, as I am wary, but am moving forward this way for now. 
 
 #clean up environment
-rm(fish1, fish2, fish3, fish4, fish5, fish6, fish7)
+rm(fish1, fish2, fish3, fish4, fish5, fish6)
 
 
 #2) LAND MAMMALS ------------------
@@ -385,8 +384,8 @@ lm <- lm %>%
     startsWith(Resource_Code, "2299") ~ "Unknown Small Land Mammals/Furbearers"
   )) 
 
-lm$Conversion_Units_To_Pounds <- as.character(lm$Conversion_Units_To_Pounds)
-lm$Est_Comm_Population <- as.character(lm$Est_Comm_Population)
+#lm$Conversion_Units_To_Pounds <- as.character(lm$Conversion_Units_To_Pounds)
+#lm$Est_Comm_Population <- as.character(lm$Est_Comm_Population)
 
 ##select rows where the family level is not broken down further in a certain year/community
 lm1 <- lm %>%
@@ -407,17 +406,15 @@ lm3 <- lm %>%
   filter(is.na(Sex)) %>%
   filter(!is.na(Taxa_lvl5))
 
-lm4 <- rbind(lm1, lm2, lm3) %>%
-  select(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population) %>%
+lm_final <- rbind(lm1, lm2, lm3) %>%
+  select(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Resource_Code, Resource_Name, Percent_Using:Mean_Grams_Percapita_Harvest, Sampled_households:Most_Rep_Year) %>%
   mutate(Taxa_lvl4 = coalesce(Taxa_lvl4, Taxa_lvl3)) %>%
   mutate(Taxa_lvl5 = coalesce(Taxa_lvl5, Taxa_lvl4))
 
-lm_final <- lm4 %>%
-  group_by(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population) %>%
-  summarise(across(where(is.numeric), sum))
+
 
 #clean up environment
-rm(lm1, lm2, lm3, lm4)
+rm(lm1, lm2, lm3)
 ##Note: there are some small land mammals where there are # of resources harvested, but no estimated weight, so will need to decide if we want to go and determine conversion units and then calculate estimated weight
 ##I feel like an intermediate solution oculd be to determine estimated dressed weight for these species where this has occurred, so not needing to re-do all convserions, but for these particular cases to have some  estimate of weight that is comparable to the other estimates  
 ##This doesn't solve the issue that some of the conversion estimates are likely mistakes in the database (e.g., brown bear conversion used for black bear conversion but this is an option)
@@ -480,8 +477,8 @@ mm <- mm %>%
     startsWith(Resource_Code, "3099") ~ "Unknown Marine Mammals",
   ))
 
-mm$Conversion_Units_To_Pounds <- as.character(mm$Conversion_Units_To_Pounds)
-mm$Est_Comm_Population <- as.character(mm$Est_Comm_Population)
+#mm$Conversion_Units_To_Pounds <- as.character(mm$Conversion_Units_To_Pounds)
+#mm$Est_Comm_Population <- as.character(mm$Est_Comm_Population)
 
 ##select rows where the family level is not broken down further in a certain year/community
 mm1 <- mm %>%
@@ -502,18 +499,16 @@ mm3 <- mm %>%
   filter(is.na(Sex)) %>%
   filter(!is.na(Taxa_lvl5))
 
-mm4 <- rbind(mm1, mm2, mm3) %>%
-  select(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population) %>%
+mm_final <- rbind(mm1, mm2, mm3) %>%
+  select(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Resource_Code, Resource_Name, Percent_Using:Mean_Grams_Percapita_Harvest, Sampled_households:Most_Rep_Year) %>%
   mutate(Taxa_lvl4 = coalesce(Taxa_lvl4, Taxa_lvl3)) %>%
   mutate(Taxa_lvl5 = coalesce(Taxa_lvl5, Taxa_lvl4)) %>%
   filter(Taxa_lvl5 != "Harbour Seal (saltwater)") %>% ##removed harbor seal (saltwater) and fur seal (other) as always a replicate when it does come up
   filter(Taxa_lvl5 != "Fur Seal (other)")
   
-mm_final <- mm4 %>%
-  group_by(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population) %>%
-  summarise(across(where(is.numeric), sum))
 
-rm(mm1, mm2, mm3, mm4)
+
+rm(mm1, mm2, mm3)
 
 #4) BIRDS AND EGGS -----------------
 
@@ -716,8 +711,8 @@ be <- be %>%
 
 
 ##are there other groups that are only identified to a higher level like family that i am missing..???? yes...need to re do this. 
-be$Conversion_Units_To_Pounds <- as.character(be$Conversion_Units_To_Pounds)
-be$Est_Comm_Population <- as.character(be$Est_Comm_Population)
+#be$Conversion_Units_To_Pounds <- as.character(be$Conversion_Units_To_Pounds)
+#be$Est_Comm_Population <- as.character(be$Est_Comm_Population)
 
 be1 <- be %>%
   filter(is.na(Season)) %>%
@@ -736,18 +731,15 @@ be3 <- be %>%
   filter(!is.na(Taxa_lvl5))
 
 
-be4 <- rbind(be1, be2, be3) %>%
-  select(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population) %>%
+be_final <- rbind(be1, be2, be3) %>%
+  select(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Resource_Code, Resource_Name, Percent_Using:Mean_Grams_Percapita_Harvest, Sampled_households:Most_Rep_Year) %>%
   mutate(Taxa_lvl4 = coalesce(Taxa_lvl4, Taxa_lvl3)) %>%
   mutate(Taxa_lvl5 = coalesce(Taxa_lvl5, Taxa_lvl4)) %>%
   distinct() ## for sitka_2013 for some reason the large and small shorebirds are duplicated, just removing these (only duplicate row)
 
 
-be_final <- be4 %>%
-  group_by(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population) %>%
-  summarise(across(where(is.numeric), sum))
 
-rm(be1, be2, be3, be4)
+rm(be1, be2, be3)
 
 #5) MARINE INVERTEBRATES -----------------
 marine_inverts_code <- "5"
@@ -897,8 +889,8 @@ mi <- mi %>%
     startsWith(Taxa_lvl3, "Whelk") ~ "Nearshore",
   ))
 
-mi$Conversion_Units_To_Pounds <- as.character(mi$Conversion_Units_To_Pounds)
-mi$Est_Comm_Population <- as.character(mi$Est_Comm_Population)
+#mi$Conversion_Units_To_Pounds <- as.character(mi$Conversion_Units_To_Pounds)
+#mi$Est_Comm_Population <- as.character(mi$Est_Comm_Population)
 str(mi)
 ##select rows where the family level is not broken down further in a certain year/community
 mi1 <- mi %>%
@@ -919,16 +911,14 @@ mi3 <- mi %>%
   filter(is.na(Fishing_Gear_Type)) %>%
   filter(!is.na(Taxa_lvl5))
 
-mi4 <- rbind(mi1, mi2, mi3) %>%
-  select(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population) %>%
+mi_final <- rbind(mi1, mi2, mi3) %>%
+  select(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Resource_Code, Resource_Name, Percent_Using:Mean_Grams_Percapita_Harvest, Sampled_households:Most_Rep_Year) %>%
   mutate(Taxa_lvl4 = coalesce(Taxa_lvl4, Taxa_lvl3)) %>%
   mutate(Taxa_lvl5 = coalesce(Taxa_lvl5, Taxa_lvl4)) 
 
-mi_final <- mi4 %>%
-  group_by(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population) %>%
-  summarise(across(where(is.numeric), sum))
 
-rm(mi1, mi2, mi3, mi4)
+
+rm(mi1, mi2, mi3)
 #6) VEGETATION --------------------
 
 veg_code <- "6"
@@ -1051,8 +1041,8 @@ mutate(Use = case_when(
 ))
 
 
-veg$Conversion_Units_To_Pounds <- as.character(veg$Conversion_Units_To_Pounds)
-veg$Est_Comm_Population <- as.character(veg$Est_Comm_Population)
+#veg$Conversion_Units_To_Pounds <- as.character(veg$Conversion_Units_To_Pounds)
+#veg$Est_Comm_Population <- as.character(veg$Est_Comm_Population)
 
 ##select rows where the family level is not broken down further in a certain year/community
 veg1 <- veg %>%
@@ -1073,24 +1063,27 @@ veg3 <- veg %>%
   filter(is.na(Harvest_Type)) %>%
   filter(!is.na(Taxa_lvl5))
 
-veg4 <- rbind(veg1, veg2, veg3) %>%
-  select(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Mean_Pounds_Per_Household, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested, Percent_Of_Total_Harvest, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population) %>%
+veg_final <- rbind(veg1, veg2, veg3) %>%
+  select(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Resource_Code, Resource_Name, Percent_Using:Mean_Grams_Percapita_Harvest, Sampled_households:Most_Rep_Year) %>%
   mutate(Taxa_lvl4 = coalesce(Taxa_lvl4, Taxa_lvl3)) %>%
   mutate(Taxa_lvl5 = coalesce(Taxa_lvl5, Taxa_lvl4)) %>%
   distinct()
 
-veg_final <- veg4 %>%
-  group_by(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population) %>%
-  summarise(across(where(is.numeric), sum))
-
-rm(veg1, veg2, veg3, veg4)
+rm(veg1, veg2, veg3)
 ##Note: for now, have decided to go to the level of each species, and use the existing per capita harvets and total estimated lbs harvested to move forward with trying to establish food web approach.
 ##
 #Join all dataframes together ----------
 df_final <- rbind(fish_final, lm_final, mm_final, be_final, mi_final, veg_final) %>%
-  filter(!if_all(Reported_Pounds_Harvested:Percent_Of_Total_Harvest, ~ .x == 0)) ##remove rows where all values are 0 (nothing was harvested)
+  select(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Resource_Code, Resource_Name, Sampled_households:Most_Rep_Year, Conversion_Units_To_Pounds, Resource_Harvest_Units, Percent_Using:Percapita_Pounds_Harvested, Number_Of_Resource_Harvested:Mean_Grams_Percapita_Harvest) %>%
+  filter(!if_all(Percent_Using:Mean_Grams_Percapita_Harvest, ~ .x == 0)) ##remove rows where all values are 0 (nothing was harvested or shared in community)
 
 setwd("~/Desktop/Wild Foods Repo/")
 write.csv(df_final, "intermediate_files/harvest_data_clean.csv")
 
 ##for now keeping eggs and adults separate (same w/ roe in fish) as these have different trophic levels... can add later if want to, or remove egg/roe part of name for species richness.. need to think about how to do that still anyway
+##code to summarise across numeric categories if want for later - have taken out of code for time being, can do this summary later 
+#veg_final <- veg4 %>%
+#  group_by(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population) %>%
+#  summarise(across(where(is.numeric), sum))
+
+
