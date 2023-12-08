@@ -31,7 +31,7 @@ df_sum <- df %>%
 ##how are there 0's for percapita harvest but estimated total harvest is not 0? 
 
 ##Plotting frequency of interactions
-hist <- ggplot(df, aes(x = Percapita_Pounds_Harvested)) +
+hist <- ggplot(df_sum, aes(x = Percapita_Pounds_Harvested)) +
   geom_histogram() +
   facet_wrap(~Site_Year_Code) 
 hist
@@ -39,6 +39,111 @@ hist
 ##working out how to plot food web -- start w/ 1 community-year
 angoon_2012 <- df_sum %>%
   filter(Site_Year_Code == "Angoon_2012")
+
+##need to generate interaction matrix 
+mat <- angoon_2012 %>%
+  unite(Resource, c(Habitat, Trophic_Level), sep = "_", remove = FALSE) %>%
+  mutate(Consumer = "Human") 
+
+is1 <- mat %>%
+  ungroup() %>%
+  select(Resource,  Consumer, Percapita_Pounds_Harvested)
+
+tl <- mat %>%
+  ungroup() %>%
+  select(Resource, Trophic_Level, Habitat)
+tl$Trophic_Level <- as.character(tl$Trophic_Level)
+
+tl[nrow(tl) + 1,] = list("Human", "4.5", "NA")
+
+tl <- tl %>%
+  mutate(Habitat_cat = case_when(
+    startsWith(Habitat, "Fresh") ~ "1",
+    startsWith(Habitat, "Mar") ~ "2",
+    startsWith(Habitat, "Near") ~ "3",
+    startsWith(Habitat, "Terr") ~ "4",
+    startsWith(Habitat, "NA") ~ "5",
+  ))
+
+tl$Habitat_cat <- as.numeric(tl$Habitat_cat)
+##Trying to graph network w/ igraph
+#We start by converting the raw data to an igraph network object. Here we use igraph’s graph.data.frame function, which takes two data frames: d and vertices.
+
+  #d describes the edges of the network. Its first two columns are the IDs of the source and the target node for each edge. The following columns are edge attributes (weight, type, label, or anything else).
+  #vertices starts with a column of node IDs. Any following columns are interpreted as node attributes
+
+##so d would be my is1, and vertices would be tl, with trophic level as a node attribute
+net <- graph_from_data_frame(d= is1, vertices = tl, directed = T)
+class(net)
+net
+
+E(net)
+V(net)
+
+plot(net, edge.arrow.size = .4, vertex.label = NA)
+
+##replace the vertex names
+plot(net, edge.arrow.size = 0.2, edge.curved = 0, vertex.label = V(net)$Resource)
+
+##Generate Colours based on Habitat 
+colrs <- c("salmon", "darkblue", "lightblue", "darkgreen", "black")
+V(net)$color <- colrs[V(net)$Habitat_cat] ##has to be numeric to assign colors this way
+
+V(net)$Habitat_cat
+V(net)$color
+
+#Set edge width based on weight
+E(net)$width <- E(net)$Percapita_Pounds_Harvested/3
+
+
+plot(net, edge.arrow.size = 0.5, edge.curved = 0, vertex.label = V(net)$Resource)
+
+
+##color edges of graph based on source node color
+edge.start <- ends(net, es = E(net), names = F)[,1]
+edge.col <- V(net)$color[edge.start]
+
+plot(net, edge.color = edge.col, edge.curved = .3, arrow.size = 10, layout = layout_on_grid)
+
+##interactive plotting
+tkid <- tkplot(net)
+l <- tkplot.getcoords(tkid)
+tk_close(tkid)
+plot(net, layot = l, edge.color = edge.col)
+##this is not really working, not saving coordinates properly 
+ 
+
+
+
+V(net)$color
+
+
+# get row/column names of new matrix from columns 1 and 2 of data.frame
+myNames <- sort(unique(as.character(unlist(is1[1:2]))))
+
+# build matrix of 0s
+myMat <- matrix(0, 14, 14, dimnames = list(myNames, myNames))
+
+# fill in upper triangle
+myMat[as.matrix(is1[c(1,2)])] <- is1$Percapita_Pounds_Harvested
+##fill in lower triange
+myMat[as.matrix(is1[c(2,1)])] <- is1$Percapita_Pounds_Harvested
+
+
+
+
+
+
+
+tl <- mat %>%
+  ungroup() %>%
+  select(Resource, Trophic_Level)
+tl$Trophic_Level <- as.character(tl$Trophic_Level)
+
+tl[nrow(tl) + 1,] = list("Human", "4.5")
+
+
+
 
 library(cheddar)
 data(TL86)
