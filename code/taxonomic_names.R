@@ -26,7 +26,11 @@ write.csv(sp_list, "intermediate_files/harvest_species_list.csv")
 
 
 
+test <- df_comp %>%
+  filter(Taxa_lvl3 == "Whitefish")
 
+test <- df_comp %>%
+  filter(Resource_Name == "Whitefish")
 ##unknown large land mammals -- only in Haines 1983, there are # harvested, but no estimated harvest weights because there is no conversion unit... 
 ##there may be certain things like this we can't get around..but this does somehow need to be taken into account when comparing food webs... 
 ##I think Sea bass are the same as black rockfish
