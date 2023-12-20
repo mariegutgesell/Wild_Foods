@@ -54,24 +54,28 @@ tl <- mat %>%
   select(Resource, Trophic_Level, Habitat)
 tl$Trophic_Level <- as.character(tl$Trophic_Level)
 
-tl[nrow(tl) + 1,] = list("Human", "4.5", "NA")
+tl[nrow(tl) + 1,] = list("Human", "5", "NA")
 
 tl <- tl %>%
   mutate(Habitat_cat = case_when(
-    startsWith(Habitat, "Fresh") ~ "1",
-    startsWith(Habitat, "Mar") ~ "2",
-    startsWith(Habitat, "Near") ~ "3",
-    startsWith(Habitat, "Terr") ~ "4",
-    startsWith(Habitat, "NA") ~ "5",
+    startsWith(Habitat, "Fresh") ~ "4",
+    startsWith(Habitat, "Mar") ~ "1",
+    startsWith(Habitat, "Near") ~ "2",
+    startsWith(Habitat, "Terr") ~ "5",
+    startsWith(Habitat, "NA") ~ "3",
   ))
 
 tl$Habitat_cat <- as.numeric(tl$Habitat_cat)
+
+tl$Habitat <- ordered(tl$Habitat,
+                                    levels = c("Marine", "Nearshore",  "NA", "Freshwater_Anadromous", "Terrestrial"))
+
 ##Trying to graph network w/ igraph
 #We start by converting the raw data to an igraph network object. Here we use igraph’s graph.data.frame function, which takes two data frames: d and vertices.
 
   #d describes the edges of the network. Its first two columns are the IDs of the source and the target node for each edge. The following columns are edge attributes (weight, type, label, or anything else).
   #vertices starts with a column of node IDs. Any following columns are interpreted as node attributes
-
+library(igraph)
 ##so d would be my is1, and vertices would be tl, with trophic level as a node attribute
 net <- graph_from_data_frame(d= is1, vertices = tl, directed = T)
 class(net)
@@ -86,7 +90,8 @@ plot(net, edge.arrow.size = .4, vertex.label = NA)
 plot(net, edge.arrow.size = 0.2, edge.curved = 0, vertex.label = V(net)$Resource)
 
 ##Generate Colours based on Habitat 
-colrs <- c("salmon", "darkblue", "lightblue", "darkgreen", "black")
+#colrs <- c("salmon", "darkblue", "lightblue", "darkgreen", "black")
+colrs <- c("#003366","#CC9966","black", "#FF9999","#339933")
 V(net)$color <- colrs[V(net)$Habitat_cat] ##has to be numeric to assign colors this way
 
 V(net)$Habitat_cat
@@ -103,19 +108,44 @@ plot(net, edge.arrow.size = 0.5, edge.curved = 0, vertex.label = V(net)$Resource
 edge.start <- ends(net, es = E(net), names = F)[,1]
 edge.col <- V(net)$color[edge.start]
 
-plot(net, edge.color = edge.col, edge.curved = .3, arrow.size = 10, layout = layout_on_grid)
+##want to create a matrix of coordinates, where y is the trophic level, and x is the habitat
+tl$Trophic_Level <- as.numeric(tl$Trophic_Level)
+lay <- matrix(nrow = nrow(tl), ncol = 2)
+lay[,1] <- tl$Habitat_cat
+lay[,2] <- tl$Trophic_Level
+fw_plot <- plot(net, edge.color = edge.col, edge.curved = 0, arrow.size = 15, layout = lay, vertex.label = NA)
+##i think also want to have connections between trophic layers, so need to figure out how to code in "dummy" interactions
+
+##create blank ggplot axis
+axis <- ggplot(tl, aes (x = Habitat, y = Trophic_Level )) +
+  geom_blank() +
+  theme_classic() +
+  ylab("Trophic Level") +
+  theme(axis.text.x = element_text(  size = 12),axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14), axis.title.x = element_text(size = 14), text = element_text(family = "Times New Roman"), strip.background = element_blank(),strip.text = element_blank()) 
+  
+axis
+
+##Next steps:
+###need to combine the axis and igraph plot someway, 
+###add links between trophic levels -- somehow add these interactions to the df
+###think about where humans should be in terms of trophic level
+##sort out overlapping lines and make arrows look better
+##potentially automate this so can do multiple/many at a time. however, i think also next to do cluster analysis to see if we have broad archetypes 
+##get feedback from ryan and see what he thinks should change
+
 
 ##interactive plotting
-tkid <- tkplot(net)
-l <- tkplot.getcoords(tkid)
-tk_close(tkid)
-plot(net, layot = l, edge.color = edge.col)
-##this is not really working, not saving coordinates properly 
+#tkid <- tkplot(net)
+#l <- tkplot.getcoords(tkid)
+#tk_close(tkid)
+#plot(net, layot = l, edge.color = edge.col)
+
+
  
 
 
 
-V(net)$color
+#V(net)$color
 
 
 # get row/column names of new matrix from columns 1 and 2 of data.frame
