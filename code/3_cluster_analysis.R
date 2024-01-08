@@ -67,6 +67,10 @@ fviz_nbclust(df_wide_scale,kmeans, method = "silhouette")
 ###   - Is kmeans the best clustering approach? 
 ###   - what does it mean if your clusters keep changing? 
 
+##Could community harvest structure be becoming more similar over time? -- lots of the spread on the axis seems to be driven by older surveys, 
+##definitely want to look at things with year independently, but could have a way of quantifying within and across year differences... maybe showing things are more similar now?
+##somehow need to control for differences in sample size.. but an idea of something to look into
+
 ##playing around with PCA
 library(vegan)
 
