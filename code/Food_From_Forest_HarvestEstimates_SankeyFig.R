@@ -113,7 +113,6 @@ df_sank_2 <- df_sank %>%
   group_by(Category) %>%
   mutate(percent_total_harvest_all = sum(percent_total_harvest_all))
 
-##need to go through calculations in this script to make sure all the numbers add up and make sense ... something still looks off and don't like that the values have changed since pie chart
 
 links <- data.frame(
   source=c("All Harvest Species", "All Harvest Species", "All Harvest Species", "All Harvest Species", "","", "", "", "Terrestrial", "Terrestrial", "Terrestrial", "Terrestrial", "Terrestrial", "Freshwater (Anadromous)", "Freshwater (Anadromous)", "Freshwater (Anadromous)", "Freshwater (Anadromous)", "Nearshore", "Nearshore", "Nearshore", "Nearshore", "Nearshore", "Marine", "Marine", "Marine", "Marine"), 
