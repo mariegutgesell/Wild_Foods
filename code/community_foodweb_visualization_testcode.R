@@ -253,7 +253,7 @@ V(net)$color
 E(net)$width <- E(net)$total_percapitalb_harvested/5
 
 
-plot(net, edge.arrow.size = 0.5, edge.curved = 0, vertex.label = V(net)$Resource)
+plot(net, edge.arrow.size = 0.5, edge.curved = 0.5, vertex.label = V(net)$Resource)
 
 
 ##color edges of graph based on source node color
@@ -379,4 +379,130 @@ lay[,1] <- tl$Resource_cat
 lay[,2] <- tl$mean_trophic_level
 fw_plot <- plot(net, edge.color = edge.col, edge.curved = 0, arrow.size = 15, layout = lay)
 fw_plot <- plot(net, edge.color = edge.col, edge.curved = 0, arrow.size = 15, layout = lay, vertex.label = NA, arrow.size = 25)
+
+##Calculating total harvest amounts and harvest diversity
+eb_1987 <- df_fwv %>%
+  filter(Site_Year_Code == "Edna Bay_1987")
+
+skag_1987 <- df_fwv %>%
+  filter(Site_Year_Code == "Skagway_1987")
+
+eb_total_harvest <- eb_1987 %>%
+  ungroup() %>%
+  summarise_at(vars(Estimated_Total_Pounds_Harvested), list(total_est_lb_harvested = sum))
+
+skag_total_harvest <- skag_1987 %>%
+  ungroup() %>%
+  summarise_at(vars(Estimated_Total_Pounds_Harvested), list(total_est_lb_harvested = sum))
+
+
+##what would it look like if they weren't grouped? -- i..e, visualizing to the lowest taxonomic resolution
+mat <- eb_1987 %>%
+  dplyr::rename(Resource = "Taxa_lvl5") %>%
+  mutate(Consumer = "Human") 
+
+is1 <- mat %>%
+  ungroup() %>%
+  select(Resource,  Consumer, Percapita_Pounds_Harvested)
+
+tl <- mat %>%
+  ungroup() %>%
+  select(Resource, Trophic_Level, Habitat, General_Category)
+
+tl$Trophic_Level <- as.character(tl$Trophic_Level)
+
+tl[nrow(tl) + 1,] = list("Human", "5", "NA", "NA")
+
+tl <- tl %>%
+  arrange(Habitat) %>%
+  dplyr::mutate(Resource_cat = seq(from = 1, by = 4, length.out = n()) )
+
+
+#row_number()
+
+str(tl)
+
+tl <- tl %>%
+  mutate(Habitat_cat = case_when(
+    startsWith(Habitat, "Fresh") ~ "4",
+    startsWith(Habitat, "Mar") ~ "1",
+    startsWith(Habitat, "Near") ~ "2",
+    startsWith(Habitat, "Terr") ~ "5",
+    startsWith(Habitat, "NA") ~ "3",
+  ))
+
+tl$Habitat_cat <- as.numeric(tl$Habitat_cat)
+
+tl$Resource_cat <- as.numeric(tl$Resource_cat)
+tl$Trophic_Level <- as.numeric(tl$Trophic_Level)
+str(tl)
+
+#tl$Resource <- ordered(tl$Resource,
+#                       levels = c("Birds/Eggs", "Large Land Mammals", "Plants/Greens/Mushrooms", "Berries", "Salmon", "Char", "Smelt", "Human", "Crab", "Herring Roe", "Mollusc", "Other", "Seaweed/Kelp", "Halibut", "Marine Invertebrates", "Non-Halibut Fish" ))
+
+
+str(tl)
+tl$Habitat <- ordered(tl$Habitat,
+                      levels = c("Marine", "Nearshore",  "NA", "Freshwater_Anadromous", "Terrestrial"))
+
+##Trying to graph network w/ igraph
+#We start by converting the raw data to an igraph network object. Here we use igraph’s graph.data.frame function, which takes two data frames: d and vertices.
+
+#d describes the edges of the network. Its first two columns are the IDs of the source and the target node for each edge. The following columns are edge attributes (weight, type, label, or anything else).
+#vertices starts with a column of node IDs. Any following columns are interpreted as node attributes
+#library(igraph)
+##so d would be my is1, and vertices would be tl, with trophic level as a node attribute
+net <- graph_from_data_frame(d= is1, vertices = tl, directed = T)
+class(net)
+net
+
+E(net)
+V(net)
+
+plot(net, edge.arrow.size = .4, vertex.label = NA)
+
+##replace the vertex names
+plot(net, edge.arrow.size = 0.2, edge.curved = 0, vertex.label = V(net)$Resource)
+
+##Generate Colours based on Habitat 
+#colrs <- c("salmon", "darkblue", "lightblue", "darkgreen", "black")
+colrs <- c("#003366","#CC9966","black", "#FF9999","#339933")
+#colrs <- c("#FF9999", "#FF9999","#FF9999","#003366","#003366","#003366","#CC9966", "#CC9966", "#CC9966","#CC9966","#CC9966","#339933", "#339933","#339933","#339933", "black")
+#colrs <- c("#339933", "#339933","#339933","#339933","#FF9999", "#FF9999","#FF9999","black", "#CC9966", "#CC9966", "#CC9966","#CC9966","#CC9966","#003366","#003366","#003366")
+V(net)$color <- colrs[V(net)$Habitat_cat] ##has to be numeric to assign colors this way
+
+V(net)$Habitat_cat
+V(net)$color
+
+#Set edge width based on weight
+E(net)$width <- E(net)$Percapita_Pounds_Harvested
+
+
+plot(net, edge.arrow.size = 0.5, edge.curved = 0, vertex.label = V(net)$Resource)
+
+
+##color edges of graph based on source node color
+edge.start <- ends(net, es = E(net), names = F)[,1]
+edge.col <- V(net)$color[edge.start]
+
+##want to create a matrix of coordinates, where y is the trophic level, and x is the habitat
+tl$mean_trophic_level <- as.numeric(tl$Trophic_Level)
+lay <- matrix(nrow = nrow(tl), ncol = 2)
+lay[,1] <- tl$Resource_cat
+lay[,2] <- tl$Trophic_Level
+fw_plot <- plot(net, edge.color = edge.col, edge.curved = 0, arrow.size = 15, layout = lay, vertex.label.cex = 0.8, vertex.label.dist = -1)
+fw_plot <- plot(net, edge.color = edge.col, edge.curved = 0, arrow.size = 15, layout = lay, vertex.label = NA, arrow.size = 25)
+text(
+  x = lay[, 1],
+  y = lay[, 2],
+  labels = V(net)$Resource,
+  pos = 3,  # 3 represents the bottom of the text
+  srt = 45  # Set the rotation angle to 45 degrees
+)
+
+#vertex.label.degree = 45
+#vertex.label.dist = -1
+#vertex.label.cex = 0.5,
+
+tkplot(net, vertex.label.degree = 45)
 
