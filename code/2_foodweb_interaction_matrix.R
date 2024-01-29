@@ -27,7 +27,9 @@ df_sum <- df %>%
   group_by(Site_Year_Code, Habitat, Trophic_Level) %>%
   summarise(across(where(is.numeric), sum))
 
-
+##just looking at birds for figure... not part of code just needed to do this
+test <- df %>%
+  filter(Taxa_lvl3 == "Plants/Greens")
 ##how are there 0's for percapita harvest but estimated total harvest is not 0? 
 
 ##Plotting frequency of interactions
