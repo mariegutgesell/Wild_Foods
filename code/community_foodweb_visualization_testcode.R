@@ -24,6 +24,12 @@ df <- harvest_df %>%
 
 str(df)
 
+
+##test 
+eb_1987 <- df %>%
+  filter(Site_Year_Code == "Edna Bay_1987")
+sg_1987 <- df %>%
+  filter(Site_Year_Code == "Skagway_1987")
 ##ryan wants to visualize the food web with the categories summed/avged by the general classifications as used in the food from forests manuscript (at least for the community engagement meeting)
 ##so need to add a column that gives that category level, and then calculate sum and avg trophic position
 
