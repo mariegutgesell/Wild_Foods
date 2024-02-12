@@ -1080,7 +1080,7 @@ df_final <- rbind(fish_final, lm_final, mm_final, be_final, mi_final, veg_final)
 
 
 setwd("~/Desktop/Wild Foods Repo/")
-write.csv(df_final, "intermediate_files/harvest_data_clean.csv")
+write.csv(df_final, "data/intermediate_data/harvest_data_clean.csv")
 
 ##for now keeping eggs and adults separate (same w/ roe in fish) as these have different trophic levels... can add later if want to, or remove egg/roe part of name for species richness.. need to think about how to do that still anyway
 ##code to summarise across numeric categories if want for later - have taken out of code for time being, can do this summary later 
