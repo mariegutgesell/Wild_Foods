@@ -26,7 +26,7 @@ survey_demographics <- read_excel("CSIS_SurveyData_Demographics.xlsx", sheet = 2
 df_comp <- df %>%
   filter(Site_Year_Code %in% survey_demographics$Site_Year_Code) %>% ##selects only years where a comprehensive survey was done
   filter(!grepl("Marine Mammals", Project_Name)) %>% ##this removes data from targeted marine mammal surveys done in same year as comprehensive survey
-  select(Site_Year_Code, Project_Name, Resource_Code, Resource_Name, Percent_Using:Estimated_Amount_Harvested, Percent_Of_Total_Harvest, Mean_Grams_Per_Capita_Use:Mean_Grams_Percapita_Harvest) %>%
+  dplyr::select(Site_Year_Code, Project_Name, Resource_Code, Resource_Name, Percent_Using:Estimated_Amount_Harvested, Percent_Of_Total_Harvest, Mean_Grams_Per_Capita_Use:Mean_Grams_Percapita_Harvest) %>%
   left_join(survey_demographics, by = "Site_Year_Code")
 
 ##reorganize dataframe to make categories, levels
@@ -260,7 +260,7 @@ fish6 <- fish4 %>%
   filter(Site_Year_Code != "Yakutat_2015")
 
 fish_final <- rbind(fish5, fish6) %>%
-  select(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Resource_Code, Resource_Name, Percent_Using:Mean_Grams_Percapita_Harvest, Sampled_households:Most_Rep_Year) %>%
+  dplyr::select(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Resource_Code, Resource_Name, Percent_Using:Mean_Grams_Percapita_Harvest, Sampled_households:Most_Rep_Year) %>%
   mutate(Taxa_lvl4 = coalesce(Taxa_lvl4, Taxa_lvl3)) %>%
   mutate(Taxa_lvl5 = coalesce(Taxa_lvl5, Taxa_lvl4))
   
@@ -407,7 +407,7 @@ lm3 <- lm %>%
   filter(!is.na(Taxa_lvl5))
 
 lm_final <- rbind(lm1, lm2, lm3) %>%
-  select(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Resource_Code, Resource_Name, Percent_Using:Mean_Grams_Percapita_Harvest, Sampled_households:Most_Rep_Year) %>%
+  dplyr::select(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Resource_Code, Resource_Name, Percent_Using:Mean_Grams_Percapita_Harvest, Sampled_households:Most_Rep_Year) %>%
   mutate(Taxa_lvl4 = coalesce(Taxa_lvl4, Taxa_lvl3)) %>%
   mutate(Taxa_lvl5 = coalesce(Taxa_lvl5, Taxa_lvl4))
 
@@ -500,7 +500,7 @@ mm3 <- mm %>%
   filter(!is.na(Taxa_lvl5))
 
 mm_final <- rbind(mm1, mm2, mm3) %>%
-  select(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Resource_Code, Resource_Name, Percent_Using:Mean_Grams_Percapita_Harvest, Sampled_households:Most_Rep_Year) %>%
+  dplyr::select(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Resource_Code, Resource_Name, Percent_Using:Mean_Grams_Percapita_Harvest, Sampled_households:Most_Rep_Year) %>%
   mutate(Taxa_lvl4 = coalesce(Taxa_lvl4, Taxa_lvl3)) %>%
   mutate(Taxa_lvl5 = coalesce(Taxa_lvl5, Taxa_lvl4)) %>%
   filter(Taxa_lvl5 != "Harbour Seal (saltwater)") %>% ##removed harbor seal (saltwater) and fur seal (other) as always a replicate when it does come up
@@ -732,7 +732,7 @@ be3 <- be %>%
 
 
 be_final <- rbind(be1, be2, be3) %>%
-  select(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Resource_Code, Resource_Name, Percent_Using:Mean_Grams_Percapita_Harvest, Sampled_households:Most_Rep_Year) %>%
+  dplyr::select(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Resource_Code, Resource_Name, Percent_Using:Mean_Grams_Percapita_Harvest, Sampled_households:Most_Rep_Year) %>%
   mutate(Taxa_lvl4 = coalesce(Taxa_lvl4, Taxa_lvl3)) %>%
   mutate(Taxa_lvl5 = coalesce(Taxa_lvl5, Taxa_lvl4)) %>%
   distinct() ## for sitka_2013 for some reason the large and small shorebirds are duplicated, just removing these (only duplicate row)
@@ -912,7 +912,7 @@ mi3 <- mi %>%
   filter(!is.na(Taxa_lvl5))
 
 mi_final <- rbind(mi1, mi2, mi3) %>%
-  select(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Resource_Code, Resource_Name, Percent_Using:Mean_Grams_Percapita_Harvest, Sampled_households:Most_Rep_Year) %>%
+  dplyr::select(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Resource_Code, Resource_Name, Percent_Using:Mean_Grams_Percapita_Harvest, Sampled_households:Most_Rep_Year) %>%
   mutate(Taxa_lvl4 = coalesce(Taxa_lvl4, Taxa_lvl3)) %>%
   mutate(Taxa_lvl5 = coalesce(Taxa_lvl5, Taxa_lvl4)) 
 
@@ -1064,7 +1064,7 @@ veg3 <- veg %>%
   filter(!is.na(Taxa_lvl5))
 
 veg_final <- rbind(veg1, veg2, veg3) %>%
-  select(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Resource_Code, Resource_Name, Percent_Using:Mean_Grams_Percapita_Harvest, Sampled_households:Most_Rep_Year) %>%
+  dplyr::select(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Resource_Code, Resource_Name, Percent_Using:Mean_Grams_Percapita_Harvest, Sampled_households:Most_Rep_Year) %>%
   mutate(Taxa_lvl4 = coalesce(Taxa_lvl4, Taxa_lvl3)) %>%
   mutate(Taxa_lvl5 = coalesce(Taxa_lvl5, Taxa_lvl4)) %>%
   distinct()
@@ -1074,7 +1074,7 @@ rm(veg1, veg2, veg3)
 ##
 #Join all dataframes together ----------
 df_final <- rbind(fish_final, lm_final, mm_final, be_final, mi_final, veg_final) %>%
-  select(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Resource_Code, Resource_Name, Sampled_households:Most_Rep_Year, Conversion_Units_To_Pounds, Resource_Harvest_Units, Percent_Using:Percapita_Pounds_Harvested, Number_Of_Resource_Harvested:Mean_Grams_Percapita_Harvest) #%>%
+  dplyr::select(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Resource_Code, Resource_Name, Sampled_households:Most_Rep_Year, Conversion_Units_To_Pounds, Resource_Harvest_Units, Percent_Using:Percapita_Pounds_Harvested, Number_Of_Resource_Harvested:Mean_Grams_Percapita_Harvest) #%>%
 #  filter(!if_all(Percent_Using:Mean_Grams_Percapita_Harvest, ~ .x == 0)) ##remove rows where all values are 0 (nothing was harvested or shared in community)
 ##don't want to do any filtering or summing, so can just use this dataframe for any subsequent analysis, and don't need to keep coming back to this script - do later when wanted
 
