@@ -3,9 +3,9 @@
 
 library(tidyverse)
 ##import cleaned harvest data and trophic info
-setwd("~/Desktop/Wild Foods Repo/")
-source("code/1_dataframe_formation.R")
-rm(list = ls()[!ls() %in% c("df_final")])
+#setwd("~/Desktop/Wild Foods Repo/")
+df_final <- read.csv("data/intermediate_data/harvest_data_clean.csv")
+
 trophic_df <- read_excel("data/harvest_species_list_characteristics_5.xlsx", sheet = 2)
 
 ##filter to only species harvested in harvest data, select only columns needed for food web interaction, then join trophic data
@@ -25,8 +25,6 @@ df <- harvest_df %>%
 
 str(df)
 
-test <- harvest_df %>%
-  filter(Taxa_lvl3 == "Shark")
 
 ##calculate harvest metrics for the lowest common taxon, to be used for harvest analysis moving forward
 ##for Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Percapita_Pounds_Harvested, Number_of_Resource_Harvested, Estimated_Amount_Harvested want to sum by 
@@ -42,24 +40,97 @@ unique_surveys <- df %>%
   select(Site_Year_Code, Sampled_households:Est_Comm_Population) %>%
   distinct()
 
-df_common_taxa_percents <- df %>%
-  select(Site_Year_Code:Scientific_Name, Sampled_households:Estimated_Amount_Harvested) %>%
-  group_by(Site_Year_Code, Lowest_Common_Taxon_Name, Scientific_Name) %>%
-  ##need to filter out NAs
-  summarise_at(vars(Percent_Using, Percent_Attempting_to_Harvest, Percent_Harvesting, Percent_Receiving, Percent_Giving), list(mean = mean))
+
+mean_func <- function(x){
+  x1 <- x %>%
+    select(Site_Year_Code:Lowest_Common_Taxon_Name, Scientific_Name, Percent_Using) %>%
+    filter(!is.na(Percent_Using)) %>%
+    group_by(Site_Year_Code, Lowest_Common_Taxon_Name, Scientific_Name) %>%
+    summarise_at(vars(Percent_Using), list(Percent_Using_mean = mean))
+  
+  x2 <- x %>%
+    select(Site_Year_Code:Lowest_Common_Taxon_Name, Scientific_Name, Percent_Attempting_to_Harvest) %>%
+    filter(!is.na(Percent_Attempting_to_Harvest)) %>%
+    group_by(Site_Year_Code, Lowest_Common_Taxon_Name, Scientific_Name) %>%
+    summarise_at(vars(Percent_Attempting_to_Harvest), list(Percent_Attempting_to_Harvest_mean = mean))
+  
+  x3 <- x %>%
+    select(Site_Year_Code:Lowest_Common_Taxon_Name, Scientific_Name, Percent_Harvesting) %>%
+    filter(!is.na(Percent_Harvesting)) %>%
+    group_by(Site_Year_Code, Lowest_Common_Taxon_Name, Scientific_Name) %>%
+    summarise_at(vars(Percent_Harvesting), list(Percent_Harvesting_mean = mean))
+  
+  x4 <- x %>%
+    select(Site_Year_Code:Lowest_Common_Taxon_Name, Scientific_Name, Percent_Receiving) %>%
+    filter(!is.na(Percent_Receiving)) %>%
+    group_by(Site_Year_Code, Lowest_Common_Taxon_Name, Scientific_Name) %>%
+    summarise_at(vars(Percent_Receiving), list(Percent_Receiving_mean = mean))
+  
+  x5 <- x %>%
+    select(Site_Year_Code:Lowest_Common_Taxon_Name, Scientific_Name, Percent_Giving) %>%
+    filter(!is.na(Percent_Giving)) %>%
+    group_by(Site_Year_Code, Lowest_Common_Taxon_Name, Scientific_Name) %>%
+    summarise_at(vars(Percent_Giving), list(Percent_Giving_mean = mean))
+  
+  x_final <- full_join(x1, x2, by = c("Site_Year_Code", "Lowest_Common_Taxon_Name", "Scientific_Name")) %>%
+    full_join(x3, by = c("Site_Year_Code", "Lowest_Common_Taxon_Name", "Scientific_Name")) %>%
+    full_join(x4, by = c("Site_Year_Code", "Lowest_Common_Taxon_Name", "Scientific_Name")) %>%
+    full_join(x5, by = c("Site_Year_Code", "Lowest_Common_Taxon_Name", "Scientific_Name"))
+}
+
+df_mean <- mean_func(df)
 
 
-df_common_taxa_harvest <- df %>%
-  select(Site_Year_Code:Lowest_Common_Taxon_Name, Scientific_Name, Sampled_households:Estimated_Amount_Harvested) %>%
-  group_by(Site_Year_Code, Lowest_Common_Taxon_Name, Scientific_Name) %>%
-  ##Need to filter out NAs
-  summarise_at(vars(Reported_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Percapita_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested), list(sum = sum))
+sum_func <- function(x){
+  x1 <- x %>%
+    select(Site_Year_Code:Lowest_Common_Taxon_Name, Scientific_Name, Reported_Pounds_Harvested) %>%
+    filter(!is.na(Reported_Pounds_Harvested)) %>%
+    group_by(Site_Year_Code, Lowest_Common_Taxon_Name, Scientific_Name) %>%
+    summarise_at(vars(Reported_Pounds_Harvested), list(Reported_Pounds_Harvested_sum = sum))
+  
+  x2 <- x %>%
+    select(Site_Year_Code:Lowest_Common_Taxon_Name, Scientific_Name, Estimated_Total_Pounds_Harvested) %>%
+    filter(!is.na(Estimated_Total_Pounds_Harvested)) %>%
+    group_by(Site_Year_Code, Lowest_Common_Taxon_Name, Scientific_Name) %>%
+    summarise_at(vars(Estimated_Total_Pounds_Harvested), list(Estimated_Total_Pounds_Harvested_sum = sum))
+  
+  x3 <- x %>%
+    select(Site_Year_Code:Lowest_Common_Taxon_Name, Scientific_Name, Percapita_Pounds_Harvested) %>%
+    filter(!is.na(Percapita_Pounds_Harvested)) %>%
+    group_by(Site_Year_Code, Lowest_Common_Taxon_Name, Scientific_Name) %>%
+    summarise_at(vars(Percapita_Pounds_Harvested), list(Percapita_Pounds_Harvested_sum = sum))
+  
+  x4 <- x %>%
+    select(Site_Year_Code:Lowest_Common_Taxon_Name, Scientific_Name, Number_Of_Resource_Harvested) %>%
+    filter(!is.na(Number_Of_Resource_Harvested)) %>%
+    group_by(Site_Year_Code, Lowest_Common_Taxon_Name, Scientific_Name) %>%
+    summarise_at(vars(Number_Of_Resource_Harvested), list(Number_Of_Resource_Harvested_sum = sum))
+  
+  x5 <- x %>%
+    select(Site_Year_Code:Lowest_Common_Taxon_Name, Scientific_Name, Estimated_Amount_Harvested) %>%
+    filter(!is.na(Estimated_Amount_Harvested)) %>%
+    group_by(Site_Year_Code, Lowest_Common_Taxon_Name, Scientific_Name) %>%
+    summarise_at(vars(Estimated_Amount_Harvested), list(Estimated_Amount_Harvested_sum = sum))
+  
+  x_final <- full_join(x1, x2, by = c("Site_Year_Code", "Lowest_Common_Taxon_Name", "Scientific_Name")) %>%
+    full_join(x3, by = c("Site_Year_Code", "Lowest_Common_Taxon_Name", "Scientific_Name")) %>%
+    full_join(x4, by = c("Site_Year_Code", "Lowest_Common_Taxon_Name", "Scientific_Name")) %>%
+    full_join(x5, by = c("Site_Year_Code", "Lowest_Common_Taxon_Name", "Scientific_Name"))
+}
 
-df_common_taxa <- left_join(df_common_taxa_percents, df_common_taxa_harvest, by = c("Site_Year_Code", "Lowest_Common_Taxon_Name", "Scientific_Name")) %>%
+df_sum <- sum_func(df)
+
+
+
+##Join all data together
+
+df_common_taxa <- left_join(df_mean, df_sum, by = c("Site_Year_Code", "Lowest_Common_Taxon_Name", "Scientific_Name")) %>%
   left_join(unique_trophic_common_taxa, by = c("Site_Year_Code", "Lowest_Common_Taxon_Name", "Scientific_Name")) %>%
-  left_join(unique_surveys, by = "Site_Year_Code")
+  left_join(unique_surveys, by = "Site_Year_Code") %>%
+  select(Site_Year_Code, Lowest_Common_Taxon_Name, Scientific_Name, Habitat:Est_Comm_Population, Percent_Using_mean:Estimated_Amount_Harvested_sum)
 
 ##something i think is off, there should be the same number of rows in the harvest sums as unique trophic/common taxa... 
 
 ##need to go back and double check, but for now just move on... 
 write.csv(df_common_taxa, "data/intermediate_data/comparable_harvest_df.csv")
+
