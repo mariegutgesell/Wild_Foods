@@ -7,33 +7,318 @@
 library(dplyr)
 library(vegan)
 library(factoextra)
-
+library(tidyverse)
 #library(devtools)
 #install_github("vqv/ggbiplot")
 library(ggbiplot)
 
-##import cleaned harvest data and trophic info
-setwd("~/Desktop/Wild Foods Repo/")
-source("code/1_dataframe_formation.R")
-rm(list = ls()[!ls() %in% c("df_final")])
-trophic_df <- read_excel("data/harvest_species_list_characteristics_5.xlsx")
+##import cleaned harvest data and trophic info that is comparable across all years
+df <- read.csv("data/intermediate_data/comparable_harvest_df.csv")
+  
 
-##filter to only species harvested in harvest data, select only columns needed for food web interaction, then join trophic data
-##note: in future will likely recalculate the harvest metrics, but lets not worry about that now -- also still need to fix those where conversion unit is 0 but did harvest resources
-harvest_df <- df_final %>%
-  select(Site_Year_Code, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Percapita_Pounds_Harvested, Estimated_Total_Pounds_Harvested, Reported_Pounds_Harvested, Number_Of_Resource_Harvested, Estimated_Amount_Harvested) %>%
-  filter(!if_all(Percapita_Pounds_Harvested:Estimated_Amount_Harvested, ~ .x == 0))
+##Normalize percapita harvest and total harvest 
+total_harvest <- df %>%
+  select(Site_Year_Code, Estimated_Total_Pounds_Harvested_sum, Percapita_Pounds_Harvested_sum) %>%
+  filter(Percapita_Pounds_Harvested_sum != 0) %>%
+  group_by(Site_Year_Code) %>%
+  summarise_at(vars(Estimated_Total_Pounds_Harvested_sum, Percapita_Pounds_Harvested_sum), list(total = sum))
 
-#harvest_df$Taxa_lvl5 <- str_remove(harvest_df$Taxa_lvl5, "Unknown ")
-#harvest_df$Taxa_lvl4 <- str_remove(harvest_df$Taxa_lvl4, "Unknown ")
 
-df <- harvest_df %>%
-  left_join(trophic_df %>% select(Taxa_lvl4, Taxa_lvl5, Scientific_Name, Lowest_Taxonomic_Resolution, Habitat, Trophic_Level, Trophic_Category), by = c("Taxa_lvl4", "Taxa_lvl5")) %>%
-  select(Site_Year_Code, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Scientific_Name, Lowest_Taxonomic_Resolution, Habitat, Trophic_Level, Trophic_Category,Percapita_Pounds_Harvested:Estimated_Amount_Harvested)
+df_2 <- df %>%
+  left_join(total_harvest, by = "Site_Year_Code") %>%
+  mutate(Total_Harvest_prop = (Estimated_Total_Pounds_Harvested_sum/Estimated_Total_Pounds_Harvested_sum_total)*100) %>%
+  mutate(Percapita_Harvest_prop = (Percapita_Pounds_Harvested_sum/Percapita_Pounds_Harvested_sum_total)*100) %>%
+  mutate(Percapita_Harvest_prop_log = log(Percapita_Harvest_prop)) %>%
+  mutate(Percapita_Harvest_prop_sqrt = sqrt(Percapita_Harvest_prop)) %>%
+  mutate(Total_Harvest_prop_log = log(Total_Harvest_prop)) %>%
+  mutate(Total_Harvest_prop_sqrt = sqrt(Total_Harvest_prop)) %>%
+  group_by(Site_Year_Code) %>%
+  mutate(Percapita_Harvest_prop_scale = scale(Percapita_Harvest_prop)) %>%
+  mutate(Total_Harvest_prop_scale = scale(Total_Harvest_prop)) #%>%
+  #filter(!grepl("Unknown", Lowest_Common_Taxon_Name))
 
-str(df)
-##NOTE: need to sort out cases where for example reported number or pounds harvested is 0, but have an estimate of total harvested 
+##Looking at distributions
+hist(df_2$Percapita_Harvest_prop) ##very left skewed
+hist(df_2$Total_Harvest_prop) ## very left skewed
+hist(df_2$Total_Harvest_prop_log) ##more normal, but has -ves 
+hist(df_2$Percapita_Harvest_prop_log) ##normal, but has -ves
+hist(df_2$Total_Harvest_prop_sqrt) ##still left skewed
+hist(df_2$Percapita_Harvest_prop_sqrt) ##still left skewed
+hist(df_2$Total_Harvest_prop_scale) ##still left skewed
+hist(df_2$Percapita_Harvest_prop_scale) ##still left skewed 
 
+
+
+
+ggplot(df_2, aes(x = Percapita_Harvest_prop)) +
+  geom_histogram()+
+  facet_wrap(~Site_Year_Code)
+##Percapita harvest ---------------
+##NMDS and cluster analysis for all sites and all years using comparable taxa level
+
+##convert into wide format -- percapita harvest proportion, no transformations
+df_wide_1 <- df_2 %>%
+  select(Site_Year_Code, Lowest_Common_Taxon_Name, Percapita_Harvest_prop) %>%
+  filter(Percapita_Harvest_prop != 0) %>% ##keep only values that are not 0 for percapita harvest, 
+  spread(key = Lowest_Common_Taxon_Name, value = Percapita_Harvest_prop)
+df_wide_1[is.na(df_wide_1)] <- 0
+
+df_wide_1 <- df_wide_1 %>%
+  remove_rownames %>% 
+  column_to_rownames(var="Site_Year_Code")
+##select only numerical rows
+df_wide_1a <- df_wide_1 %>%
+  select(Abalone:`Wilson's Snipe`)
+is.na(df_wide_1a)
+
+
+##K-means clustering  -- common clustering approach that uses algorithm that minimizes intracluster distances, based on sum of squares of euclidean distances to centroid
+library(factoextra)
+k2 <- kmeans(df_wide_1a, iter.max = 1000, centers = 2)
+fviz_cluster(k2, data = df_wide_1a)
+
+##why do clusters change when re-running it? how do you then determine which clusters are appropirate? does this mean the clusters aren't strong? 
+##what is an appropriate amount of variance that should be explained?
+
+fviz_nbclust(df_wide_1a,kmeans, method = "silhouette")
+
+
+##Trying NMDS, with Manhattan distance
+sp_NMDS_1 <- metaMDS(df_wide_1a, k=2, autotransform = TRUE, distance = "manhattan") ##The sqrt() transformation is applied if the maximum value is ≤ 50 and wisconsin() standardization is applied if the maximum value > 9, but it is recommended to do desired transformations/standardizations first and then do autotransform = FALSE
+stressplot(sp_NMDS_1)
+plot(sp_NMDS_1)
+ordiplot(sp_NMDS_1,type="n")
+orditorp(sp_NMDS_1,display="species",col="red",air=0.01)
+orditorp(sp_NMDS_1,display="sites",cex=1,air=0.01)
+
+
+
+##hierarchical clustering
+#clusters <- hclust(dist(df_wide_scale))
+#plot(clusters)
+
+###Average proportion percapita harvest across communities ---------------
+##Average per community (following methods as in Renner and Huntington)
+df_comm_avg <- df_2 %>%
+  select(Site_Year_Code, Lowest_Common_Taxon_Name, Total_Harvest_prop, Percapita_Harvest_prop) %>%
+  separate(Site_Year_Code, c("Site", "Year"), sep = "_") %>%
+  group_by(Site, Lowest_Common_Taxon_Name) %>%
+  summarise_at(vars(Total_Harvest_prop, Percapita_Harvest_prop), list(avg = mean))
+
+
+
+##convert into wide format 
+df_wide_2 <- df_comm_avg %>%
+  select(Site, Lowest_Common_Taxon_Name, Percapita_Harvest_prop_avg) %>%
+  #filter(Estimated_Total_Pounds_Harvested_sum_avg != 0) %>% ##keep only values that are not 0 for percapita harvest, 
+  spread(key = Lowest_Common_Taxon_Name, value = Percapita_Harvest_prop_avg)
+df_wide_2[is.na(df_wide_2)] <- 0
+
+
+df_wide_2 <- df_wide_2 %>%
+  remove_rownames %>% 
+  column_to_rownames(var="Site")
+##select only numerical rows
+df_wide_2a <- df_wide_2 %>%
+  select(Abalone:`Wilson's Snipe`)
+is.na(df_wide_2a)
+
+
+##example cluster analysis (still need to figure out what is the best one)
+
+##K-means clustering  -- common clustering approach that uses algorithm that minimizes intracluster distances, based on sum of squares of euclidean distances to centroid
+k2 <- kmeans(df_wide_2a, iter.max = 1000, centers = 2)
+#fviz_cluster(k2, data = df_wide_2a, scale = FALSE)
+
+##why do clusters change when re-running it? how do you then determine which clusters are appropirate? does this mean the clusters aren't strong? 
+##what is an appropriate amount of variance that should be explained?
+
+fviz_nbclust(df_wide_scale, kmeans, method = "silhouette")
+
+
+##Trying NMDS, with BC similarity
+sp_NMDS_2 <- metaMDS(df_wide_2a, k=2, autotransform = TRUE, distance = "manhattan")
+stressplot(sp_NMDS_2)
+plot(sp_NMDS_2)
+ordiplot(sp_NMDS_2,type="n")
+orditorp(sp_NMDS_2,display="species",col="red",air=0.01)
+orditorp(sp_NMDS_2,display="sites",cex=1,air=0.01)
+
+
+###Looking at variance in species richness and SW diversity
+sp_rich <- df_2 %>%
+  group_by(Site_Year_Code, Est_Comm_Population) %>%
+  summarise_at() %>%
+  mutate(Est_Comm_Population_log = log(Est_Comm_Population))
+hist(sp_rich$n)
+
+ggplot(sp_rich, aes(x=Est_Comm_Population_log, y = n)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  theme_classic() +
+  ylab("Harvest Species Richness") +
+  xlab("Estimated Community Population (log)")
+
+sp_rich_lm <- lm(n~Est_Comm_Population_log, data = sp_rich)
+summary(sp_rich_lm)
+
+
+df_wide <- df_2 %>%
+  select(Site_Year_Code, Lowest_Common_Taxon_Name, Percapita_Pounds_Harvested_sum) %>%
+  filter(Percapita_Pounds_Harvested_sum != 0) %>% ##keep only values that are not 0 for percapita harvest, 
+  spread(key = Lowest_Common_Taxon_Name, value = Percapita_Pounds_Harvested_sum)
+df_wide[is.na(df_wide)] <- 0
+df_wide <- df_wide %>%
+  remove_rownames %>% 
+  column_to_rownames(var="Site_Year_Code")
+
+str(df_wide)
+sw_div <- diversity(df_wide, index = "shannon") 
+
+
+sp_rich <- cbind(sp_rich, sw_div)
+ggplot(sp_rich, aes(x=Est_Comm_Population_log, y = `...5`)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  theme_classic() +
+  ylab("Harvest Species Diversity (SW)") +
+  xlab("Estimated Community Population (log)")
+
+sw_lm <- lm(`...5`~Est_Comm_Population_log, data = sp_rich)
+summary(sw_lm)
+
+
+##NMDS by year --- just seeing if clear temporal trends apparent or now 
+
+df_yr_avg <- df_2 %>%
+  select(Site_Year_Code, Lowest_Common_Taxon_Name, Percapita_Pounds_Harvested_sum, Estimated_Total_Pounds_Harvested_sum) %>%
+  separate(Site_Year_Code, c("Site", "Year"), sep = "_") %>%
+  group_by(Lowest_Common_Taxon_Name, Year) %>%
+  summarise_at(vars(Percapita_Pounds_Harvested_sum, Estimated_Total_Pounds_Harvested_sum), list(avg = mean))
+
+##convert into wide format 
+df_wide <- df_yr_avg %>%
+  select(Year, Lowest_Common_Taxon_Name, Percapita_Pounds_Harvested_sum_avg) %>%
+  filter(Percapita_Pounds_Harvested_sum_avg != 0) %>% ##keep only values that are not 0 for percapita harvest, 
+  spread(key = Lowest_Common_Taxon_Name, value = Percapita_Pounds_Harvested_sum_avg)
+df_wide[is.na(df_wide)] <- 0
+
+str(df_wide)
+
+df_wide <- df_wide %>%
+  remove_rownames %>% 
+  column_to_rownames(var="Year")
+##select only numerical rows
+df_wide2 <- df_wide %>%
+  select(Abalone:`Wilson's Snipe`)
+is.na(df_wide2)
+
+
+##example cluster analysis (still need to figure out what is the best one)
+##scale data so it is normalized (i think)
+df_wide_scale <- as.data.frame(scale(df_wide2))
+
+##K-means clustering  -- common clustering approach that uses algorithm that minimizes intracluster distances, based on sum of squares of euclidean distances to centroid
+library(factoextra)
+k2 <- kmeans(df_wide_scale, iter.max = 1000, centers = 2)
+fviz_cluster(k2, data = df_wide_scale)
+
+##why do clusters change when re-running it? how do you then determine which clusters are appropirate? does this mean the clusters aren't strong? 
+##what is an appropriate amount of variance that should be explained?
+
+fviz_nbclust(df_wide_scale, kmeans, method = "silhouette")
+
+
+##Trying NMDS, with BC similarity
+sp_NMDS <- metaMDS(df_wide2, k=2, autotransform = TRUE, distance = "manhattan")
+stressplot(sp_NMDS)
+plot(sp_NMDS)
+ordiplot(sp_NMDS,type="n")
+orditorp(sp_NMDS,display="species",col="red",air=0.01)
+orditorp(sp_NMDS,display="sites",cex=1,air=0.01)
+
+
+##PLAYing around with visualizing communities that may have different harvest structure
+##haines 1983
+haines_1983 <- df_comm_avg %>%
+  filter(Site == "Haines") %>%
+  filter(!is.na(Percapita_Pounds_Harvested_sum_avg))
+
+mat <- haines_1983 %>%
+  dplyr::rename(Resource = "Lowest_Common_Taxon_Name") %>%
+  mutate(Consumer = "Human") 
+
+is1 <- mat %>%
+  ungroup() %>%
+  select(Resource,  Consumer, Percapita_Pounds_Harvested_sum_avg)
+
+tl <- mat %>%
+  ungroup() %>%
+  select(Resource)
+
+
+tl[nrow(tl) + 1,] = list("Human")
+
+library(igraph)
+net <- graph_from_data_frame(d= is1, vertices = tl, directed = T)
+class(net)
+net
+
+E(net)
+V(net)
+
+plot(net, edge.arrow.size = .4, vertex.label = NA)
+
+##replace the vertex names
+plot(net, edge.arrow.size = 0.2, edge.curved = 0, vertex.label = V(net)$Resource)
+
+#Set edge width based on weight
+E(net)$width <- E(net)$Percapita_Pounds_Harvested_sum_avg
+
+
+plot(net, edge.arrow.size = 0.5, edge.curved = 0, vertex.label = V(net)$Resource)
+
+##game greek 1996
+gc_1996 <- df_comm_avg %>%
+  filter(Site == "Game Creek") %>%
+  filter(!is.na(Percapita_Pounds_Harvested_sum_avg))
+
+mat <- gc_1996 %>%
+  dplyr::rename(Resource = "Lowest_Common_Taxon_Name") %>%
+  mutate(Consumer = "Human") 
+
+is1 <- mat %>%
+  ungroup() %>%
+  select(Resource,  Consumer, Percapita_Pounds_Harvested_sum_avg)
+
+tl <- mat %>%
+  ungroup() %>%
+  select(Resource)
+
+
+tl[nrow(tl) + 1,] = list("Human")
+
+library(igraph)
+net <- graph_from_data_frame(d= is1, vertices = tl, directed = T)
+class(net)
+net
+
+E(net)
+V(net)
+
+plot(net, edge.arrow.size = .4, vertex.label = NA)
+
+##replace the vertex names
+plot(net, edge.arrow.size = 0.2, edge.curved = 0, vertex.label = V(net)$Resource)
+
+#Set edge width based on weight
+E(net)$width <- E(net)$Percapita_Pounds_Harvested_sum_avg
+
+
+plot(net, edge.arrow.size = 0.5, edge.curved = 0, vertex.label = V(net)$Resource)
+
+
+##OLD CODE -------------------
 ##Cluster/PCA analysis for all species/years -- by HABITAT and TROPHIC CATEGORY ------------
 ##for each community-year want to sum by habitat, and then trophic category
 df_sum <- df %>%
@@ -409,18 +694,6 @@ sg3_hist <- df_test2 %>%
   geom_histogram() +
   facet_wrap(~Site_Year_Code) 
 sg3_hist
-
-##Next steps:
-##- Identify level of identification that is comparable across years -- or potentially do this within years?
-##    - Maybe try just 
-##- Need to figure out what these clusters mean -- what is driving the presence of these different clusters?
-###   - Is there something like PCA or other constrained clustering approach that is approporiate but also shows us what is driving the clusters?
-###   - Is kmeans the best clustering approach? 
-###   - what does it mean if your clusters keep changing? 
-
-##Could community harvest structure be becoming more similar over time? -- lots of the spread on the axis seems to be driven by older surveys, 
-##definitely want to look at things with year independently, but could have a way of quantifying within and across year differences... maybe showing things are more similar now?
-##somehow need to control for differences in sample size.. but an idea of something to look into
 
 
 ##PLAYing around with visualizing communities that may have different harvest structure
