@@ -147,7 +147,7 @@ fish <- fish %>%
     startsWith(Resource_Code, "121006") ~ "Pacific (silver) hake",
     startsWith(Resource_Code, "12109") ~ "Unknown Gadiformes",
     startsWith(Resource_Code, "1212") ~ "Eel",
-    startsWith(Resource_Code, "12140") ~ "Flounder",
+  #  startsWith(Resource_Code, "12140") ~ "Flounder",
     startsWith(Resource_Code, "12149") ~ "Unknown Flounder",
     startsWith(Resource_Code, "121606") ~ "Lingcod",
     startsWith(Resource_Code, "121608") ~ "Rock Greenling",
@@ -176,7 +176,7 @@ fish <- fish %>%
     startsWith(Resource_Code, "123204") ~ "Salmon Shark",
     startsWith(Resource_Code, "12329") ~ "Unknown Shark",
     startsWith(Resource_Code, "1234") ~ "Skates",
-    startsWith(Resource_Code, "12360") ~ "Sole",
+   # startsWith(Resource_Code, "12360") ~ "Sole",
     startsWith(Resource_Code, "12369") ~ "Unknown Sole",
     startsWith(Resource_Code, "124002") ~ "Blue Fin", 
     startsWith(Resource_Code, "124004") ~ "Mackerel", 
@@ -194,7 +194,7 @@ fish <- fish %>%
     startsWith(Resource_Code, "126204") ~ "Rainbow Trout", 
     startsWith(Resource_Code, "126206") ~ "Steelhead", 
     startsWith(Resource_Code, "12629") ~ "Unknown Trout", 
-    startsWith(Resource_Code, "12640") ~ "Whitefish", 
+    #startsWith(Resource_Code, "12640") ~ "Whitefish", 
     startsWith(Resource_Code, "12649") ~ "Unknown Whitefish",
     startsWith(Resource_Code, "1299") ~ "Unknown Non-Salmon Fish", 
     startsWith(Resource_Code, "1248") ~ "Burbot",
@@ -709,8 +709,6 @@ be <- be %>%
     startsWith(Resource_Code, "4318049") ~ "Unknown Ptarmigan Eggs",
   )) 
 
-
-##are there other groups that are only identified to a higher level like family that i am missing..???? yes...need to re do this. 
 #be$Conversion_Units_To_Pounds <- as.character(be$Conversion_Units_To_Pounds)
 #be$Est_Comm_Population <- as.character(be$Est_Comm_Population)
 
@@ -1082,10 +1080,20 @@ df_final <- rbind(fish_final, lm_final, mm_final, be_final, mi_final, veg_final)
 setwd("~/Desktop/Wild Foods Repo/")
 write.csv(df_final, "data/intermediate_data/harvest_data_clean.csv")
 
-##for now keeping eggs and adults separate (same w/ roe in fish) as these have different trophic levels... can add later if want to, or remove egg/roe part of name for species richness.. need to think about how to do that still anyway
-##code to summarise across numeric categories if want for later - have taken out of code for time being, can do this summary later 
-#veg_final <- veg4 %>%
-#  group_by(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Conversion_Units_To_Pounds, Resource_Harvest_Units, Est_Comm_Population) %>%
-#  summarise(across(where(is.numeric), sum))
+##list of distinct harvest taxa
+sp_list <- df_final %>%
+  ungroup() %>%
+  select(Taxa_lvl1:Taxa_lvl5, Habitat) %>%
+  distinct()
+write.csv(sp_list, "data/harvest_species_list.csv")
 
+##list of distinct harvest taxa w/ some harvest (removes species listed but not harvested)
+df_final_2 <- rbind(fish_final, lm_final, mm_final, be_final, mi_final, veg_final) %>%
+  dplyr::select(Project_Name, Site_Year_Code, Habitat, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Resource_Code, Resource_Name, Sampled_households:Most_Rep_Year, Conversion_Units_To_Pounds, Resource_Harvest_Units, Percent_Using:Percapita_Pounds_Harvested, Number_Of_Resource_Harvested:Mean_Grams_Percapita_Harvest) %>%
+  filter(!if_all(Percent_Using:Mean_Grams_Percapita_Harvest, ~ .x == 0)) ##remove rows where all values are 0 (nothing was harvested or shared in community)
 
+sp_list_2 <- df_final_2 %>%
+  ungroup() %>%
+  select(Taxa_lvl1:Taxa_lvl5, Habitat) %>%
+  distinct()
+write.csv(sp_list_2, "data/harvest_species_list_harvested_taxa.csv")
