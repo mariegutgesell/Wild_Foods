@@ -15,7 +15,12 @@ library(ggbiplot)
 ##import cleaned harvest data and trophic info that is comparable across all years
 df <- read.csv("data/intermediate_data/comparable_harvest_df.csv")
   
+##remove hoonah 2016 because lauren said that survey was conducted differently, wasn't a full comprehensive 
+#df <- df %>%
+#  filter(Site_Year_Code != "Hoonah_2016")
 
+#test <- df %>%
+#  filter(Site_Year_Code == "Hoonah_2016")
 ##Normalize percapita harvest and total harvest 
 total_harvest <- df %>%
   select(Site_Year_Code, Estimated_Total_Pounds_Harvested_sum, Percapita_Pounds_Harvested_sum) %>%
@@ -46,9 +51,6 @@ hist(df_2$Total_Harvest_prop_sqrt) ##still left skewed
 hist(df_2$Percapita_Harvest_prop_sqrt) ##still left skewed
 hist(df_2$Total_Harvest_prop_scale) ##still left skewed
 hist(df_2$Percapita_Harvest_prop_scale) ##still left skewed 
-
-
-
 
 ggplot(df_2, aes(x = Percapita_Harvest_prop)) +
   geom_histogram()+
@@ -92,11 +94,6 @@ orditorp(sp_NMDS_1,display="species",col="red",air=0.01)
 orditorp(sp_NMDS_1,display="sites",cex=1,air=0.01)
 
 
-
-##hierarchical clustering
-#clusters <- hclust(dist(df_wide_scale))
-#plot(clusters)
-
 ###Average proportion percapita harvest across communities ---------------
 ##Average per community (following methods as in Renner and Huntington)
 df_comm_avg <- df_2 %>%
@@ -104,8 +101,6 @@ df_comm_avg <- df_2 %>%
   separate(Site_Year_Code, c("Site", "Year"), sep = "_") %>%
   group_by(Site, Lowest_Common_Taxon_Name) %>%
   summarise_at(vars(Total_Harvest_prop, Percapita_Harvest_prop), list(avg = mean))
-
-
 
 ##convert into wide format 
 df_wide_2 <- df_comm_avg %>%
@@ -123,20 +118,7 @@ df_wide_2a <- df_wide_2 %>%
   select(Abalone:`Wilson's Snipe`)
 is.na(df_wide_2a)
 
-
-##example cluster analysis (still need to figure out what is the best one)
-
-##K-means clustering  -- common clustering approach that uses algorithm that minimizes intracluster distances, based on sum of squares of euclidean distances to centroid
-k2 <- kmeans(df_wide_2a, iter.max = 1000, centers = 2)
-#fviz_cluster(k2, data = df_wide_2a, scale = FALSE)
-
-##why do clusters change when re-running it? how do you then determine which clusters are appropirate? does this mean the clusters aren't strong? 
-##what is an appropriate amount of variance that should be explained?
-
-fviz_nbclust(df_wide_scale, kmeans, method = "silhouette")
-
-
-##Trying NMDS, with BC similarity
+##Trying NMDS, with manhattan distance
 sp_NMDS_2 <- metaMDS(df_wide_2a, k=2, autotransform = TRUE, distance = "manhattan")
 stressplot(sp_NMDS_2)
 plot(sp_NMDS_2)
@@ -145,28 +127,141 @@ orditorp(sp_NMDS_2,display="species",col="red",air=0.01)
 orditorp(sp_NMDS_2,display="sites",cex=1,air=0.01)
 
 
-###Looking at variance in species richness and SW diversity
-sp_rich <- df_2 %>%
-  group_by(Site_Year_Code, Est_Comm_Population) %>%
-  summarise_at() %>%
-  mutate(Est_Comm_Population_log = log(Est_Comm_Population))
-hist(sp_rich$n)
+##Cluster analysis of total harvest -- normalized to proportion -----------
+##convert into wide format 
+df_wide_3 <- df_2 %>%
+  select(Site_Year_Code, Lowest_Common_Taxon_Name, Total_Harvest_prop) %>%
+  filter(Total_Harvest_prop!= 0) %>% ##keep only values that are not 0 for percapita harvest, 
+  spread(key = Lowest_Common_Taxon_Name, value = Total_Harvest_prop)
+df_wide_3[is.na(df_wide_3)] <- 0
 
-ggplot(sp_rich, aes(x=Est_Comm_Population_log, y = n)) +
+df_wide_3 <- df_wide_3 %>%
+  remove_rownames %>% 
+  column_to_rownames(var="Site_Year_Code")
+##select only numerical rows
+df_wide_3a <- df_wide_3 %>%
+  select(Abalone:`Wilson's Snipe`)
+##example cluster analysis (still need to figure out what is the best one)
+
+##K-means clustering  -- common clustering approach that uses algorithm that minimizes intracluster distances, based on sum of squares of euclidean distances to centroid
+k2 <- kmeans(df_wide_3a, iter.max = 1000, centers = 2)
+fviz_cluster(k2, data = df_wide_3a, scale = FALSE)
+
+##why do clusters change when re-running it? how do you then determine which clusters are appropirate? does this mean the clusters aren't strong? 
+##what is an appropriate amount of variance that should be explained?
+
+fviz_nbclust(df_wide_3a, kmeans, method = "silhouette")
+
+##hierarchical clustering
+clusters_1 <- hclust(dist(df_wide_3a))
+plot(clusters_1)
+
+##Cluster analysis on total harvest proportion,  mean across communities 
+df_wide_4 <- df_comm_avg %>%
+  select(Site, Lowest_Common_Taxon_Name, Total_Harvest_prop_avg) %>%
+  filter(Total_Harvest_prop_avg!= 0) %>% ##keep only values that are not 0 for percapita harvest, 
+  spread(key = Lowest_Common_Taxon_Name, value = Total_Harvest_prop_avg)
+df_wide_4[is.na(df_wide_4)] <- 0
+
+df_wide_4 <- df_wide_4 %>%
+  remove_rownames %>% 
+  column_to_rownames(var="Site")
+##select only numerical rows
+df_wide_4a <- df_wide_4 %>%
+  select(Abalone:`Wilson's Snipe`)
+##example cluster analysis (still need to figure out what is the best one)
+
+##K-means clustering  -- common clustering approach that uses algorithm that minimizes intracluster distances, based on sum of squares of euclidean distances to centroid
+k2 <- kmeans(df_wide_4a, iter.max = 1000, centers = 2)
+fviz_cluster(k2, data = df_wide_4a)
+
+##why do clusters change when re-running it? how do you then determine which clusters are appropirate? does this mean the clusters aren't strong? 
+##what is an appropriate amount of variance that should be explained?
+
+fviz_nbclust(df_wide_4a, kmeans, method = "silhouette")
+
+##hierarchical clustering
+clusters_2 <- hclust(dist(df_wide_4a))
+plot(clusters_2)
+
+###NMDS w/ deer, salmon, and halibut removed --------------
+df_reduced <- df_2 %>%
+  filter(!Lowest_Common_Taxon_Name %in% c("Deer", "Halibut", "Chinook Salmon", "Chum Salmon", "Coho Salmon", "Pink Salmon", "Sockeye Salmon"))
+
+##convert into wide format 
+df_wide_5 <- df_reduced %>%
+  select(Site_Year_Code, Lowest_Common_Taxon_Name, Percapita_Harvest_prop) %>%
+  #filter(Estimated_Total_Pounds_Harvested_sum_avg != 0) %>% ##keep only values that are not 0 for percapita harvest, 
+  spread(key = Lowest_Common_Taxon_Name, value = Percapita_Harvest_prop)
+df_wide_5[is.na(df_wide_5)] <- 0
+
+
+df_wide_5 <- df_wide_5 %>%
+  remove_rownames %>% 
+  column_to_rownames(var="Site_Year_Code")
+##select only numerical rows
+df_wide_5a <- df_wide_5 %>%
+  select(Abalone:`Wilson's Snipe`)
+is.na(df_wide_5a)
+
+##Trying NMDS, with manhattan distance
+sp_NMDS_3 <- metaMDS(df_wide_5a, k=2, autotransform = TRUE, distance = "manhattan")
+stressplot(sp_NMDS_3)
+plot(sp_NMDS_3)
+ordiplot(sp_NMDS_3,type="n")
+orditorp(sp_NMDS_3,display="species",col="red",air=0.01)
+orditorp(sp_NMDS_3,display="sites",cex=1,air=0.01)
+
+
+
+
+##Diversity vs. Population Size -------------------------------
+###Looking at variance in species richness and SW diversity
+library(readxl)
+comm_dem <- read_excel("data/CSIS_Community_Demographics.xlsx", sheet = 2) %>%
+  unite(Site_Year_Code, c(Community, Survey_Year), sep = "_", remove = FALSE) 
+
+comm_dem$Estimated_Population <- as.numeric(comm_dem$Estimated_Population)
+comm_dem$Percent_Native_by_Individual <- as.numeric(comm_dem$Percent_Native_by_Individual)
+str(comm_dem)
+
+sp_rich <- df_2 %>%
+  select(Site_Year_Code, Lowest_Common_Taxon_Name) %>%
+  filter(!grepl("Unknown", Lowest_Common_Taxon_Name)) %>% ##remove unknown taxa from diversity calculations
+  group_by(Site_Year_Code) %>%
+  count()
+ 
+sp_rich <- comm_dem %>%
+  left_join(sp_rich, by = "Site_Year_Code") %>%
+  dplyr::rename(Species_Richness = "n") %>%
+  mutate(Est_Comm_Population_log = log(Estimated_Population)) %>%
+  mutate(Percent_Native_by_Individual_log = log(Percent_Native_by_Individual+1)) %>%
+  mutate(Percent_Native_by_Individual_sqrt = sqrt(Percent_Native_by_Individual))
+
+hist(sp_rich$Percent_Native_by_Individual)
+hist(sp_rich$Percent_Native_by_Individual_log)
+hist(sp_rich$Percent_Native_by_Individual_sqrt)
+
+log(1)
+
+shapiro.test(sp_rich$Percent_Native_by_Individual_log)
+
+ggplot(sp_rich, aes(x=Est_Comm_Population_log, y = Species_Richness)) +
   geom_point() +
   geom_smooth(method = "lm") +
   theme_classic() +
   ylab("Harvest Species Richness") +
   xlab("Estimated Community Population (log)")
 
-sp_rich_lm <- lm(n~Est_Comm_Population_log, data = sp_rich)
+sp_rich_lm <- lm(Species_Richness~Est_Comm_Population_log, data = sp_rich)
 summary(sp_rich_lm)
 
 
 df_wide <- df_2 %>%
-  select(Site_Year_Code, Lowest_Common_Taxon_Name, Percapita_Pounds_Harvested_sum) %>%
-  filter(Percapita_Pounds_Harvested_sum != 0) %>% ##keep only values that are not 0 for percapita harvest, 
-  spread(key = Lowest_Common_Taxon_Name, value = Percapita_Pounds_Harvested_sum)
+  select(Site_Year_Code, Lowest_Common_Taxon_Name,Total_Harvest_prop) %>%
+  filter(!grepl("Unknown", Lowest_Common_Taxon_Name)) %>%
+  filter(Total_Harvest_prop != 0) %>% ##keep only values that are not 0 for percapita harvest, 
+  spread(key = Lowest_Common_Taxon_Name, value =Total_Harvest_prop)
 df_wide[is.na(df_wide)] <- 0
 df_wide <- df_wide %>%
   remove_rownames %>% 
@@ -177,17 +272,141 @@ sw_div <- diversity(df_wide, index = "shannon")
 
 
 sp_rich <- cbind(sp_rich, sw_div)
-ggplot(sp_rich, aes(x=Est_Comm_Population_log, y = `...5`)) +
+ggplot(sp_rich, aes(x=Est_Comm_Population_log, y = sw_div)) +
   geom_point() +
   geom_smooth(method = "lm") +
   theme_classic() +
   ylab("Harvest Species Diversity (SW)") +
   xlab("Estimated Community Population (log)")
 
-sw_lm <- lm(`...5`~Est_Comm_Population_log, data = sp_rich)
+sw_lm <- lm(sw_div~Est_Comm_Population_log, data = sp_rich)
 summary(sw_lm)
 
 
+##Harvest diversity by % Native
+ggplot(sp_rich, aes(x=Percent_Native_by_Individual, y = sw_div)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  theme_classic() +
+  ylab("Harvest Species Diversity (SW)") +
+  xlab("% Alaska Native by Individual")
+
+sw_lm <- lm(sw_div~Percent_Native_by_Individual, data = sp_rich)
+summary(sw_lm)
+hist(sw_lm$residuals)
+
+ggplot(sp_rich, aes(x=Percent_Native_by_Individual_sqrt, y = Species_Richness)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  theme_classic() +
+  ylab("Harvest Species Richness") +
+  xlab("% Alaska Native by Individual")
+
+sr_lm <- lm(Species_Richness~Percent_Native_by_Individual_log, data = sp_rich)
+summary(sr_lm)
+
+hist(sr_lm$residuals)
+##Correlation between population size and % Native
+ggplot(sp_rich, aes(y=Percent_Native_by_Individual, x = Est_Comm_Population_log)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  theme_classic() +
+  ylab("% Alaska Native by Individual") +
+  xlab("Estimated Community Population (log)")
+lm1 <- lm(Percent_Native_by_Individual ~ Est_Comm_Population_log, data = sp_rich)
+summary(lm1)
+hist(sp_rich$Percent_Native_by_Individual)
+
+sr_lm_2 <- lm(Species_Richness ~ Percent_Native_by_Individual+Est_Comm_Population_log, data = sp_rich)
+summary(sr_lm_2)
+
+sw_lm_2 <- lm(sw_div ~ Percent_Native_by_Individual+Est_Comm_Population_log, data = sp_rich)
+summary(sw_lm_2)
+cor(sp_rich$Percent_Native_by_Individual, sp_rich$Est_Comm_Population_log)
+##Harvest magnitude vs. community demographics
+total_harvest_comm <- total_harvest %>%
+  left_join(comm_dem, by = "Site_Year_Code") %>%
+  mutate(Est_Comm_Population_log = log(Estimated_Population)) %>%
+  mutate(Est_Total_Harvest_log = log(Estimated_Total_Pounds_Harvested_sum_total))
+
+ggplot(total_harvest_comm, aes(x=Percent_Native_by_Individual, y = Estimated_Total_Pounds_Harvested_sum_total)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  theme_classic() +
+  ylab("Estimated Total Harvest (lbs)") +
+  xlab("% Alaska Native by Individual")
+
+lm2 <- lm(Estimated_Total_Pounds_Harvested_sum_total ~ Percent_Native_by_Individual, data = total_harvest_comm)
+summary(lm2)
+
+
+ggplot(total_harvest_comm, aes(x= Est_Comm_Population_log, y = Estimated_Total_Pounds_Harvested_sum_total)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  theme_classic() +
+  ylab("Estimated Total Harvest (lbs)") +
+  xlab("Community Population Size (log)")
+
+hist(total_harvest$Estimated_Total_Pounds_Harvested_sum_total)
+
+lm3 <- lm(Estimated_Total_Pounds_Harvested_sum_total ~ Percent_Native_by_Individual, data = total_harvest)
+summary(lm3)
+
+ggplot(total_harvest_comm, aes(x= Est_Comm_Population_log, y = Est_Total_Harvest_log)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  theme_classic() +
+  ylab("Estimated Total Harvest log (lbs)") +
+  xlab("Community Population Size (log)")
+
+lm4 <- lm(Est_Total_Harvest_log ~ Est_Comm_Population_log, data = total_harvest_comm)
+summary(lm4)
+
+
+ggplot(total_harvest_comm, aes(x= Percent_Native_by_Individual, y = Est_Total_Harvest_log)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  theme_classic() +
+  ylab("Estimated Total Harvest log (lbs)") +
+  xlab("% Alaska Native (by individual)")
+
+lm5 <- lm(Est_Total_Harvest_log ~ Percent_Native_by_Individual, data = total_harvest_comm)
+summary(lm5)
+
+
+lm6 <- lm(Est_Total_Harvest_log ~ Percent_Native_by_Individual+Est_Comm_Population_log, data = total_harvest_comm)
+summary(lm6)
+
+hist(total_harvest_comm$Est_Total_Harvest_log)
+
+##Percapita Harvest vs. Community Demographics 
+hist(total_harvest_comm$Percapita_Pounds_Harvested_sum_total)
+ggplot(total_harvest_comm, aes(x= Est_Comm_Population_log, y = Percapita_Pounds_Harvested_sum_total)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  theme_classic() +
+  ylab("Percapita Harvest (lbs)") +
+  xlab("Community Population Size (log)")
+
+lm7 <- lm(Percapita_Pounds_Harvested_sum_total ~ Est_Comm_Population_log, data = total_harvest_comm)
+summary(lm7)
+
+
+ggplot(total_harvest_comm, aes(x= Percent_Native_by_Individual, y = Percapita_Pounds_Harvested_sum_total)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  theme_classic() +
+  ylab("Percapita Harvest (lbs)") +
+  xlab("% Alaska Native (by individual)")
+
+lm8 <- lm(Percapita_Pounds_Harvested_sum_total ~ Percent_Native_by_Individual, data = total_harvest_comm)
+summary(lm8)
+
+
+lm9 <- lm(Percapita_Pounds_Harvested_sum_total ~ Percent_Native_by_Individual+Est_Comm_Population_log, data = total_harvest_comm)
+summary(lm9)
+
+##Old Code ------------------
 ##NMDS by year --- just seeing if clear temporal trends apparent or now 
 
 df_yr_avg <- df_2 %>%
@@ -240,17 +459,17 @@ orditorp(sp_NMDS,display="sites",cex=1,air=0.01)
 
 ##PLAYing around with visualizing communities that may have different harvest structure
 ##haines 1983
-haines_1983 <- df_comm_avg %>%
-  filter(Site == "Haines") %>%
-  filter(!is.na(Percapita_Pounds_Harvested_sum_avg))
+klukwan <- df_comm_avg %>%
+  filter(Site == "Klukwan") %>%
+  filter(!is.na(Percapita_Harvest_prop_avg))
 
-mat <- haines_1983 %>%
+mat <- klukwan %>%
   dplyr::rename(Resource = "Lowest_Common_Taxon_Name") %>%
   mutate(Consumer = "Human") 
 
 is1 <- mat %>%
   ungroup() %>%
-  select(Resource,  Consumer, Percapita_Pounds_Harvested_sum_avg)
+  select(Resource,  Consumer, Percapita_Harvest_prop_avg)
 
 tl <- mat %>%
   ungroup() %>%
@@ -273,7 +492,7 @@ plot(net, edge.arrow.size = .4, vertex.label = NA)
 plot(net, edge.arrow.size = 0.2, edge.curved = 0, vertex.label = V(net)$Resource)
 
 #Set edge width based on weight
-E(net)$width <- E(net)$Percapita_Pounds_Harvested_sum_avg
+E(net)$width <- E(net)$Percapita_Harvest_prop_avg
 
 
 plot(net, edge.arrow.size = 0.5, edge.curved = 0, vertex.label = V(net)$Resource)
