@@ -9,8 +9,6 @@ library(ggrepel)
 library(data.table)
 library(networkD3)
 
-getwd()
-setwd("/Users/mariegutgesell/Desktop/Wild Foods Repo/")
 
 ####Total Harvest Data estimated for 2022 by Lauren (note: want to to all calculations raw, will have to read in population by year)
 ##read in terrestrial sheet in order to obtain 2022 population
@@ -43,8 +41,8 @@ latest_surveys <- survey_demographics %>%
 
 ##reduce dataframe to only focus on years/sites using for this project 
 df_2 <- df %>%
-  filter(Site_Year_Code %in% latest_surveys$Site_Year_Code) %>% ##selects only years where a comprehensive survey was done
-  filter(!grepl("Marine Mammals", Project_Name))%>%
+  dplyr::filter(Site_Year_Code %in% latest_surveys$Site_Year_Code) %>% ##selects only years where a comprehensive survey was done
+  dplyr::filter(!grepl("Marine Mammals", Project_Name))%>%
   dplyr::rename(Community = "Community_Name") %>%
   left_join(latest_surveys, by = c("Site_Year_Code", "Community"))
 
