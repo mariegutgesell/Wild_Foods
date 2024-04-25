@@ -2,9 +2,11 @@
 ##Create working dataframe of comparable taxa across years/communities 
 
 library(tidyverse)
+library(readxl)
 ##import cleaned harvest data and trophic info
 #setwd("~/Desktop/Wild Foods Repo/")
-df_final <- read.csv("data/intermediate_data/harvest_data_clean.csv")
+df_final <- read.csv("data/intermediate_data/harvest_data_clean.csv") ##csv from 1_dataframe_formation.R
+
 
 trophic_df <- read_excel("data/harvest_species_list_characteristics_5.xlsx", sheet = 2)
 
@@ -14,8 +16,6 @@ harvest_df <- df_final %>%
   select(Site_Year_Code, Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Taxa_lvl4, Taxa_lvl5, Sampled_households:Est_Comm_Population, Conversion_Units_To_Pounds:Estimated_Total_Pounds_Harvested, Percapita_Pounds_Harvested:Estimated_Amount_Harvested) %>%
   filter(!if_all(Percent_Using:Estimated_Amount_Harvested, ~ .x == 0))
 
-harvest_df$Taxa_lvl5 <- str_remove(harvest_df$Taxa_lvl5, "Unknown ")
-harvest_df$Taxa_lvl4 <- str_remove(harvest_df$Taxa_lvl4, "Unknown ")
 
 ##join trophic info for the lowest common taxa across all years and communities
 df <- harvest_df %>%
@@ -23,7 +23,10 @@ df <- harvest_df %>%
   select(Site_Year_Code:Taxa_lvl5, Lowest_Common_Taxon_Name:Trophic_Category, Sampled_households:Estimated_Amount_Harvested) %>%
   filter(!Lowest_Common_Taxon_Name %in% c("Not_comparable", "NA"))
 
+test <- df_final %>%
+  filter(Taxa_lvl3 == "Berries")
 str(df)
+##the difference in number of rows in harvest df and df w/ lowest common taxon is the removal of coal and mushrooms, which are not comparable (only part of surveys after 2000)
 
 
 ##calculate harvest metrics for the lowest common taxon, to be used for harvest analysis moving forward
@@ -32,7 +35,7 @@ str(df)
 
 unique_trophic_common_taxa <- df %>%
   ungroup() %>%
-  select(Site_Year_Code, Lowest_Common_Taxon_Name, Scientific_Name:Trophic_Category) %>%
+  select(Site_Year_Code,Taxa_lvl1, Taxa_lvl2, Taxa_lvl3, Lowest_Common_Taxon_Name, Scientific_Name:Trophic_Category) %>%
   distinct()
 
 unique_surveys <- df %>%
@@ -45,7 +48,7 @@ mean_func <- function(x){
   x1 <- x %>%
     select(Site_Year_Code:Lowest_Common_Taxon_Name, Scientific_Name, Percent_Using) %>%
     filter(!is.na(Percent_Using)) %>%
-    group_by(Site_Year_Code, Lowest_Common_Taxon_Name, Scientific_Name) %>%
+    group_by(Site_Year_Code,  Lowest_Common_Taxon_Name, Scientific_Name) %>%
     summarise_at(vars(Percent_Using), list(Percent_Using_mean = mean))
   
   x2 <- x %>%
@@ -127,10 +130,19 @@ df_sum <- sum_func(df)
 df_common_taxa <- left_join(df_mean, df_sum, by = c("Site_Year_Code", "Lowest_Common_Taxon_Name", "Scientific_Name")) %>%
   left_join(unique_trophic_common_taxa, by = c("Site_Year_Code", "Lowest_Common_Taxon_Name", "Scientific_Name")) %>%
   left_join(unique_surveys, by = "Site_Year_Code") %>%
-  select(Site_Year_Code, Lowest_Common_Taxon_Name, Scientific_Name, Habitat:Est_Comm_Population, Percent_Using_mean:Estimated_Amount_Harvested_sum)
+  select(Site_Year_Code, Taxa_lvl1:Taxa_lvl3,  Lowest_Common_Taxon_Name, Scientific_Name, Habitat:Est_Comm_Population, Percent_Using_mean:Estimated_Amount_Harvested_sum)
 
 ##something i think is off, there should be the same number of rows in the harvest sums as unique trophic/common taxa... 
 
 ##need to go back and double check, but for now just move on... 
 write.csv(df_common_taxa, "data/intermediate_data/comparable_harvest_df.csv")
 
+
+test3 <- df_common_taxa %>%
+  filter(Site_Year_Code == "Haines_1983")
+
+test_2 <- df_final %>%
+  filter(Site_Year_Code == "Haines_1983")
+
+test <- df_common_taxa %>%
+  filter(Lowest_Common_Taxon_Name == "Arctic Char")
