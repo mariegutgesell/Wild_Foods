@@ -1,4 +1,4 @@
-##Generating cleaned dataframe for food web analysis
+##Generating cleaned dataframe of CSIS harvest data for communities around Tongass NF for food web analysis
 ##Wild Foods Project
 
 ##Creator: Marie Gutgesell
@@ -11,7 +11,7 @@ library(data.table)
 
 
 ##read in harvest datafiles
-setwd("~/Desktop/Wild Foods Repo/data/harvest_data/")
+setwd("~/Desktop/Wild Foods Repo/data/harvest_data/Tongass/")
 file.list <- list.files(pattern='*.xls')
 df.list <- sapply(file.list, read_excel, simplify = FALSE)
 df <- rbindlist(df.list) %>%
