@@ -15,7 +15,14 @@ library(grid)
 #Create data frame for img coords
 df <- data.frame(x = c(2, 4), y = c(10, 20))
 
+##deer
 ggplot(df) +
-  geom_phylopic(aes(x = x, y = y, name = "desmodus rotundus"), fill = "#DB6961",color="black", size = 10) +
+  geom_phylopic(aes(x = x, y = y, name = "odocoileus hemionus"), fill = "#339933",color="black", size = 10) +
+  coord_cartesian(xlim = c(1,3), ylim = c(5, 30)) +
+  theme_void()
+
+##king crab
+ggplot(df) +
+  geom_phylopic(aes(x = x, y = y, name = "metacarcinus magister"), fill = "#339933",color="black", size = 10) +
   coord_cartesian(xlim = c(1,3), ylim = c(5, 30)) +
   theme_void()
