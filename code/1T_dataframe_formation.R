@@ -1078,7 +1078,7 @@ df_final <- rbind(fish_final, lm_final, mm_final, be_final, mi_final, veg_final)
 
 
 setwd("~/Desktop/Wild Foods Repo/")
-write.csv(df_final, "data/intermediate_data/harvest_data_clean.csv")
+write.csv(df_final, "data/intermediate_data/tongass_harvest_data_clean.csv")
 
 ##list of distinct harvest taxa
 sp_list <- df_final %>%
@@ -1096,4 +1096,4 @@ sp_list_2 <- df_final_2 %>%
   ungroup() %>%
   select(Taxa_lvl1:Taxa_lvl5, Habitat) %>%
   distinct()
-write.csv(sp_list_2, "data/harvest_species_list_harvested_taxa.csv")
+write.csv(sp_list_2, "data/tongass_harvest_species_list_harvested_taxa.csv")
