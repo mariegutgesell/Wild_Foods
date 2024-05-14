@@ -56,7 +56,8 @@ library(tidyverse)
 #set working directory 
 landuse <- read_excel("data/CSIS_SurveyData_Demographics.xlsx", sheet = 2) %>%
   dplyr::select(Community, Longitude, Latitude) %>%
-  distinct()
+  distinct() %>%
+  filter(!is.na(Longitude))
 
 # Example
 pts <- st_as_sf(landuse,
