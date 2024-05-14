@@ -74,7 +74,7 @@ total_harvest_rank %>%
 
 
 
-##first for total harvest
+##percapita harvest rank
 percapita_harvest_rank <- df_2 %>%
   select(Site_Year_Code:Trophic_Category, Percapita_Pounds_Harvested_sum, Percapita_Harvest_prop) %>%
   group_by(Site_Year_Code) %>%

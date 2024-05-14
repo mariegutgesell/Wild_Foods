@@ -6,7 +6,7 @@ library(vegan)
 library(factoextra)
 
 ##import cleaned harvest data and trophic info that is comparable across all years
-df <- read.csv("data/intermediate_data/comparable_harvest_df.csv") %>%
+df <- read.csv("data/intermediate_data/tongass_comparable_harvest_df.csv") %>%
   filter(!Site_Year_Code %in% c("Hoonah_2016") )
 
 
