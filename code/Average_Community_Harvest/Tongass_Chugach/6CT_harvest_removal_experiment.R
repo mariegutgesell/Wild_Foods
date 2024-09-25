@@ -187,7 +187,7 @@ summary(richness_lm)
 richness_lm2 <- lm(alpha ~ richness + Forest, data = comm_div_2)
 summary(richness_lm2)
 
-ggplot(comm_div_2, aes(x = sw_diversity, y = 1/alpha)) +
+ggplot(comm_div_2, aes(x = sw_diversity, y = alpha)) +
   geom_point() +
   geom_smooth(method = "lm", color = "darkred")+
   theme_classic() +
@@ -196,7 +196,7 @@ ggplot(comm_div_2, aes(x = sw_diversity, y = 1/alpha)) +
   theme(axis.text.x = element_text(size = 12),axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14),axis.title.x=element_text(size = 14),  text = element_text(family = "Times New Roman"))
 
 
-sw_lm <- lm(1/alpha ~ sw_diversity, data = comm_div_2)
+sw_lm <- lm(alpha ~ sw_diversity, data = comm_div_2)
 summary(sw_lm)
 
 sw_lm2 <- lm(alpha ~ sw_diversity + Forest, data = comm_div_2)
