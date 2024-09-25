@@ -927,6 +927,7 @@ mi <- mi %>%
     startsWith(Taxa_lvl3, "Starfish") ~ "Nearshore",
     startsWith(Taxa_lvl3, "Unknown Marine Invert") ~ "Marine",
     startsWith(Taxa_lvl3, "Whelk") ~ "Nearshore",
+    startsWith(Taxa_lvl3, "Snails") ~ "Nearshore",
   ))
 
 #mi$Conversion_Units_To_Pounds <- as.character(mi$Conversion_Units_To_Pounds)
@@ -1118,6 +1119,8 @@ df_final <- rbind(fish_final, lm_final, mm_final, be_final, mi_final, veg_final)
 #  filter(!if_all(Percent_Using:Mean_Grams_Percapita_Harvest, ~ .x == 0)) ##remove rows where all values are 0 (nothing was harvested or shared in community)
 ##don't want to do any filtering or summing, so can just use this dataframe for any subsequent analysis, and don't need to keep coming back to this script - do later when wanted
 
+test <- df_final %>%
+  filter(is.na(Habitat))
 
 setwd("~/Desktop/Wild Foods Repo/")
 write.csv(df_final, "data/intermediate_data/chugach_harvest_data_clean.csv")
