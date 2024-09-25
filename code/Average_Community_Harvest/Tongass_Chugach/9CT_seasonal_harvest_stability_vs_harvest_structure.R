@@ -1,6 +1,7 @@
 ##Compare harvest distributions stability and synchrony to diversity metrics 
 
 library(tidyverse)
+library(ggplot2)
 
 ##Read in whichever harvest distributions (i.e., based on proportions, total lbs harvested or percapita)
 ##Proportion of total harvest
@@ -161,7 +162,7 @@ ggplot(comm_dv_cv, aes(x = richness, y = harvest_total_cv)) +
 richness_cv_lm <- lm(harvest_total_cv ~ richness, comm_dv_cv)
 summary(richness_cv_lm)
 
-ggplot(comm_dv_cv, aes(x = richness, y = harvest_total_cv, color = Forest)) +
+ggplot(comm_dv_cv, aes(x = richness, y = harvest_total_cv)) +
   geom_point() +
   geom_smooth(method = "lm") +
   theme_classic() +
@@ -175,8 +176,8 @@ richness_cv_lm2 <- lm(harvest_total_cv ~ richness + Forest, comm_dv_cv)
 summary(richness_cv_lm2)
 
 ggplot(comm_dv_cv, aes(x = sw_diversity, y = harvest_total_cv)) +
-  geom_point(aes(color = Forest)) +
-  geom_smooth(method = "lm") +
+  geom_point() +
+  geom_smooth(method = "lm", color = "darkred") +
   theme_classic() +
   labs(x = "Harvest Diversity (SW)", y = "Total Harvest CV") +
   theme(axis.text.x = element_text(size = 12),axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14),axis.title.x=element_text(size = 14),  text = element_text(family = "Times New Roman"))
@@ -227,7 +228,7 @@ comm_dv_cv <- comm_dv_cv %>%
   mutate(`1_logSD` = 1/(log(sd))) %>%
   mutate(log_1_SD = log(1/sd))
 
-ggplot(comm_dv_cv, aes(x = log_1_SD, y = 1/harvest_total_cv)) +
+ggplot(comm_dv_cv, aes(x = log_1_SD, y = harvest_total_cv)) +
   geom_point() +
   geom_smooth(method = "lm", color = "darkred") +
   theme_classic() +
