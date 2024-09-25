@@ -22,8 +22,6 @@ harvest_df <- rbind(df_t, df_c) %>%
   filter(!if_all(Percent_Using:Mean_Grams_Percapita_Harvest, ~ .x == 0)) ##remove rows where all values are 0 (nothing was harvested or shared in community)
 
 
-test4 <- df_t %>%
-  filter(Site_Year_Code == "Haines_1983")
 ##import harvest characteristic data
 
 trophic_df <- read_excel("data/harvest_species_list_characteristics_5.xlsx", sheet = 4)
@@ -34,10 +32,6 @@ df <- harvest_df %>%
   left_join(trophic_df %>% select(Taxa_lvl1:Lowest_Common_Taxon_lvl, Scientific_Name, Habitat, Habitat_2, Trophic_Level, Trophic_Category), by = c("Taxa_lvl1", "Taxa_lvl2", "Taxa_lvl3", "Taxa_lvl4", "Taxa_lvl5")) %>%
   select(Forest, Site_Year_Code:Taxa_lvl5, Lowest_Common_Taxon_Name:Trophic_Category, Sampled_households:Estimated_Amount_Harvested) %>%
   filter(!Lowest_Common_Taxon_Name %in% c("Not_comparable", "NA"))
-
-test <- df %>%
-  filter(Taxa_lvl3 == "Shorebird Eggs")
-str(df)
 
 ##need to figure out what species eel is 
 
