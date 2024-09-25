@@ -168,6 +168,7 @@ rm(list = ls()[!ls() %in% c("nls_all_param", "harvest_div")])
 
 nls_all_param <- nls_all_param %>%
   rename(Site = "community")
+write.csv(nls_all_param, "data/intermediate_data/average_harvest_removal_results.csv")
 
 comm_div_2 <- left_join(harvest_div, nls_all_param, by = "Site") 
 
