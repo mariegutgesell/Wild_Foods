@@ -18,7 +18,7 @@ terr <- read_excel("data/Foods_From_Forests_data/Copy of Southeast harvest summa
 
 
 ##read in harvest datafiles
-setwd("~/Desktop/Wild Foods Repo/data/harvest_data/")
+setwd("~/Desktop/Wild Foods Repo/data/harvest_data/Tongass/")
 file.list <- list.files(pattern='*.xls')
 df.list <- sapply(file.list, read_excel, simplify = FALSE)
 df <- rbindlist(df.list) %>%
@@ -47,6 +47,9 @@ df_2 <- df %>%
   left_join(latest_surveys, by = c("Site_Year_Code", "Community"))
 
 
+test <- df_2 %>%
+  select(Site_Year_Code) %>%
+  unique()
 ##select resource groups using for this study
 resource_list <- read_excel("Foods_From_Forests_data/Copy of Southeast harvest summary_mg.xlsx", sheet = "Resource_List")
 
@@ -60,6 +63,16 @@ df_2_res <- df_2 %>%
   group_by(Category, Resource_Group) %>% ##change back to resource_group, just testing to see where differences are
   summarise_at(vars(est_total_lbs_2022, est_total_kgs_2022), sum)
 
+
+##total percap harvest
+percap <- df_2 %>%
+  filter(Resource_Name %in% resource_list$Resource_Name) %>%
+  left_join(resource_list, by = "Resource_Name") %>%
+  select(Site_Year_Code, Category, Resource_Group, Resource_Name, Percapita_Pounds_Harvested) %>%
+  group_by(Site_Year_Code) %>%
+  summarise_at(vars(Percapita_Pounds_Harvested),sum ) %>%
+  mutate(est_percap_kgs = Percapita_Pounds_Harvested*0.45359237)
+##this seems in line w/ estimates from Fall 2016 paper 
 
 ##calculate total harvest of all categories
 total_harvest_all_lb <- sum(df_2_res$est_total_lbs_2022)
@@ -167,3 +180,26 @@ pop_change_plot <- ggplot(pop_change, aes(x = Community, y = percent_change)) +
 
   
 pop_change_plot
+
+##Calculate servings harvested 
+##Based on USDA recommendations of 150g/serving for fruits/veg and 99g/serving for meat 
+
+fruit_veg <- df_2_res %>%
+  filter(Resource_Group %in% c("Seaweed", "Berries", "Plants/Greens/Mushrooms")) %>%
+  select(Resource_Group, est_total_kgs_2022, est_total_1000kg_2022) %>%
+  mutate(servings = est_total_kgs_2022/0.150) %>%
+  mutate(servings_mill = est_total_1000kg_2022/0.150) %>%
+  mutate(servings_per_person = servings/total_pop) 
+
+
+meat <- df_2_res %>%
+  filter(!Resource_Group %in% c("Seaweed", "Berries", "Plants/Greens/Mushrooms"))%>%
+  select(Resource_Group, est_total_kgs_2022, est_total_1000kg_2022) %>%
+  mutate(servings = est_total_kgs_2022/0.099) %>%
+  mutate(servings_mill = est_total_1000kg_2022/0.099) %>%
+  mutate(servings_per_person = servings/total_pop) 
+  
+
+
+##total rural population in 2022
+total_pop <- sum(terr$`2022_population`)
