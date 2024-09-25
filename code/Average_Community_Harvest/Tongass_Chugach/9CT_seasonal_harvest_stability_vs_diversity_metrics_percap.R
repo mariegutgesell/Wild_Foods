@@ -221,8 +221,9 @@ summary(sd_h_cv_lm)
 comm_dv_cv <- comm_dv_cv %>%
   mutate(`1_logSD` = 1/(log(sd))) %>%
   mutate(log_1_SD = log(1/sd))
+write.csv(comm_dv_cv, "data/intermediate_data/average_harvest_phenology_summary_metrics.csv")
 
-ggplot(comm_dv_cv, aes(x = log_1_SD, y = 1/harvest_total_cv)) +
+ggplot(comm_dv_cv, aes(x = log_1_SD, y = harvest_total_cv)) +
   geom_point() +
   geom_smooth(method = "lm", color = "darkred") +
   theme_classic() +
@@ -231,7 +232,7 @@ ggplot(comm_dv_cv, aes(x = log_1_SD, y = 1/harvest_total_cv)) +
   theme(axis.text.x = element_text(size = 12),axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14),axis.title.x=element_text(size = 14),  text = element_text(family = "Times New Roman"))
 
 
-sd_h_cv_lm <- lm((1/harvest_total_cv) ~ log_1_SD, comm_dv_cv)
+sd_h_cv_lm <- lm((harvest_total_cv) ~ log_1_SD, comm_dv_cv)
 summary(sd_h_cv_lm)
 
 
