@@ -867,7 +867,7 @@ mi <- mi %>%
     startsWith(Taxa_lvl3, "Octopus") ~ "Marine",
     startsWith(Taxa_lvl3, "Scallop") ~ "Marine", 
     startsWith(Taxa_lvl3, "Shrimp") ~ "Marine",
-    grepl("Tanner Crab", Taxa_lvl5) ~ "Marine",
+    grepl("Tanner Crab", Taxa_lvl4) ~ "Marine",
     startsWith(Taxa_lvl3, "Abalone") ~ "Nearshore",
     startsWith(Taxa_lvl3, "Chiton") ~ "Nearshore",
     startsWith(Taxa_lvl3, "Clam") ~ "Nearshore",
@@ -1076,7 +1076,8 @@ df_final <- rbind(fish_final, lm_final, mm_final, be_final, mi_final, veg_final)
 #  filter(!if_all(Percent_Using:Mean_Grams_Percapita_Harvest, ~ .x == 0)) ##remove rows where all values are 0 (nothing was harvested or shared in community)
 ##don't want to do any filtering or summing, so can just use this dataframe for any subsequent analysis, and don't need to keep coming back to this script - do later when wanted
 
-
+test <- df_final %>%
+  filter(is.na(Habitat))
 setwd("~/Desktop/Wild Foods Repo/")
 write.csv(df_final, "data/intermediate_data/tongass_harvest_data_clean.csv")
 
