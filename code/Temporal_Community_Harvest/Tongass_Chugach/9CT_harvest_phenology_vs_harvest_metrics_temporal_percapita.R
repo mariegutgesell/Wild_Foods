@@ -1,19 +1,25 @@
-##Compare harvest distributions stability and synchrony to diversity metrics -- PERCAPITA 
+##Compare harvest distributions stability and synchrony to diversity metrics -- percapita
 
 library(tidyverse)
+getwd()
+##Read in whichever harvest distributions (i.e., based on proportions, total lbs harvested or percapita)
+##Proportion of total harvest
+simulated_harvest_df <- read.csv("data/intermediate_data/temporal_simulated_harvest_distributions_harvest_percapita.csv") %>%
+  mutate(harvest_amount_kg = harvest_amount*0.45359237) 
 
-##Read in harvest distributions
-simulated_harvest_df <- read.csv("data/intermediate_data/simulated_harvest_distributions_harvest_percapita.csv")
+##Total lbs harvested
+#simulated_harvest_df <- read.csv()
 
-
+##Percapita lbs harvested
+#simulated_harvest_df <- read.csv()
 
 
 ##Plotting all distributions for each community
 ggplot(simulated_harvest_df, aes(x = date, y = harvest_amount, group = habitat, color = habitat)) +
   geom_line() +
   scale_colour_manual(values = c("#FF9999","#003366","#CC9966", "#339933"))+
-  labs(x = "Date", y = "Percapita Harvest Amount", title = "Simulated Harvest Amounts Across Harvest Season") +
-  facet_wrap(~site)
+  labs(x = "Date", y = "Harvest Amount (%)", title = "Simulated Harvest Amounts Across Harvest Season") +
+  facet_wrap(~site, scale = "free")
 
 
 
@@ -22,32 +28,33 @@ ggplot(simulated_harvest_df, aes(x = date, y = harvest_amount, group = habitat, 
 total_simulated_harvest <- simulated_harvest_df %>%
   filter(!is.na(harvest_amount)) %>%
   group_by(site, date) %>%
-  summarise_at(vars(harvest_amount), list(harvest_total = sum))
+  summarise_at(vars(harvest_amount_kg), list(harvest_total_kg = sum)) 
 
 
-ggplot(total_simulated_harvest, aes(x = date, y = harvest_total, group = site, color = site)) +
+ggplot(total_simulated_harvest, aes(x = date, y = harvest_total_kg, group = site, color = site)) +
   geom_line() +
-  labs(x = "Date", y = "Percapita Harvest Amount", title = "Total Harvest Amounts Across Harvest Season") +
+  labs(x = "Date", y = "Harvest Amount (kg/person)", title = "Total Harvest Amounts Across Harvest Season") +
   theme_classic()
 
 total_harvest_all <- total_simulated_harvest %>%
-  filter(!is.na(harvest_total)) %>%
+  filter(!is.na(harvest_total_kg)) %>%
   group_by(date) %>%
-  summarise_at(vars(harvest_total), list(harvest_mean = mean))
+  summarise_at(vars(harvest_total_kg), list(harvest_mean = mean))
+
 
 ggplot() +
-#  geom_path(data = total_harvest_all, aes(x = date, y = harvest_mean), color = "red", size = 3) +
-  geom_path(data = total_simulated_harvest, aes(x = date, y = harvest_total, group = site), color = "black") +
-  labs(x = "Date", y = "Percapita Harvest Amount (kg/person)") +
+  geom_path(data = total_harvest_all, aes(x = date, y = harvest_mean), color = "red", size = 3) +
+  geom_path(data = total_simulated_harvest, aes(x = date, y = harvest_total_kg, group = site), color = "black") +
+  labs(x = "Date", y = "Harvest Amount (kg/person)", title = "Simulated Harvest Amounts Across Harvest Season") +
   theme_classic()
 
 
 
 ggplot() +
-  geom_line(data = simulated_harvest_df, aes(x = date, y = harvest_amount, group = habitat, color = habitat)) +
-  geom_line(data = total_simulated_harvest, aes(x = date, y = harvest_total)) +
+  geom_line(data = simulated_harvest_df, aes(x = date, y = harvest_amount_kg, group = habitat, color = habitat)) +
+  geom_line(data = total_simulated_harvest, aes(x = date, y = harvest_total_kg)) +
   scale_colour_manual(values = c("#FF9999","#003366","#CC9966", "#339933"))+
-  labs(x = "Day of Year", y = "Percapita Harvest Amount", title = "Simulated Harvest Amounts Across Harvest Season") +
+  labs(x = "Day of Year", y = "Harvest Amount (kg/person)", title = "Simulated Harvest Amounts Across Harvest Season") +
   facet_wrap(~site)
 
 
@@ -56,10 +63,10 @@ ggplot() +
 ##Plot harvest in order of increasing harvest date for each community
 total_simulated_harvest <- total_simulated_harvest %>%
   group_by(site) %>%
-  mutate(harvest_day = rank(harvest_total, ties.method = "min"))
+  mutate(harvest_day = rank(harvest_total_kg, ties.method = "min"))
 
 
-ggplot(total_simulated_harvest, aes(x = harvest_day, y = harvest_total, group = site)) +
+ggplot(total_simulated_harvest, aes(x = harvest_day, y = harvest_total_kg, group = site)) +
   geom_line() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   geom_hline(yintercept = 0.2776, linetype = "dashed", color = "red") +
@@ -75,12 +82,11 @@ ggplot(total_simulated_harvest, aes(x = harvest_day, y = harvest_total, group = 
 ##0.1 as arbitrary proportion -- daily harvest makes up less than 0.1% of total annual harvest 
 harvest_threshold <- total_simulated_harvest %>%
   group_by(site) %>%
-  mutate(below_harvest_threshold = ifelse(harvest_total < quantile(0.2776), "Y", "N")) %>%
+  mutate(below_harvest_threshold = ifelse(harvest_total_kg < quantile(0.2776), "Y", "N")) %>%
   filter(below_harvest_threshold == "Y") %>%
   count() %>%
   mutate(prop_days_below_threshold = (n/365)*100) 
 
-##tatitlek has no days below threshold
 ##Calculate Synchrony between harvest taxa across season ---------------
 library(codyn)
 ##add day of year 1-365 for each date 
@@ -93,10 +99,10 @@ simulated_harvest_df <- left_join(simulated_harvest_df, dates, by = "date")
 simulated_harvest_df$date_num <- as.numeric(simulated_harvest_df$date_num)
 
 ##Synchrony using Loreau metric
-synchrony_loreau <- synchrony(df = simulated_harvest_df, time.var = "date_num", species.var = "species", abundance.var = "harvest_amount", replicate.var = "site", metric = "Loreau") %>%
+synchrony_loreau <- synchrony(df = simulated_harvest_df, time.var = "date_num", species.var = "species", abundance.var = "harvest_amount_kg", replicate.var = "site", metric = "Loreau") %>%
   dplyr::rename(synchrony_loreau = "synchrony")
 
-synchrony_gross <- synchrony(df = simulated_harvest_df, time.var = "date_num", species.var = "species", abundance.var = "harvest_amount", replicate.var = "site", metric = "Gross") %>%
+synchrony_gross <- synchrony(df = simulated_harvest_df, time.var = "date_num", species.var = "species", abundance.var = "harvest_amount_kg", replicate.var = "site", metric = "Gross") %>%
   dplyr::rename(synchrony_gross = "synchrony")
 
 
@@ -107,6 +113,7 @@ ggplot(synchrony_df, aes(x = synchrony_loreau, y = synchrony_gross)) +
   geom_smooth(method = "lm") +
   theme_classic()
 sync_lm_l_g <- lm(synchrony_gross ~ synchrony_loreau, synchrony_df)
+
 summary(sync_lm_l_g)
 
 ##see bluthgen et al., 2016 for additional synchrony metrics, their approach was to calcualte all, look at relationships b/w and see if conclusions were same 
@@ -136,12 +143,11 @@ synchrony_gross_habitat <- synchrony(df = total_simulated_harvest_habitat, time.
 
 synchrony_df_habitat <- left_join(synchrony_loreau_habitat, synchrony_gross_habitat, by = "site")
 
-
 ##Calculate variability metrics
 ##calculating sd and CV
 sim_harv_cv <- total_simulated_harvest %>%
   group_by(site) %>%
-  summarise(harvest_total_mean = mean(harvest_total), harvest_total_sd = sd(harvest_total), harvest_total_cv = harvest_total_sd/harvest_total_mean)
+  summarise(harvest_total_mean = mean(harvest_total_kg), harvest_total_sd = sd(harvest_total_kg), harvest_total_cv = harvest_total_sd/harvest_total_mean)
 
 ggplot(sim_harv_cv, aes(x = reorder(site, -harvest_total_cv), y = harvest_total_cv)) +
   geom_col() +
@@ -157,8 +163,9 @@ ggplot(sim_harv_cv, aes(x = reorder(site, -harvest_total_mean), y = harvest_tota
 
 
 ##compare seasonal CV/SD to harvest structure metrics --------------
-comm_div <- read.csv("data/intermediate_data/harvest_diversity_metrics_percap.csv") %>%
-  rename(site = "Site")
+comm_div <- read.csv("data/intermediate_data/temporal_harvest_diversity_metrics_percap.csv") %>%
+  rename(site = "Site_Year_Code")
+
 #rm(list = ls()[!ls() %in% c("comm_div_2", "h_df_all")])
 
 comm_dv_cv <- left_join(comm_div, sim_harv_cv, by = "site") %>%
@@ -166,9 +173,7 @@ comm_dv_cv <- left_join(comm_div, sim_harv_cv, by = "site") %>%
   left_join(synchrony_df, by = "site") %>%
   left_join(synchrony_df_habitat, by = "site")
 
-
-write.csv(comm_dv_cv, "data/intermediate_data/average_harvest_phenology_summary_metrics_percapita.csv")
-
+write.csv(comm_dv_cv, "data/intermediate_data/temporal_harvest_phenology_summary_metrics_percapita.csv")
 ##CV vs. harvest diversity metrics ---------------
 ##testing if relationships hold w/o klukwan
 #comm_dv_cv <- comm_dv_cv %>%
@@ -200,8 +205,8 @@ richness_cv_lm2 <- lm(harvest_total_cv ~ richness + Forest, comm_dv_cv)
 summary(richness_cv_lm2)
 
 ggplot(comm_dv_cv, aes(x = sw_diversity, y = harvest_total_cv)) +
-  geom_point() +
-  geom_smooth(method = "lm", color = "darkred") +
+  geom_point(aes(color = Forest)) +
+  geom_smooth(method = "lm") +
   theme_classic() +
   labs(x = "Harvest Diversity (SW)", y = "Total Harvest CV") +
   theme(axis.text.x = element_text(size = 12),axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14),axis.title.x=element_text(size = 14),  text = element_text(family = "Times New Roman"))
@@ -236,6 +241,7 @@ summary(even_cv_lm2)
 
 
 
+
 ggplot(comm_dv_cv, aes(x = log_1_SD, y = harvest_total_cv)) +
   geom_point() +
   geom_smooth(method = "lm", color = "darkred") +
@@ -249,6 +255,7 @@ sd_h_cv_lm <- lm((harvest_total_cv) ~ log_1_SD, comm_dv_cv)
 summary(sd_h_cv_lm)
 
 
+
 ggplot(comm_dv_cv, aes(x = log_1_SD, y = harvest_total_cv, color = Forest)) +
   geom_point(aes(color = Forest)) +
   geom_smooth(method = "lm") +
@@ -259,11 +266,8 @@ ggplot(comm_dv_cv, aes(x = log_1_SD, y = harvest_total_cv, color = Forest)) +
 
 
 sd_h_cv_lm2 <- lm(harvest_total_cv ~ log_1_SD + Forest, comm_dv_cv)
+
 summary(sd_h_cv_lm2)
-
-
-
-
 
 
 ggplot(comm_dv_cv, aes(x = evenness_h, y = harvest_total_cv)) +
@@ -282,7 +286,7 @@ ggplot(comm_dv_cv, aes(x = prop_days_below_threshold, y = harvest_total_cv))+
 thresh_cv_lm <- lm(harvest_total_cv ~ prop_days_below_threshold, comm_dv_cv)
 summary(thresh_cv_lm)
 
-##
+##save dataframe of harvest characteristics and phenology metrics
 
 ##SD vs. harvest diversity metrics ----------
 ggplot(comm_dv_cv, aes(x = richness, y = harvest_total_sd)) +
@@ -410,6 +414,7 @@ total_simulated_harvest_habitat <- simulated_harvest_df %>%
   filter(!is.na(harvest_amount)) %>%
   group_by(site, date, habitat) %>%
   summarise_at(vars(harvest_amount), list(harvest_total = sum))
+
 
 ggplot(total_simulated_harvest_habitat, aes(x = date, y = harvest_total, group = site, color = habitat)) +
   geom_line() +

@@ -7,12 +7,15 @@ library(ggpubr)
 ##1) DECADAL HARVEST CV AND MEAN HARVEST DIVERSITY AND COUPLING -------------------
 ##Import temporal harvest data
 ##Stability metric data 
-df_1 <- read.csv("data/intermediate_data/temporal_harvest_phenology_summary_metrics.csv") %>%
+df_1 <- read.csv("data/intermediate_data/temporal_harvest_phenology_summary_metrics_percapita.csv") %>%
   rename(Site_Year_Code = "site")
-df_2 <- read.csv("data/intermediate_data/temporal_harvest_removal_results.csv") %>%
+df_2 <- read.csv("data/intermediate_data/temporal_harvest_removal_results_percapita.csv") %>%
   select(Site_Year_Code, alpha)
 
-df_hc <- left_join(df_1, df_2, by = "Site_Year_Code")
+df_hc <- left_join(df_1, df_2, by = "Site_Year_Code") %>%
+  separate(Site_Year_Code, into = c("Site", "Year"), sep = "_", remove = FALSE)
+
+
 
 ##select only sites w/ more than three years of data
 df_hc <- df_hc %>%
@@ -39,115 +42,153 @@ harvest_cv <- df_temp_avg %>%
 
 ##Mean harvest 
 mean_hc <- df_hc %>%
-  select(Site, richness, sw_diversity, evenness, sd, log_1_SD) %>%
+  select(Site, richness, sw_diversity, evenness, sd, log_1_SD, sd_0_1, logit_sd_0_1) %>%
   group_by(Site) %>%
-  summarise_at(vars(richness, sw_diversity, evenness, sd, log_1_SD), list(mean = mean)) %>%
-  rename(Community ="Site")
+  summarise_at(vars(richness, sw_diversity, evenness, sd, log_1_SD, sd_0_1, logit_sd_0_1), list(mean = mean)) %>%
+  rename(Community ="Site") %>%
+  mutate(example_site = ifelse(Community %in% c("Angoon", "Klukwan" ), "yes", "no")) %>%
+  mutate(example_site_color = case_when(
+    startsWith(Community, "Ang") ~ "Green",
+    startsWith(Community, "Kluk") ~ "Red",
+    startsWith(example_site, "no") ~ "Black",
+  ))
 
 mean_hc_cv <- left_join(mean_hc, harvest_cv, by = "Community")
 
-rm(list = ls()[!ls() %in% c("mean_hc_cv")])
+#rm(list = ls()[!ls() %in% c("mean_hc_cv")])
 
 
 
 ###2) AVERAGE HARVEST OVER TIME -- 
-df_1 <- read.csv("data/intermediate_data/average_harvest_phenology_summary_metrics.csv") %>%
+df_1 <- read.csv("data/intermediate_data/average_harvest_phenology_summary_metrics_percapita.csv") %>%
   select(Forest:synchrony_gross)
-df_2 <- read.csv("data/intermediate_data/average_harvest_removal_results.csv") %>%
-  rename(site = "Site")
+df_2 <- read.csv("data/intermediate_data/average_harvest_removal_results_percap.csv") %>%
+  rename(site = "Site") %>%
+  select(Forest, site, log_alpha:alpha)
 
-avg_df <- left_join(df_1, df_2, by = "site")
-rm(list = ls()[!ls() %in% c("mean_hc_cv", "avg_df")])
 
+
+avg_df <- left_join(df_1, df_2, by = c("Forest", "site")) %>%
+  mutate(example_site = ifelse(site %in% c("Metlakatla", "Klukwan"), "yes", "no")) %>%
+  mutate(example_site_color = case_when(
+    startsWith(site, "Met") ~ "Green",
+    startsWith(site, "Kluk") ~ "Red",
+    startsWith(example_site, "no") ~ "Black",
+  ))
+#rm(list = ls()[!ls() %in% c("mean_hc_cv", "avg_df")])
+
+##save table for manuscript of metrics 
+avg_df$community_unique <- paste("Community", seq_along(avg_df$site))
+ms_table <- avg_df %>%
+  rename(Community = "site") %>%
+  left_join(mean_hc_cv, by = "Community") %>%
+  select(community_unique, sw_diversity, richness, evenness, sd_0_1, synchrony_loreau, alpha, harvest_total_cv, sw_diversity_mean, richness_mean, evenness_mean, sd_0_1_mean, cv_ph)
+
+write.csv(ms_table, "data/manuscript_tables/harvest_metrics_stability_results.csv")
 ##3) PLOTTING FIGURE 5 -------------
 ##3.1) Robustness vs. SW diversity and coupling
-avg_robust_coupling <- ggplot(avg_df, aes(x = log_1_SD, y = alpha )) +
-  geom_point() +
+avg_robust_coupling <- ggplot(avg_df, aes(x = logit_sd_0_1, y = alpha)) +
+  geom_point(size = 3) +
   geom_smooth(method = "lm", color = "darkred") +
+ # scale_color_manual(values = c("black", "cyan3", "orange"))+
   theme_classic() +
-  xlab("Habitat Coupling (log 1/SD)") +
+  xlab("Habitat Coupling (logit)") +
   ylab("Rate of Harvest\nDecline (alpha)") +
-  xlim(-3.7,-1.5)+
-  theme(axis.text.x = element_text(size = 12),axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14), axis.title.x = element_text(size = 14), text = element_text(family = "Times New Roman"), strip.background = element_blank())
+  #xlim(0, 1)+
+  ylim(0.1, 0.42)+
+ # theme(plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"))+
+  theme(axis.text.x = element_text(size = 12),axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14), axis.title.x = element_text(size = 14), text = element_text(family = "Times New Roman"), strip.background = element_blank(), legend.position = "none")
 avg_robust_coupling
 
 avg_robust_diversity <- ggplot(avg_df, aes(x = sw_diversity, y = alpha)) +
-  geom_point() +
+  geom_point(size = 3) +
   geom_smooth(method = "lm", color = "darkred") +
+#  scale_color_manual(values = c("black", "cyan3", "orange"))+
   theme_classic() +
   xlab("Harvest Diversity (SW)") +
   ylab("Rate of Harvest\nDecline (alpha)") +
-  xlim(1.9, 3.0) + 
-  theme(axis.text.x = element_text(size = 12),axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14), axis.title.x = element_text(size = 14), text = element_text(family = "Times New Roman"), strip.background = element_blank())
+  xlim(1.92, 3.03) + 
+  ylim(0.1, 0.42)+
+  theme(plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"))+
+  theme(axis.text.x = element_text(size = 12),axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14), axis.title.x = element_text(size = 14), text = element_text(family = "Times New Roman"), strip.background = element_blank(), legend.position = "none")
 avg_robust_diversity
 
 ##3.2) Seasonal CV vs. SW diversity and coupling
-avg_cv_coupling <- ggplot(avg_df, aes(x = log_1_SD, y = harvest_total_cv)) +
-  geom_point() +
+avg_cv_coupling <- ggplot(avg_df, aes(x = logit_sd_0_1, y = harvest_total_cv)) +
+  geom_point(size = 3) +
   geom_smooth(method = "lm", color = "darkred") +
+  #scale_color_manual(values = c("black", "cyan3", "orange"))+
   theme_classic() +
-  xlab("Habitat Coupling (log 1/SD)") +
+  xlab("Habitat Coupling (logit)") +
   ylab("Percapita Harvest CV \n (seasonal)") +
-  ylim(0.5, 1.55) +
-  xlim(-3.7,-1.5)+
-  theme(axis.text.x = element_text(size = 12),axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14), axis.title.x = element_text(size = 14), text = element_text(family = "Times New Roman"), strip.background = element_blank())
+ # ylim(0.5, 1.55) +
+ # xlim(-3.7,-1.43)+
+  theme(plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"))+
+  theme(axis.text.x = element_text(size = 12),axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14), axis.title.x = element_text(size = 14), text = element_text(family = "Times New Roman"), strip.background = element_blank(), legend.position = "none")
 avg_cv_coupling
 
 avg_cv_diversity <- ggplot(avg_df, aes(x = sw_diversity, y = harvest_total_cv)) +
-  geom_point() +
+  geom_point(size = 3) +
   geom_smooth(method = "lm", color = "darkred") +
+ # scale_color_manual(values = c("black", "cyan3", "orange"))+
   theme_classic() +
   xlab("Harvest Diversity (SW)") +
   ylab("Percapita Harvest CV \n (seasonal)") +
-  xlim(1.9, 3) +
+  xlim(1.92, 3.03) + 
   ylim(0.5,1.55)+
-  theme(axis.text.x = element_text(size = 12),axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14), axis.title.x = element_text(size = 14), text = element_text(family = "Times New Roman"), strip.background = element_blank())
+  theme(plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"))+
+  theme(axis.text.x = element_text(size = 12),axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14), axis.title.x = element_text(size = 14), text = element_text(family = "Times New Roman"), strip.background = element_blank(), legend.position = "none")
 avg_cv_diversity
 
 ##3.3) Decadal CV vs. SW diversity and coupling
-decadal_cv_coupling <- ggplot(mean_hc_cv, aes(x = log_1_SD_mean, y = cv_ph)) +
-  geom_point() +
+decadal_cv_coupling <- ggplot(mean_hc_cv, aes(x = logit_sd_0_1_mean, y = cv_ph )) +
+  geom_point(size = 3) +
   geom_smooth(method = "lm", color = "darkred") +
+ # scale_color_manual(values = c("black", "cyan3", "orange"))+
   theme_classic() +
-  xlab("Mean Habitat Coupling (log 1/SD)") +
+  xlab("Mean Habitat Coupling (logit)") +
   ylab("Percapita Harvest CV \n (decadal)") +
   ylim(0, 0.63) +
-  xlim(-3.7,-1.5)+
-  theme(axis.text.x = element_text(size = 12),axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14), axis.title.x = element_text(size = 14), text = element_text(family = "Times New Roman"), strip.background = element_blank())
+ # xlim(-3.7,-1.43)+
+  theme(plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"))+
+  theme(axis.text.x = element_text(size = 12),axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14), axis.title.x = element_text(size = 14), text = element_text(family = "Times New Roman"), strip.background = element_blank(), legend.position = "none")
 decadal_cv_coupling
 
 decadal_cv_diversity <- ggplot(mean_hc_cv, aes(x = sw_diversity_mean, y = cv_ph)) +
-  geom_point() +
+  geom_point(size = 3) +
   geom_smooth(method = "lm", color = "darkred") +
+#  scale_color_manual(values = c("black", "cyan3", "orange"))+
   theme_classic() +
   xlab("Mean Harvest Diversity (SW)") +
   ylab("Percapita Harvest CV \n (decadal)") +
-  xlim(1.90, 3) + 
+  xlim(1.92, 3.03) + 
   ylim (0, 0.63) +
-  theme(axis.text.x = element_text(size = 12),axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14), axis.title.x = element_text(size = 14), text = element_text(family = "Times New Roman"), strip.background = element_blank())
+  theme(plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"))+
+  theme(axis.text.x = element_text(size = 12),axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14), axis.title.x = element_text(size = 14), text = element_text(family = "Times New Roman"), strip.background = element_blank(), legend.position = "none")
 decadal_cv_diversity
 
 
 ##Combine into 1 figure
-fig_5 <-  ggarrange(avg_robust_diversity, avg_robust_coupling, avg_cv_diversity, avg_cv_coupling, decadal_cv_diversity, decadal_cv_coupling, nrow = 3, ncol = 2, labels = c("a)", "b)", "c)", "d)", "e)", "f)"), font.label = list(colour = "black", size = 14, family = "Times New Roman"))
-fig_5
+fig_6 <-  ggarrange(avg_robust_diversity, avg_robust_coupling, avg_cv_diversity, avg_cv_coupling, decadal_cv_diversity, decadal_cv_coupling, nrow = 3, ncol = 2, labels = c("i)", "ii)", "i)", "ii)", "i)", "ii)"), font.label = list(colour = "black", size = 14, family = "Times New Roman"))
+fig_6
 ###4) REGRESSION ANALYSIS ------------
 avg_robust_div_lm <- lm(alpha ~ sw_diversity, avg_df)
+
 summary(avg_robust_div_lm)
 
-avg_robust_coupling_lm <- lm(alpha~ log_1_SD, avg_df)
+avg_robust_coupling_lm <- lm(alpha~ logit_sd_0_1, avg_df)
 summary(avg_robust_coupling_lm)
 
 avg_cv_div_lm <- lm(harvest_total_cv ~ sw_diversity, avg_df)
 summary(avg_cv_div_lm)
 
-avg_cv_coupling_lm <- lm(harvest_total_cv ~ log_1_SD, avg_df)
+avg_cv_coupling_lm <- lm(harvest_total_cv ~ logit_sd_0_1, avg_df)
 summary(avg_cv_coupling_lm)
 
 dec_cv_div_lm <- lm(cv_ph ~ sw_diversity_mean, mean_hc_cv)
 summary(dec_cv_div_lm)
 
-dec_cv_coupling_lm <- lm(cv_ph ~ log_1_SD_mean, mean_hc_cv)
+dec_cv_coupling_lm <- lm(cv_ph ~ logit_sd_0_1_mean, mean_hc_cv)
 summary(dec_cv_coupling_lm)
 
 
@@ -161,7 +202,9 @@ avg_robust_richness <- ggplot(avg_df, aes(x = richness, y = alpha)) +
   xlab("Harvest Richness") +
   ylab("Rate of Harvest\nDecline (alpha)") +
  # xlim(1.9, 3.0) + 
+  theme(plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"))+
   theme(axis.text.x = element_text(size = 12),axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14), axis.title.x = element_text(size = 14), text = element_text(family = "Times New Roman"), strip.background = element_blank())
+
 avg_robust_richness
 
 avg_robust_evenness <- ggplot(avg_df, aes(x = evenness, y = alpha)) +
@@ -171,6 +214,7 @@ avg_robust_evenness <- ggplot(avg_df, aes(x = evenness, y = alpha)) +
   xlab("Harvest Evenness") +
   ylab("Rate of Harvest\nDecline (alpha)") +
   # xlim(1.9, 3.0) + 
+  theme(plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"))+
   theme(axis.text.x = element_text(size = 12),axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14), axis.title.x = element_text(size = 14), text = element_text(family = "Times New Roman"), strip.background = element_blank())
 avg_robust_evenness
 
@@ -182,6 +226,7 @@ avg_cv_richness <- ggplot(avg_df, aes(x = richness, y = harvest_total_cv)) +
   xlab("Harvest Richness") +
   ylab("Percapita Harvest CV\n(seasonal)") +
   # xlim(1.9, 3.0) + 
+  theme(plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"))+
   theme(axis.text.x = element_text(size = 12),axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14), axis.title.x = element_text(size = 14), text = element_text(family = "Times New Roman"), strip.background = element_blank())
 avg_cv_richness
 
@@ -192,6 +237,7 @@ avg_cv_evenness <- ggplot(avg_df, aes(x = evenness, y = harvest_total_cv)) +
   xlab("Harvest Evenness") +
   ylab("Percapita Harvest CV\n(seasonal)") +
   # xlim(1.9, 3.0) + 
+  theme(plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"))+
   theme(axis.text.x = element_text(size = 12),axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14), axis.title.x = element_text(size = 14), text = element_text(family = "Times New Roman"), strip.background = element_blank())
 avg_cv_evenness
 
@@ -202,6 +248,7 @@ decadal_cv_richness <- ggplot(mean_hc_cv, aes(x = richness_mean, y = cv_ph)) +
   theme_classic() +
   xlab("Mean Harvest Richness") +
   ylab("Percapita Harvest CV\n(decadal)") +
+  theme(plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"))+
   theme(axis.text.x = element_text(size = 12),axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14), axis.title.x = element_text(size = 14), text = element_text(family = "Times New Roman"), strip.background = element_blank())
 decadal_cv_richness
 
@@ -211,10 +258,11 @@ decadal_cv_evenness <- ggplot(mean_hc_cv, aes(x = evenness_mean, y = cv_ph)) +
   theme_classic() +
   xlab("Mean Harvest Evenness") +
   ylab("Percapita Harvest CV\n(decadal)") +
+  theme(plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"))+
   theme(axis.text.x = element_text(size = 12),axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14), axis.title.x = element_text(size = 14), text = element_text(family = "Times New Roman"), strip.background = element_blank())
 decadal_cv_evenness
 
-supp_fig <-  ggarrange(avg_robust_richness, avg_robust_evenness, avg_cv_richness, avg_cv_evenness, decadal_cv_richness, decadal_cv_evenness, nrow = 3, ncol = 2, labels = c("a)", "b)", "c)", "d)", "e)", "f)"), font.label = list(colour = "black", size = 14, family = "Times New Roman"))
+supp_fig <-  ggarrange(avg_robust_richness, avg_robust_evenness, avg_cv_richness, avg_cv_evenness, decadal_cv_richness, decadal_cv_evenness, nrow = 3, ncol = 2, labels = c("i)", "ii)", "i)", "ii)", "i)", "ii)"), font.label = list(colour = "black", size = 14, family = "Times New Roman"))
 supp_fig
 
 

@@ -137,3 +137,6 @@ df_common_taxa <- left_join(df_mean, df_sum, by = c("Forest", "Site_Year_Code", 
 
 write.csv(df_common_taxa, "data/intermediate_data/TC_comparable_harvest_df.csv")
 
+test <- df_common_taxa %>%
+  filter(Site_Year_Code == "Port San Juan (Evans Island)_1984")
+

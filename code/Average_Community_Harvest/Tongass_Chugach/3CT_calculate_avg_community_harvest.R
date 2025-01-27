@@ -8,7 +8,8 @@ library(factoextra)
 df <- read.csv("data/intermediate_data/TC_comparable_harvest_df.csv") %>%
   filter(!Site_Year_Code %in% c("Hoonah_2016") )
 
-
+test <- df %>%
+  filter(Site_Year_Code == "Port San Juan (Evans Island)_1984")
 ##Calculate proportions, do transformations and normalize percapita harvest and total harvest 
 df_comm_avg <- df %>%
   dplyr::select(Forest, Site_Year_Code, Habitat, Trophic_Level, Trophic_Category, Lowest_Common_Taxon_Name, Estimated_Total_Pounds_Harvested_sum, Percapita_Pounds_Harvested_sum) %>% ##total harvest proportion and percapita harvest proportion are the same
@@ -36,6 +37,9 @@ df_comm_avg <- df_comm_avg %>%
   mutate(Total_Harvest_prop_scale = scale(Total_Harvest_prop))
 
 
+site_list <- df_comm_avg %>%
+  select(Site) %>%
+  unique()
 ##To think about:
 ##removing 1987/1983 surveys before calculating average
 ##removing anything that is unknown before calculating average/proportions 

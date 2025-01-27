@@ -20,6 +20,8 @@ richness <- df_temp_avg %>%
   count() %>%
   rename(richness = "n")
 
+
+
 df_temp_wide <- df_temp_avg %>%
   ungroup() %>%
   dplyr::select(Site_Year_Code, Lowest_Common_Taxon_Name, Total_Harvest_prop) %>%
@@ -96,7 +98,10 @@ h_df_all <- left_join(h_df_mean, h_div_prop, by = "Site_Year_Code") %>%
   mutate(evenness_log = log(evenness)) %>%
   mutate(sd_log = log(sd))
 
+
+
 hist(h_df_all$sd)
+
 hist(h_df_all$sd_log)
 
 h_df_all <- h_df_all %>%
@@ -119,7 +124,12 @@ temp_div_all <- left_join(temp_div, h_df_all, by = "Site_Year_Code") %>%
 
 
 ##save csv
-write.csv(temp_div_all, "data/intermediate_data/temporal_survey_harvest_diversity_metrics.csv")
+write.csv(temp_div_all, "data/intermediate_data/temporal_survey_harvest_diversity_metrics_proportion.csv")
+
+##calculate mean richness, sw diversity and coupling across time 
+temp_div_all_mean <- temp_div_all %>%
+  group_by(Site) %>%
+  summarise_at(vars(richness, sw_diversity, evenness, sd), list(mean = mean))
 
 
 ggplot(temp_div_all, aes(x = Year, y = richness, group = Site, color = Site)) +
@@ -137,3 +147,22 @@ ggplot(temp_div_all, aes(x = Year, y = sd, group = Site, color = Site)) +
 ggplot(temp_div_all, aes(x = Year, y = richness, group = Site, color = Site)) +
   geom_point() +
   geom_line() 
+
+
+##looking at tatilek and chenega
+temp_evos <- temp_div_all %>%
+  filter(Site %in% c("Tatitlek", "Chenega")) %>%
+  mutate(log_1_SD = log(1/sd))
+
+ggplot(temp_evos, aes(x = Year, y = sw_diversity, group = Site, color = Site)) +
+  geom_point() +
+  geom_line() +
+  theme_classic() +
+  ylab("Harvest Diversity (SW)")
+
+ggplot(temp_evos, aes(x = Year, y = log_1_SD, group = Site, color = Site)) +
+  geom_point() +
+  geom_line() +
+  theme_classic() +
+  ylab("Habitat Coupling")
+

@@ -1,5 +1,4 @@
-##Food from Forests Project 
-##Calculating estimated harvest for 2022 and making figure for manuscript
+##Sankey Diagram for Tongass  -- calculate servings and % of food directly and indirectly supported by NFs
 
 
 library(readxl)
@@ -12,6 +11,7 @@ library(networkD3)
 
 ####Total Harvest Data estimated for 2022 by Lauren (note: want to to all calculations raw, will have to read in population by year)
 ##read in terrestrial sheet in order to obtain 2022 population
+setwd("~/Desktop/Wild Foods Repo/")
 terr <- read_excel("data/Foods_From_Forests_data/Copy of Southeast harvest summary_mg.xlsx", sheet = "Terrestrial") %>%
   select(Community, Study_Year, Per_capita_lb, `2022_population`, Estimated_total_lb) %>%
   mutate(Category = "Terrestrial")
@@ -178,11 +178,13 @@ pop_change_plot <- ggplot(pop_change, aes(x = Community, y = percent_change)) +
   theme_classic() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 12),axis.text.y = element_text(size = 10),axis.title.y=element_text(size = 12), axis.title.x = element_blank(),  text = element_text(family = "Times New Roman"), strip.background = element_blank()) 
 
-  
+
 pop_change_plot
 
 ##Calculate servings harvested 
 ##Based on USDA recommendations of 150g/serving for fruits/veg and 99g/serving for meat 
+##total rural population in 2022
+total_pop <- sum(terr$`2022_population`)
 
 fruit_veg <- df_2_res %>%
   filter(Resource_Group %in% c("Seaweed", "Berries", "Plants/Greens/Mushrooms")) %>%
@@ -195,11 +197,10 @@ fruit_veg <- df_2_res %>%
 meat <- df_2_res %>%
   filter(!Resource_Group %in% c("Seaweed", "Berries", "Plants/Greens/Mushrooms"))%>%
   select(Resource_Group, est_total_kgs_2022, est_total_1000kg_2022) %>%
-  mutate(servings = est_total_kgs_2022/0.099) %>%
-  mutate(servings_mill = est_total_1000kg_2022/0.099) %>%
+  mutate(servings = est_total_kgs_2022/0.156) %>%
+  mutate(servings_mill = est_total_1000kg_2022/0.156) %>%
   mutate(servings_per_person = servings/total_pop) 
-  
 
 
-##total rural population in 2022
-total_pop <- sum(terr$`2022_population`)
+
+

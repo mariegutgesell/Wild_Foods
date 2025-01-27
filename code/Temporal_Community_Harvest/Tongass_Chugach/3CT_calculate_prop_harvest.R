@@ -8,7 +8,6 @@ library(readxl)
 ##Read in comparable harvest data (from 2CT_create_comparable_harvest_df.R script)
 df <- read.csv("data/intermediate_data/TC_comparable_harvest_df.csv")
 
-
 survey_demographics <- read_excel("data/CSIS_SurveyData_Demographics.xlsx", sheet = 2) %>%
   unite(Site_Year_Code, c(Community, Year), sep = "_", remove = FALSE) %>%
   dplyr::rename(Forest = "National_Forest")

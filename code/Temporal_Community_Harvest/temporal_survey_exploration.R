@@ -1,6 +1,7 @@
 ##Looking at temporal trends 
 
 library(tidyverse)
+library(readxl)
 ##import cleaned harvest data and trophic info that is comparable across all years
 df <- read.csv("data/intermediate_data/tongass_harvest_data_clean.csv")
 ##
@@ -98,3 +99,5 @@ ggplot(df_2, aes(x = Year, y = Percapita_Pounds_Harvested_sum_habitat.total, col
   xlab("Percapita Harvested (lbs)") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 12),axis.text.y = element_text(size = 10),axis.title.y=element_text(size = 12), axis.title.x = element_blank(),  text = element_text(family = "Times New Roman"), strip.background = element_blank()) +
   facet_wrap(~Community)
+
+

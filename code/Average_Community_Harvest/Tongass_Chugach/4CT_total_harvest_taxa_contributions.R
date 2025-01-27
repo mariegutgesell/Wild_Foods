@@ -23,7 +23,7 @@ total_harvest_taxa <- df_comm_avg %>%
   filter(Percapita_Pounds_Harvested_sum_avg != 0) %>%
   group_by(Lowest_Common_Taxon_Name, Habitat) %>%
   summarise_at(vars(Estimated_Total_Pounds_Harvested_sum_avg, Percapita_Pounds_Harvested_sum_avg), list(total = sum)) %>%
-  mutate(total_est_pounds_harvested_all =  6370338, total_est_percapita_all = 10391.5) %>%
+  mutate(total_est_pounds_harvested_all = 6464973, total_est_percapita_all = 11168.7) %>%
   mutate(est_pounds_harvested_prop = Estimated_Total_Pounds_Harvested_sum_avg_total/total_est_pounds_harvested_all*100,
          percapita_prop = Percapita_Pounds_Harvested_sum_avg_total/total_est_percapita_all*100) %>% ##does this make sense for percapita?
   ungroup() %>%
@@ -60,9 +60,14 @@ total_harvest_taxa$harvest_total <- cumsum(total_harvest_taxa$est_pounds_harvest
 total_harvest_taxa <- total_harvest_taxa[order(-total_harvest_taxa$percapita_prop),]
 total_harvest_taxa$percapita_harvest_total <- cumsum(total_harvest_taxa$percapita_prop)
 
+
+##total richness of taxa harvested
+taxa_rich <- total_harvest_taxa %>%
+  filter(!grepl("Unknown", Lowest_Common_Taxon_Name))
 ##only difference in taxa composition that make up the 99%:
 ##when it is 99% of average percapita harvest, abalone and caribou not included (compared to average total harvest 99%) -- some different ordering but almost same composition
 ##when comparing 99% average total harvest to 99% of total harvest (not averaged across communities) -- also have geese and unknown non-salmon fish 
 ##
 
 ##
+write.csv(total_harvest_taxa, "data/intermediate_data/harvest_contribution_rank.csv")

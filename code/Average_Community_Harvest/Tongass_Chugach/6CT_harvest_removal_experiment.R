@@ -212,6 +212,8 @@ ggplot(comm_div_2, aes(x = evenness, y = alpha)) +
 
 
 even_lm <- lm(alpha ~ evenness, data = comm_div_2)
+
+
 summary(even_lm)
 
 even_lm2 <- lm(alpha ~ evenness + Forest, data = comm_div_2)

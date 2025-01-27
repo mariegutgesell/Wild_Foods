@@ -1,4 +1,4 @@
-##Harvest strength distributions and removal experiment -- community avg across years
+##Harvest strength distributions and removal experiment -- for each year and each community -- using PERCAPITA harvest
 
 library(tidyverse)
 library(ggplot2)
@@ -11,14 +11,15 @@ rm(list = ls()[!ls() %in% c("df_temp_avg")])
 ##rename to match code
 df_comm_avg <- df_temp_avg 
 
+
 ##For each community/year, create rank # based on proportion of total harvest
 ##first for total harvest
 total_harvest_rank <- df_comm_avg %>%
   group_by(Site_Year_Code) %>%
-  mutate(harvest_rank = rank(-Total_Harvest_prop, ties.method = "min")) 
+  mutate(harvest_rank = rank(-Percapita_Pounds_Harvested_sum, ties.method = "min")) 
 
 ##Plot harvest distributions by community
-ggplot(total_harvest_rank, aes(x = harvest_rank, y= Total_Harvest_prop, fill = Habitat)) +
+ggplot(total_harvest_rank, aes(x = harvest_rank, y= Percapita_Pounds_Harvested_sum, fill = Habitat)) +
   geom_col() +
   scale_fill_manual(values = c("#FF9999","#003366","#CC9966", "#339933"))+
   facet_wrap(~Site_Year_Code, scale = "free")
@@ -67,13 +68,16 @@ for (community in communities) {
 }
 
 ##add row for 0 species removed and 100% harvest
-total_harvest_prop <- results %>%
-  select(community) %>%
-  distinct() %>%
-  mutate(species_removed = 0) %>%
-  mutate(total_harvest = 100)
+total_harvest_percap <- df_comm_avg %>%
+  ungroup() %>%
+  select(Site_Year_Code, Percapita_Pounds_Harvested_sum_total) %>%
+  unique() %>%
+  rename(total_harvest = "Percapita_Pounds_Harvested_sum_total", community = "Site_Year_Code") %>%
+  mutate(species_removed = 0)
 
-results_2 <- rbind(results, total_harvest_prop)
+##add row of total harvest? yes.. 
+
+results_2 <- rbind(results, total_harvest_percap)
 
 
 ##Plot Species Removal experiment
@@ -89,7 +93,7 @@ ggplot(results_2, aes(x = species_removed, y = total_harvest, group = community,
 ggplot(results_2, aes(x = species_removed, y = total_harvest, group = community)) +
   geom_smooth(method = "lm", se = FALSE, color = "black") +
   theme_classic() +
-  ylab("Proportion Total Harvest Remaining") +
+  ylab("Total Harvest Remaining (kg/person") +
   xlab("Number of Species Removed") 
 
 ##Plot harvest distributions and line of removal
@@ -100,7 +104,7 @@ ggplot(results_2, aes(x = species_removed, y = total_harvest, group = community)
   geom_point()+
   geom_smooth(method = "loess", se = FALSE, color = "black") +
   theme_classic() +
-  ylab("Proportion Total Harvest Remaining") +
+  ylab("Total Harvest Remaining (kg/person)") +
   xlab("Number of Species Removed") 
 
 
@@ -146,31 +150,34 @@ qplot(species_removed, total_harvest, data = augmented, geom = 'point', colour =
   facet_wrap(~community)
 
 ##Join non-linear parameters to harvest diversity metrics --------------
-harvest_div <- read.csv("data/intermediate_data/temporal_survey_harvest_diversity_metrics.csv")
+harvest_div <- read.csv("data/intermediate_data/temporal_harvest_diversity_metrics_percap.csv")
 #rm(list = ls()[!ls() %in% c("nls_all_param", "harvest_div")])
 
 nls_all_param <- nls_all_param %>%
   rename(Site_Year_Code = "community")
 
 comm_div_2 <- left_join(harvest_div, nls_all_param, by = "Site_Year_Code") 
+
 ##save for future analysis
-write.csv(comm_div_2, "data/intermediate_data/temporal_harvest_removal_results.csv")
+write.csv(comm_div_2, "data/intermediate_data/temporal_harvest_removal_results_percapita.csv")
+
+####PLOTTING RESULTS ----------------
 ##Relating harvest diversity indices with alpha (rate of harvest decline)
 ggplot(comm_div_2, aes(x = sw_diversity, y = alpha)) +
-  geom_point(aes(color = Site)) +
-#  geom_line()+
+  geom_point(aes(color = Site_Year_Code)) +
+  #  geom_line()+
   geom_smooth(method = "lm", se = FALSE)+
   theme_classic() +
   ylab("Rate of Harvest Decline") +
   xlab("Harvest Diversity (SW)") +
-#  ylim(0.05, 0.42) +
+  #  ylim(0.05, 0.42) +
   xlim(1, 3.5) +
   theme(axis.text.x = element_text(size = 12),axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14),axis.title.x=element_text(size = 14),  text = element_text(family = "Times New Roman"))# +
-  #facet_wrap(~Site)
+#facet_wrap(~Site)
 
 
 
-ggplot(comm_div_2, aes(x =richness, y = alpha, group = Site)) + 
+ggplot(comm_div_2, aes(x =richness, y = alpha, group = Site_Year_Code)) + 
   geom_point()+
   geom_line() +
   # geom_smooth(method = "lm")+
@@ -178,11 +185,10 @@ ggplot(comm_div_2, aes(x =richness, y = alpha, group = Site)) +
   ylab("Rate of Harvest Decline") +
   xlab("Harvest Richness") +
   #  ylim(0.05, 0.42) +
-  theme(axis.text.x = element_text(size = 12),axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14),axis.title.x=element_text(size = 14),  text = element_text(family = "Times New Roman")) +
-  facet_wrap(~Site)
+  theme(axis.text.x = element_text(size = 12),axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14),axis.title.x=element_text(size = 14),  text = element_text(family = "Times New Roman")) 
 
 
-ggplot(comm_div_2, aes(x =Year, y = alpha, group = Site)) + 
+ggplot(comm_div_2, aes(x =Year, y = alpha, group = Site_Year_Code)) + 
   geom_point()+
   geom_line() +
   # geom_smooth(method = "lm")+
@@ -191,7 +197,7 @@ ggplot(comm_div_2, aes(x =Year, y = alpha, group = Site)) +
   xlab("Time") +
   #  ylim(0.05, 0.42) +
   theme(axis.text.x = element_text(size = 12),axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14),axis.title.x=element_text(size = 14),  text = element_text(family = "Times New Roman")) +
-  facet_wrap(~Site)
+  facet_wrap(~Site_Year_Code)
 
 
 ggplot(comm_div_2, aes(x =Year, y = sw_diversity, group = Site)) + 
@@ -208,6 +214,7 @@ ggplot(comm_div_2, aes(x =Year, y = sw_diversity, group = Site)) +
 
 #formula = y ~ x + I(x^2)
 richness_lm <- lm(alpha ~ richness, data = comm_div_2)
+
 summary(richness_lm)
 
 richness_lm2 <- lm(alpha ~ richness + Forest, data = comm_div_2)
@@ -223,6 +230,7 @@ ggplot(comm_div_2, aes(x = sw_diversity, y = alpha)) +
 
 
 sw_lm <- lm(alpha ~ sw_diversity, data = comm_div_2)
+
 summary(sw_lm)
 
 sw_lm2 <- lm(alpha ~ sw_diversity + Forest, data = comm_div_2)
@@ -288,43 +296,7 @@ even_lm_h_3 <- lm(alpha ~ sd, data = comm_div_2)
 summary(even_lm_h_3)
 
 
-ggplot(comm_div_2, aes(x = sqrt(evenness_h), y = alpha)) +
-  geom_point() +
-  geom_smooth(method = "lm")+
-  theme_classic() +
-  ylab("Rate of Harvest Decline") +
-  xlab("Habitat Evenness (sqrt Pielou)")
 
-
-
-
-ggplot(comm_div_2, aes(x = sqrt(sd), y = alpha)) +
-  geom_point() +
-  geom_smooth(method = "lm")+
-  theme_classic() +
-  ylab("Rate of Harvest Decline") +
-  xlab("Habitat Evenness (sqrt SD of harvest proportion)")
-
-even_lm_h_4 <- lm(alpha ~ sqrt(sd), data = comm_div_2)
-summary(even_lm_h_4)
-
-ggplot(comm_div_2, aes(x = 1/log(sd), y = alpha)) +
-  geom_point() +
-  geom_smooth(method = "lm")+
-  theme_classic() +
-  ylab("Rate of Harvest Decline") +
-  xlab("Habitat Coupling (1/logSD)") +
-  ylim(0.05, 0.42) +
-  theme(axis.text.x = element_text(size = 12),axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14),axis.title.x=element_text(size = 14),  text = element_text(family = "Times New Roman"))
-
-
-even_lm_h_5 <- lm(alpha ~ log(sd), data = comm_div_2)
-summary(even_lm_h_5)
-
-##testing 1/logSD
-comm_div_2 <- comm_div_2 %>%
-  mutate(`1_logSD` = 1/(log(sd))) %>%
-  mutate(log_1_SD = log(1/sd))
 
 ggplot(comm_div_2, aes(x = log_1_SD, y = alpha)) +
   geom_point(aes(color = Forest)) +
@@ -332,7 +304,6 @@ ggplot(comm_div_2, aes(x = log_1_SD, y = alpha)) +
   theme_classic() +
   ylab("Rate of Harvest Decline") +
   xlab("Habitat Coupling (log 1/SD)") +
-  ylim(0.05, 0.42) +
   theme(axis.text.x = element_text(size = 12),axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14),axis.title.x=element_text(size = 14),  text = element_text(family = "Times New Roman"))
 
 
@@ -347,9 +318,9 @@ ggplot(comm_div_2, aes(x = Year, y = log_1_SD, color = Site)) +
   theme_classic() +
   xlab("Year") +
   ylab("Habitat Coupling (log 1/SD)") +
-#  ylim(0.05, 0.42) +
+  #  ylim(0.05, 0.42) +
   theme(axis.text.x = element_text(size = 12),axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14),axis.title.x=element_text(size = 14),  text = element_text(family = "Times New Roman")) #+
- # facet_wrap(~Site)
+# facet_wrap(~Site)
 
 ##harvest evenness vs. habitat eveneess
 ggplot(comm_div_2, aes(x = evenness, y = evenness_h)) +

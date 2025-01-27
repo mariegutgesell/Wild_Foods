@@ -206,6 +206,7 @@ fish <- fish %>%
     startsWith(Taxa_lvl3, "Char") ~ "Freshwater_Anadromous",
     startsWith(Taxa_lvl3, "Trout") ~ "Freshwater_Anadromous",
     startsWith(Taxa_lvl3, "Whitefish") ~ "Freshwater_Anadromous",
+    startsWith(Taxa_lvl3, "Smelt") ~ "Freshwater_Anadromous",
     startsWith(Taxa_lvl4, "Herring Roe") ~ "Nearshore",
     startsWith(Taxa_lvl2, "Non-Salmon") ~ "Marine",
   )) %>%

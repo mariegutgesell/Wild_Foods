@@ -1,4 +1,4 @@
-##Compare harvest distributions stability and synchrony to diversity metrics 
+##Compare harvest distributions stability and synchrony to diversity metrics -- proportion
 
 library(tidyverse)
 
@@ -136,7 +136,7 @@ ggplot(sim_harv_cv, aes(x = reorder(site, -harvest_total_mean), y = harvest_tota
 
 
 ##compare seasonal CV/SD to harvest structure metrics --------------
-comm_div <- read.csv("data/intermediate_data/temporal_survey_harvest_diversity_metrics.csv") %>%
+comm_div <- read.csv("data/intermediate_data/temporal_survey_harvest_diversity_metrics_proportion.csv") %>%
   rename(site = "Site_Year_Code")
 #rm(list = ls()[!ls() %in% c("comm_div_2", "h_df_all")])
 
@@ -240,6 +240,7 @@ sd_h_cv_lm <- lm((1/harvest_total_cv) ~ log_1_SD, comm_dv_cv)
 summary(sd_h_cv_lm)
 
 
+
 ggplot(comm_dv_cv, aes(x = log_1_SD, y = harvest_total_cv, color = Forest)) +
   geom_point(aes(color = Forest)) +
   geom_smooth(method = "lm") +
@@ -271,7 +272,7 @@ thresh_cv_lm <- lm(harvest_total_cv ~ prop_days_below_threshold, comm_dv_cv)
 summary(thresh_cv_lm)
 
 ##save dataframe of harvest characteristics and phenology metrics
-write.csv(comm_dv_cv, "data/intermediate_data/temporal_harvest_phenology_summary_metrics.csv")
+write.csv(comm_dv_cv, "data/intermediate_data/temporal_harvest_phenology_summary_metrics_proportion.csv")
 
 ##SD vs. harvest diversity metrics ----------
 ggplot(comm_dv_cv, aes(x = richness, y = harvest_total_sd)) +

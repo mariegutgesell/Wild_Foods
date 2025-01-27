@@ -29,6 +29,11 @@ ggplot(df, aes(x = sd.x, y= sd.y)) +
   geom_smooth(method = "lm") +
   theme_classic()
 
+ggplot(df, aes(x = sd.x, y= sd.y)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  theme_classic()
+
 ggplot(df, aes(x = evenness_h.x, y= evenness_h.y)) +
   geom_point() +
   geom_smooth(method = "lm") +

@@ -4,12 +4,19 @@ library(tidyverse)
 library(ggplot2)
 library(ggrepel)
 library(tibble)
+library(caret)
 
 ##source code that calculates average harvest across time for each community
 source("code/Average_Community_Harvest/Tongass_Chugach/3CT_calculate_avg_community_harvest.R")
 rm(list = ls()[!ls() %in% c("df_comm_avg")])
 
 
+df_comm_avg <- df_comm_avg %>%
+  dplyr::select(Forest:Lowest_Common_Taxon_Name,Total_Harvest_prop) %>%
+  mutate(Total_Harvest_prop = Total_Harvest_prop/100)
+
+
+  
 ##calculate richness, sw diversity and evenness of harvest taxa
 richness <- df_comm_avg %>%
   ungroup() %>%
@@ -50,13 +57,13 @@ comm_div <- comm_div %>%
 ##calculate harvest habitat coupling metrics (diversity, evenness, SD) -----------
 df_h <- df_comm_avg %>%
   group_by(Site, Habitat) %>%
-  summarise_at(vars(Estimated_Total_Pounds_Harvested_sum_avg:Total_Harvest_prop), list(total = sum))
+  summarise_at(vars(Total_Harvest_prop), list(total = sum))
 
 ##evenness based on proportion harvest (##habitat diversity/coupling values are the same for total harvest and prop harvest, so doesn't matter)
 df_h_prop <- df_h %>%
   ungroup() %>%
-  dplyr::select(Site, Habitat, Total_Harvest_prop_total) %>%
-  spread(key = Habitat, value = Total_Harvest_prop_total)
+  dplyr::select(Site, Habitat, total) %>%
+  spread(key = Habitat, value = total)
 
 df_h_prop[is.na(df_h_prop)] <- 0
 df_h_prop <- df_h_prop %>%
@@ -82,18 +89,26 @@ hist(h_div_prop$evenness)
 
 ##mean and sd of harvest proportion across habitats
 h_df_mean <- df_h %>%
-  select(Site, Habitat, Total_Harvest_prop_total) %>%
+  select(Site, Habitat, total) %>%
   group_by(Site) %>%
-  summarise_at(vars(Total_Harvest_prop_total), list(avg = mean, sd = sd)) 
+  summarise_at(vars(total), list(avg = mean, sd = sd)) 
 
 
 ##combining mean, sd and diversity
+library(car)
 h_df_all <- left_join(h_df_mean, h_div_prop, by = "Site") %>%
   mutate(evenness_log = log(evenness)) %>%
-  mutate(sd_log = log(sd))
+  mutate(sd_log = log(sd)) %>%
+  mutate(log_1_SD = log(1/sd)) %>%
+  mutate(sd_0_1 = 1-(sd/0.5)) %>%
+  mutate(logit_sd_0_1 = logit(sd_0_1)) ##logit transformation appropriate for proportions and %'s 
 
 hist(h_df_all$sd)
 hist(h_df_all$sd_log)
+hist(h_df_all$log_1_SD)
+hist(h_df_all$sd_0_1)
+
+hist(h_df_all$logit_sd_0_1)
 
 h_df_all <- h_df_all %>%
   dplyr::rename(sw_div_h = "sw_diversity", richness_h = "richness", evenness_h = "evenness", evenness_h_log = "evenness_log")
@@ -107,10 +122,23 @@ ggplot(h_df_all, aes(x = evenness_h, y = sd)) +
 ggplot(h_df_all, aes(x = evenness_h, y = sd_log)) +
   geom_point()
 
+##Trying out scaling SD (i.e., habitat coupling metric) between 0-1
+
+
+
+ggplot(h_df_all, aes(x = log_1_SD, y= logit_sd_0_1)) +
+  geom_point() +
+  theme_classic()
+
+##I think could add in a maximum and minimum standard deviation -- which for 4 habitats will always be the same, and then scale the other SD to this 
+
+##minimum would be 0 (or 0.0001 so can log transform) and max will be... 50
+##new equation:first, change % to prop, then  1-(SD/0.5) -- this gives range of 0-1, with 0 being minimal/no coupling, and 1 = perfectly even coupling
+##then for stats/figure, do log transformation to improve normality 
+
 
 ##Join habitat coupling metrics with harvest diversity metrics ------------
-comm_div_all <- left_join(comm_div, h_df_all, by = "Site") %>%
-  mutate(log_1_SD = log(1/sd))
+comm_div_all <- left_join(comm_div, h_df_all, by = "Site") 
 
 
 ##save csv

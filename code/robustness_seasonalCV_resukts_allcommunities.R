@@ -1,0 +1,127 @@
+##Harvest Robustness and seasonal CV all communities fig
+
+library(tidyverse)
+library(ggplot2)
+library(ggpubr)
+
+##Read in results from robustness and seasonal CV data 
+r_param <- read.csv( "data/intermediate_data/average_harvest_removal_results_percap.csv") %>%
+  select(Site, alpha) %>%
+  rename(community = "Site")
+r_raw <- read.csv("data/intermediate_data/species_removal_results_raw_percap.csv")
+r_df <- left_join(r_raw, r_param, by = "community")
+
+r_raw_1000 <- read.csv("data/intermediate_data/random_harvest_loss_1000_percap.csv") %>%
+  filter(iteration <= 854)
+
+r_raw_1000_slopes <- read.csv("data/intermediate_data/1000_random_removal_slope_mean_sd.csv") %>%
+  rename(community = "Community")
+
+r_raw_1000_summary <- r_raw_1000 %>%
+  group_by(community, species_removed) %>%
+  summarise_at(vars(total_harvest), list(total_harvest_mean = mean, total_harvest_sd = sd))
+
+r_df <- left_join(r_raw, r_param, by = "community") %>%
+  left_join(r_raw_1000_summary, by = c("community", "species_removed")) %>%
+  left_join(r_raw_1000_slopes, by = "community")
+#Plot r
+r_fig <- ggplot(r_df, aes(x = species_removed, y = total_harvest, group = community)) +
+  #  geom_point()+
+  geom_smooth(aes(color = alpha), method = "loess", se = FALSE) +
+  scale_color_gradient2(low = "deepskyblue",mid = "darkgoldenrod1", high = "brown3", midpoint = 0.3 ) +
+  theme_classic() +
+  ylab("Percapita Harvest Remaining (kg/person)") +
+  xlab("Number of Species Removed") +
+  scale_y_log10()+
+  theme(axis.text.x = element_text(size = 12),axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14), axis.title.x = element_text(size = 14), text = element_text(family = "Times New Roman"), strip.background = element_blank(), legend.position = "right")
+
+r_fig
+
+r_fig_2 <- ggplot(r_df, aes(x = species_removed, y = total_harvest, group = community)) +
+  #  geom_point()+
+  geom_line(aes(color = alpha), size = 1) +
+  scale_color_gradient2(low = "deepskyblue",mid = "darkgoldenrod1", high = "brown3", midpoint = 0.3 ) +
+  theme_classic() +
+  ylab("Percapita Harvest Remaining (kg/person)") +
+  xlab("Number of Species Removed") +
+#  scale_y_log10()+
+  theme(axis.text.x = element_text(size = 12),axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14), axis.title.x = element_text(size = 14), text = element_text(family = "Times New Roman"), strip.background = element_blank(), legend.position = "right")
+
+r_fig_2
+
+mid <- r_param %>%
+  mutate(midpoint = min(alpha) + max(alpha) / 2)
+
+hist(r_param$alpha)
+
+##Plot mean results from 1000. iterations 
+r_fig_1000 <- ggplot(r_df, aes(x = species_removed, y = total_harvest_mean, group = community)) +
+  #  geom_point()+
+  geom_smooth(aes(color = slope_mean), method = "loess", se = FALSE) +
+  scale_color_gradient2(high = "deepskyblue",mid = "darkgoldenrod1", low = "brown3", midpoint = -9.0 ) +
+  theme_classic() +
+  ylab("Mean Percapita Harvest Remaining (kg/person)") +
+  xlab("Number of Species Removed") +
+#  scale_y_log10()+
+  theme(axis.text.x = element_text(size = 12),axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14), axis.title.x = element_text(size = 14), text = element_text(family = "Times New Roman"), strip.background = element_blank(), legend.position = "right")
+
+r_fig_1000
+
+
+##For CV data 
+cv_raw <- read.csv("data/intermediate_data/simulated_harvest_distributions_harvest_percapita.csv") %>%
+  filter(!is.na(harvest_amount)) %>%
+  group_by(site, date) %>%
+  summarise_at(vars(harvest_amount), list(harvest_total = sum))
+cv_param <- read.csv("data/intermediate_data/average_harvest_phenology_summary_metrics_percapita.csv")%>%
+  select(site, harvest_total_cv)
+cv_df <- left_join(cv_raw, cv_param, by = "site")  
+  
+
+cv_fig <- ggplot(cv_df, aes(x = date, y = harvest_total, group = site)) +
+  #  geom_point()+
+  geom_line(aes(color = harvest_total_cv), size = 1) +
+  scale_color_gradient2(low = "deepskyblue",mid = "darkgoldenrod1", high = "brown3", midpoint = 1.1 ) +
+  theme_classic() +
+  ylab("Percapita Harvest (kg/person)") +
+  xlab("Date") +
+#  scale_y_log10()+
+  theme(axis.text.x = element_text(size = 12),axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14), axis.title.x = element_text(size = 14), text = element_text(family = "Times New Roman"), strip.background = element_blank(), legend.position = "right")
+
+cv_fig  
+
+cv_fig_2 <- ggplot(cv_df, aes(x = date, y = harvest_total, group = site)) +
+  #  geom_point()+
+  geom_smooth(aes(color = harvest_total_cv), method = "loess", se = FALSE) +
+  scale_color_gradient2(low = "deepskyblue",mid = "darkgoldenrod1", high = "brown3", midpoint = 1.1 ) +
+  theme_classic() +
+  ylab("Percapita Harvest (kg/person)") +
+  xlab("Date") +
+   scale_y_log10()+
+  theme(axis.text.x = element_text(size = 12),axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14), axis.title.x = element_text(size = 14), text = element_text(family = "Times New Roman"), strip.background = element_blank(), legend.position = "right")
+
+cv_fig_2 
+  
+
+mid_cv <- cv_param %>%
+  mutate(midpoint = min(harvest_total_cv) + max(harvest_total_cv) / 2)
+
+hist(cv_param$harvest_total_cv)
+
+ggplot(cv_df, aes(x = date, y = harvest_total, group = site)) +
+  geom_line(aes(color = harvest_total_cv), size = 1) +
+  geom_smooth(color = "black", method = "loess", se = FALSE) +
+  scale_color_gradient2(low = "deepskyblue",mid = "darkgoldenrod1", high = "brown3", midpoint = 1.1 ) +
+  theme_classic() +
+  ylab("Percapita Harvest (kg/person)") +
+  xlab("Date") +
+  scale_y_log10()+
+  theme(axis.text.x = element_text(size = 12),axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14), axis.title.x = element_text(size = 14), text = element_text(family = "Times New Roman"), strip.background = element_blank(), legend.position = "right") +
+  facet_wrap(~site)
+
+##Join together
+cv_r_fig <- ggarrange(r_fig_2, cv_fig, nrow = 1, ncol = 2, labels = c("a)", "b)"), font.label = list(colour = "black", size = 14, family = "Times New Roman"))
+cv_r_fig
+
+cv_r_fig2 <- ggarrange(r_fig, r_fig_1000, cv_fig_2, nrow = 1, ncol = 3, labels = c("a)", "b)", "c)"), font.label = list(colour = "black", size = 14, family = "Times New Roman"))
+cv_r_fig2

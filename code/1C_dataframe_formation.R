@@ -18,7 +18,6 @@ df <- rbindlist(df.list) %>%
   unite(Site_Year_Code, c(Community_Name, Study_Year), sep = "_", remove = FALSE) 
 
 
-
 ##read in comprehensive survey demographics
 setwd("~/Desktop/Wild Foods Repo/data/")
 survey_demographics <- read_excel("CSIS_SurveyData_Demographics.xlsx", sheet = 2) %>%

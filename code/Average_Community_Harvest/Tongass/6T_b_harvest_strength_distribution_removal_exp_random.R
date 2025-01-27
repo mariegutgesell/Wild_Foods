@@ -168,6 +168,7 @@ summary(richness_lm)
 
 nls(total_harvest ~ SSasymp(species_removed, yf, y0, log_alpha), data = angoon)
 
+
 ggplot(comm_div, aes(x = sw_diversity, y = slope)) +
   geom_point() +
   geom_smooth(method = "lm")+

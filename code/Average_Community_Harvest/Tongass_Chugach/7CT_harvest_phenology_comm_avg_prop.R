@@ -55,12 +55,12 @@ df_hp <- df_hp %>%
 df_hp_w_1 <- df_hp %>%
   filter(is.na(Avg_Peak_Harvest_2)) %>%
   filter(harvest_duration > 0)  %>%
-  filter(!Lowest_Common_Taxon_Name %in% c("Chiton", "Clam", "Cockle", "Sea Cucumber", "Flounder", "Seal")) ##these species the peak is across the year 
+  filter(!Lowest_Common_Taxon_Name %in% c("Chiton", "Clam", "Cockle", "Sea Cucumber", "Flounder", "Sole")) ##these species the peak is across the year 
 ##b) Harvest distribution within year, 1 peak, where peak is crosses yearly border (wraps)
 df_hp_w_1_b <- df_hp %>%
   filter(is.na(Avg_Peak_Harvest_2)) %>%
   filter(harvest_duration > 0)  %>%
-  filter(Lowest_Common_Taxon_Name %in% c("Chiton", "Clam", "Cockle", "Sea Cucumber", "Flounder", "Seal"))
+  filter(Lowest_Common_Taxon_Name %in% c("Chiton", "Clam", "Cockle", "Sea Cucumber", "Flounder", "Sole"))
 
 ##c) Harvest distribution within year, 2 peaks, both peaks within year
 df_hp_w_2 <- df_hp %>%
@@ -72,11 +72,18 @@ df_hp_a_1 <- df_hp %>%
   filter(is.na(Avg_Peak_Harvest_2)) %>%
   filter(harvest_duration < 0) 
 
-##e) Harvest Distributions -- across year, 1 peak
-df_hp_a_2 <- df_hp %>%
-  filter(!is.na(Avg_Peak_Harvest_2)) %>%
-  filter(harvest_duration < 0) 
 
+##e) Harvest Distributions -- across year, 1 peak -- black bear
+df_hp_a_2_1 <- df_hp %>%
+  filter(!is.na(Avg_Peak_Harvest_2)) %>%
+  filter(harvest_duration < 0) %>%
+  filter(Lowest_Common_Taxon_Name %in% c("Black Bear", "Brown Bear"))
+
+##f) Harvest Distributions -- across year, 1 peak -- upland game birds
+df_hp_a_2_2 <- df_hp %>%
+  filter(!is.na(Avg_Peak_Harvest_2)) %>%
+  filter(harvest_duration < 0) %>%
+  filter(Lowest_Common_Taxon_Name == "Upland Game Birds")
 
 ##2a) Harvest Distributions -- within year, 1 peak, and full distribution within year -----------------
 distribute_harvest <- function(amount, duration, peak_date) {
@@ -360,7 +367,7 @@ sp_dist_plot_6 <- simulated_harvest_prop_df_a_1 %>%
   facet_wrap(~species)
 sp_dist_plot_6
 
-##2e) Harvest Distributions -- across year, 2 peaks -----------------
+##2e) Harvest Distributions -- across year, 2 peaks -- black bear-----------------
 distribute_harvest_bimodal <- function(amount, duration, peak_date1, peak_date2, days) {
   weights1 <- dnorm(days, mean = peak_date1, sd = 0.1*duration) 
   weights2 <- dnorm(days, mean = peak_date2, sd = 0.1*duration) 
@@ -386,17 +393,17 @@ distribute_harvest_bimodal <- function(amount, duration, peak_date1, peak_date2,
 
 # Apply the function to each row in the dataframe
 ##seeing how looks if do proportion of harvest
-simulated_harvest_prop <- lapply(1:nrow(df_hp_a_2), function(i) {
-  amount <- df_hp_a_2$Total_Harvest_prop[i]
-  duration <- (365-df_hp_a_2$Harvest_Start_j[i]) + (1+df_hp_a_2$Harvest_End_j[i])
+simulated_harvest_prop <- lapply(1:nrow(df_hp_a_2_1), function(i) {
+  amount <- df_hp_a_2_1$Total_Harvest_prop[i]
+  duration <- (365-df_hp_a_2_1$Harvest_Start_j[i]) + (1+df_hp_a_2_1$Harvest_End_j[i])
   days <- 1:duration
-  peak_date1 <- df_hp_a_2$Avg_Peak_Harvest_2_j[i] - df_hp_a_2$Harvest_Start_j[i]
-  peak_date2 <- (365-df_hp_a_2$Harvest_Start_j[i]) + df_hp_a_2$Avg_Peak_Harvest_1_j[i]
+  peak_date1 <- df_hp_a_2_1$Avg_Peak_Harvest_2_j[i] - df_hp_a_2_1$Harvest_Start_j[i]
+  peak_date2 <- (365-df_hp_a_2_1$Harvest_Start_j[i]) + df_hp_a_2_1$Avg_Peak_Harvest_1_j[i]
   
   
-  Site <- df_hp_a_2$Site[i]
-  Species <- df_hp_a_2$Lowest_Common_Taxon_Name[i]
-  habitat <- df_hp_a_2$Habitat[i]
+  Site <- df_hp_a_2_1$Site[i]
+  Species <- df_hp_a_2_1$Lowest_Common_Taxon_Name[i]
+  habitat <- df_hp_a_2_1$Habitat[i]
   # Distribute the harvest amount
   harvest_amount <- distribute_harvest_bimodal(amount, duration, peak_date1, peak_date2, days)
   # Create a dataframe with date and harvest amount
@@ -405,9 +412,9 @@ simulated_harvest_prop <- lapply(1:nrow(df_hp_a_2), function(i) {
 })
 
 # Combine the results into a single dataframe
-simulated_harvest_prop_df_a_2 <- do.call(rbind, simulated_harvest_prop) 
+simulated_harvest_prop_df_a_2_1 <- do.call(rbind, simulated_harvest_prop) 
 
-sp_dist_plot_7 <- simulated_harvest_prop_df_a_2 %>%
+sp_dist_plot_7 <- simulated_harvest_prop_df_a_2_1 %>%
   ungroup() %>%
   group_by(species, habitat, date) %>%
   summarise_at(vars(harvest_amount), list(total_harvest_amount = sum)) %>%
@@ -419,11 +426,71 @@ sp_dist_plot_7 <- simulated_harvest_prop_df_a_2 %>%
   facet_wrap(~species)
 sp_dist_plot_7
 
+##2f) Harvest Distributions -- across year, 2 peaks -- upland game birds -----------------
+distribute_harvest_bimodal <- function(amount, duration, peak_date1, peak_date2, days) {
+  weights1 <- dnorm(days, mean = peak_date1, sd = 0.1*duration) 
+  weights2 <- dnorm(days, mean = peak_date2, sd = 0.1*duration) 
+  
+  # Scale weights to sum to the total amount and adjust peak ratio
+  weights1 <- amount * weights1 * 1/ sum(weights1)
+  weights2 <- amount * weights2 * 1 / sum(weights2)
+  
+  days_2 <- data.frame(c(seq(214, 365), seq(1, 136))) 
+  names(days_2)[1] <- "date"
+  
+  weights <- cbind(days_2, weights1, weights2) %>%
+    mutate(weight = weights1 + weights2)
+  
+  
+  yr_date <- as.data.frame(1:365) %>%
+    rename(date = "1:365")
+  
+  results <- left_join(yr_date, weights, by = "date")
+  return(results)
+}
+###Need to check over the math of this, to make sure this makes sense... 
+
+# Apply the function to each row in the dataframe
+##seeing how looks if do proportion of harvest
+simulated_harvest_prop <- lapply(1:nrow(df_hp_a_2_2), function(i) {
+  amount <- df_hp_a_2_2$Total_Harvest_prop[i]
+  duration <- (365-df_hp_a_2_2$Harvest_Start_j[i]) + (1+df_hp_a_2_2$Harvest_End_j[i])
+  days <- 1:duration
+  peak_date1 <- df_hp_a_2_2$Avg_Peak_Harvest_2_j[i] - df_hp_a_2_2$Harvest_Start_j[i]
+  peak_date2 <- (365-df_hp_a_2_2$Harvest_Start_j[i]) + df_hp_a_2_2$Avg_Peak_Harvest_1_j[i]
+  
+  
+  Site <- df_hp_a_2_2$Site[i]
+  Species <- df_hp_a_2_2$Lowest_Common_Taxon_Name[i]
+  habitat <- df_hp_a_2_2$Habitat[i]
+  # Distribute the harvest amount
+  harvest_amount <- distribute_harvest_bimodal(amount, duration, peak_date1, peak_date2, days)
+  # Create a dataframe with date and harvest amount
+  data.frame(date = harvest_amount$date,
+             harvest_amount = harvest_amount$weight, site = Site, species = Species, habitat = habitat)
+})
+
+# Combine the results into a single dataframe
+simulated_harvest_prop_df_a_2_2 <- do.call(rbind, simulated_harvest_prop) 
+
+sp_dist_plot_8 <- simulated_harvest_prop_df_a_2_2 %>%
+  ungroup() %>%
+  group_by(species, habitat, date) %>%
+  summarise_at(vars(harvest_amount), list(total_harvest_amount = sum)) %>%
+  ggplot(aes(x = date, y = total_harvest_amount, color = habitat)) +
+  #geom_point() +
+  geom_path() +
+  scale_colour_manual(values = c("#339933"))+
+  labs(x = "Date", y = "Harvest Amount (%)", title = "Simulated Harvest Distribution Across Harvest Season") +
+  facet_wrap(~species)
+sp_dist_plot_8
+
 
 
 ##Combine all simulated distribution dataframes ---------------
-simulated_harvest_prop_df <- rbind(simulated_harvest_prop_df_w_1, simulated_harvest_prop_df_w_1_b, simulated_harvest_prop_df_w_2_a, simulated_harvest_prop_df_w_2_b, simulated_harvest_prop_df_a_1, simulated_harvest_prop_df_a_2)
+simulated_harvest_prop_df <- rbind(simulated_harvest_prop_df_w_1, simulated_harvest_prop_df_w_1_b, simulated_harvest_prop_df_w_2_a, simulated_harvest_prop_df_w_2_b, simulated_harvest_prop_df_a_1, simulated_harvest_prop_df_a_2_1, simulated_harvest_prop_df_a_2_2)
 
+setwd("~/Desktop/Wild Foods Repo/")
 write.csv(simulated_harvest_prop_df, "data/intermediate_data/simulated_harvest_distributions_harvest_proportion.csv")
 
 ##Plot all species 
@@ -460,3 +527,4 @@ test <- simulated_harvest_prop_df %>%
   labs(x = "Date", y = "Harvest Amount (%)", title = "Simulated Harvest Distribution Across Harvest Season") +
   facet_wrap(~site, scale = "free")
 test
+
