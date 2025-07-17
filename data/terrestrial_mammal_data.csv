@@ -1,0 +1,742 @@
+"","Forest","Community","Year","Site_Year_Code","Taxa_lvl1","Taxa_lvl2","Taxa_lvl5","Sampled_households","Est_Num_Community_Households","Sampled_Population","Est_Comm_Population","Most_Rep_Year","Conversion_Units_To_Pounds","Resource_Harvest_Units","Percent_Using","Percent_Attempting_to_Harvest","Percent_Harvesting","Percent_Receiving","Percent_Giving","Estimated_Total_Pounds_Harvested","Percapita_Pounds_Harvested","Number_Of_Resource_Harvested"
+"1","Chugach","Cordova","1985","Cordova_1985","Land Mammals","Small Land Mammals","Hare",206,853,547,2265,"No",2,"Ind.",0.311,0.35,0.311,0.087,0.078,4762,2.1,575
+"2","Chugach","Cordova","1988","Cordova_1988","Land Mammals","Small Land Mammals","Hare",101,872,299,2407.4,"No",2,"Ind.",0.18200001,0.198,0.174,0.008,0.016,2945,1.22,NA
+"3","Chugach","Valdez","1991","Valdez_1991","Land Mammals","Small Land Mammals","Fox",100,1231,330,4062.3,"No",0,"Ind.",0.01,0.01,0.01,0,0,0,0,4
+"4","Chugach","Valdez","1992","Valdez_1992","Land Mammals","Small Land Mammals","Fox",100,1257,297,3733.3,"Yes",0,"Ind.",0.01,0.01,0.01,0,0,0,0,1
+"5","Chugach","Valdez","1991","Valdez_1991","Land Mammals","Small Land Mammals","Fox",100,1231,330,4062.3,"No",0,"Ind.",0.01,0.01,0.01,0,0,0,0,4
+"6","Chugach","Valdez","1992","Valdez_1992","Land Mammals","Small Land Mammals","Fox",100,1257,297,3733.3,"Yes",0,"Ind.",0.01,0.01,0.01,0,0,0,0,1
+"7","Chugach","Valdez","1993","Valdez_1993","Land Mammals","Small Land Mammals","Squirrel",35,1257,104,3735.1,"No",0.5,"Ind.",0.029000001,0.029000001,0.029000001,0.029000001,0,18,0,1
+"8","Chugach","Chenega","1984","Chenega_1984","Land Mammals","Large Land Mammals","Black Bear",16,16,57,57,"No",58,"Ind.",0.5,0.313,0.063,0.5,0.063,58,1.02,1
+"9","Chugach","Chenega","1985","Chenega_1985","Land Mammals","Large Land Mammals","Black Bear",16,17,57,60.6,"No",58,"Ind.",0.688,0.375,0.375,0.438,0.313,616,10.17,11
+"10","Chugach","Chenega","1990","Chenega_1990","Land Mammals","Large Land Mammals","Black Bear",18,21,66,77,"No",58,"Ind.",0.38900003,0.278,0.278,0.16700001,0.16700001,338,4.39,5
+"11","Chugach","Chenega","1991","Chenega_1991","Land Mammals","Large Land Mammals","Black Bear",18,22,66,80.7,"No",58,"Ind.",0.333,0.222,0.16700001,0.222,0.16700001,213,2.64,3
+"12","Chugach","Chenega","1992","Chenega_1992","Land Mammals","Large Land Mammals","Black Bear",23,26,80,90.4,"No",58,"Ind.",0.39099997,0.261,0.261,0.261,0.21700001,852,9.42,13
+"13","Chugach","Chenega","1993","Chenega_1993","Land Mammals","Large Land Mammals","Black Bear",23,28,83,101,"No",58,"Ind.",0.174,0.304,0.087,0.174,0.13,141,1.4,2
+"14","Chugach","Chenega","1997","Chenega_1997","Land Mammals","Large Land Mammals","Black Bear",15,21,42,58.8,"No",58,"Ind.",0.26700002,0.2,0.133,0.2,0.067,162,2.76,2
+"15","Chugach","Chenega","2014","Chenega_2014","Land Mammals","Large Land Mammals","Black Bear",12,17,25,35.4,"Yes",58,"Ind.",0.25,0.25,0.16700001,0.083000004,0.083000004,246.5,6.9599934,3
+"16","Chugach","Chenega","1992","Chenega_1992","Land Mammals","Large Land Mammals","Caribou",23,26,80,90.4,"No",150,"Ind.",0.609,0.087,0.087,0.565,0.174,1187,13.13,7
+"17","Chugach","Chenega","1993","Chenega_1993","Land Mammals","Large Land Mammals","Caribou",23,28,83,101,"No",150,"Ind.",0.087,0.043,0.043,0.087,0.087,183,1.81,1
+"18","Chugach","Chenega","1984","Chenega_1984","Land Mammals","Large Land Mammals","Deer",16,16,57,57,"No",43.2,"Ind.",0.813,0.625,0.625,0.75,0.625,2765,48.51,64
+"19","Chugach","Chenega","1985","Chenega_1985","Land Mammals","Large Land Mammals","Deer",16,17,57,60.6,"No",43.2,"Ind.",1,0.813,0.688,0.625,0.5,3351,55.33,73
+"20","Chugach","Chenega","1989","Chenega_1989","Land Mammals","Large Land Mammals","Deer",18,21,63,73.6,"No",43.2,"Ind.",0.889,0.667,0.556,0.38900003,0.444,1411,19.2,28
+"21","Chugach","Chenega","1990","Chenega_1990","Land Mammals","Large Land Mammals","Deer",18,21,66,77,"No",43.2,"Ind.",0.944,0.72199994,0.556,0.556,0.38900003,2621,34.04,52
+"22","Chugach","Chenega","1991","Chenega_1991","Land Mammals","Large Land Mammals","Deer",18,22,66,80.7,"No",43.2,"Ind.",1,0.667,0.667,0.833,0.556,3221,39.93,61
+"23","Chugach","Chenega","1992","Chenega_1992","Land Mammals","Large Land Mammals","Deer",23,26,80,90.4,"No",43.2,"Ind.",0.95699996,0.565,0.565,0.78300005,0.478,4200,46.44,86
+"24","Chugach","Chenega","1993","Chenega_1993","Land Mammals","Large Land Mammals","Deer",23,28,83,101,"No",43.2,"Ind.",0.826,0.696,0.478,0.739,0.435,1473,14.58,28
+"25","Chugach","Chenega","1997","Chenega_1997","Land Mammals","Large Land Mammals","Deer",15,21,42,58.8,"No",43.2,"Ind.",0.73300004,0.667,0.667,0.6,0.6,3326,56.57,55
+"26","Chugach","Chenega","2003","Chenega_2003","Land Mammals","Large Land Mammals","Deer",16,20,45,56.3,"No",43.2,"Ind.",0.8125,0.75,0.5625,0.8125,0.75,2160,38.4,40
+"27","Chugach","Chenega","2014","Chenega_2014","Land Mammals","Large Land Mammals","Deer",12,17,25,35.4,"Yes",43.2,"Ind.",0.75,0.25,0.16700001,0.667,0.25,367.2,10.3679905,6
+"28","Chugach","Chenega","1984","Chenega_1984","Land Mammals","Large Land Mammals","Goat",16,16,57,57,"No",72.5,"Ind.",0.063,0.375,0.063,0.063,0.063,145,2.54,2
+"29","Chugach","Chenega","1985","Chenega_1985","Land Mammals","Large Land Mammals","Goat",16,17,57,60.6,"No",72.5,"Ind.",0.313,0.125,0.063,0.25,0.063,154,2.54,2
+"30","Chugach","Chenega","1989","Chenega_1989","Land Mammals","Large Land Mammals","Goat",18,21,63,73.6,"No",72.5,"Ind.",0.38900003,0.111,0.111,0.278,0.16700001,169,2.3,2
+"31","Chugach","Chenega","1997","Chenega_1997","Land Mammals","Large Land Mammals","Goat",15,21,42,58.8,"No",72.5,"Ind.",0.2,0.067,0.067,0.2,0.067,102,1.73,1
+"32","Chugach","Chenega","2003","Chenega_2003","Land Mammals","Large Land Mammals","Goat",16,20,45,56.3,"No",72.5,"Ind.",0.25,0.125,0.0625,0.25,0.125,90.625,1.6111112,1
+"33","Chugach","Chenega","1984","Chenega_1984","Land Mammals","Large Land Mammals","Moose",16,16,57,57,"No",540,"Ind.",0.375,0.188,0.063,0.313,0.188,540,9.47,1
+"34","Chugach","Chenega","1985","Chenega_1985","Land Mammals","Large Land Mammals","Moose",16,17,57,60.6,"No",540,"Ind.",0.438,0.063,0.063,0.375,0.063,574,9.48,1
+"35","Chugach","Chenega","1997","Chenega_1997","Land Mammals","Large Land Mammals","Moose",15,21,42,58.8,"No",540,"Ind.",0.467,0.133,0.133,0.4,0.2,1512,25.71,2
+"36","Chugach","Chenega","2003","Chenega_2003","Land Mammals","Large Land Mammals","Moose",16,20,45,56.3,"No",540,"Ind.",0.4375,0.0625,0.0625,0.4375,0.125,675,12,1
+"37","Chugach","Chenega","2014","Chenega_2014","Land Mammals","Large Land Mammals","Moose",12,17,25,35.4,"Yes",540,"Ind.",0.333,0.16700001,0.083000004,0.25,0.083000004,765,21.59998,1
+"38","Chugach","Chenega","1997","Chenega_1997","Land Mammals","Large Land Mammals","Dall Sheep",15,21,42,58.8,"No",104,"Ind.",0.2,0.067,0.067,0.2,0.133,146,2.48,1
+"39","Chugach","Chenega","1984","Chenega_1984","Land Mammals","Small Land Mammals","Snowshoe Hare",16,16,57,57,"No",2,"Ind.",0.063,0.063,0.063,0,0.063,12,0.21,6
+"40","Chugach","Chenega","1997","Chenega_1997","Land Mammals","Small Land Mammals","Snowshoe Hare",15,21,42,58.8,"No",2,"Ind.",0.133,0.133,0.133,0,0,42,0.71,15
+"41","Chugach","Chenega","2003","Chenega_2003","Land Mammals","Small Land Mammals","Snowshoe Hare",16,20,45,56.3,"No",2,"Ind.",0.0625,0.0625,0.0625,0.0625,0.0625,15,0.26666668,6
+"42","Chugach","Chenega","1984","Chenega_1984","Land Mammals","Small Land Mammals","Land Otter",16,16,57,57,"No",0,"Ind.",0.188,0.125,0.125,0.063,0,0,0,24
+"43","Chugach","Chenega","1985","Chenega_1985","Land Mammals","Small Land Mammals","Land Otter",16,17,57,60.6,"No",NA,"Ind.",0.188,0.188,0.188,0,0,0,0,29
+"44","Chugach","Chenega","1992","Chenega_1992","Land Mammals","Small Land Mammals","Land Otter",23,26,80,90.4,"No",0,"Ind.",0.087,0.13,0.087,0,0.087,0,0,3
+"45","Chugach","Chenega","1993","Chenega_1993","Land Mammals","Small Land Mammals","Land Otter",23,28,83,101,"No",NA,"Ind.",0.087,0.087,0.087,0,0.043,0,0,6
+"46","Chugach","Chenega","1997","Chenega_1997","Land Mammals","Small Land Mammals","Land Otter",15,21,42,58.8,"No",0,"Ind.",0.2,0.133,0.133,0.133,0.067,0,0,12
+"47","Chugach","Chenega","2003","Chenega_2003","Land Mammals","Small Land Mammals","Land Otter",16,20,45,56.3,"No",0,"Ind.",0.0625,0.0625,0.0625,0,0,0,0,22
+"48","Chugach","Chenega","2014","Chenega_2014","Land Mammals","Small Land Mammals","Land Otter",12,17,25,35.4,"Yes",0,"Ind.",0.16700001,0.16700001,0.16700001,0,0.083000004,0,0,19
+"49","Chugach","Chenega","1984","Chenega_1984","Land Mammals","Small Land Mammals","Marten",16,16,57,57,"No",0,"Ind.",0.063,0.063,0.063,0,0,0,0,2
+"50","Chugach","Chenega","2014","Chenega_2014","Land Mammals","Small Land Mammals","Marten",12,17,25,35.4,"Yes",0,"Ind.",0.083000004,0.083000004,0.083000004,0,0,0,0,3
+"51","Chugach","Chenega","1984","Chenega_1984","Land Mammals","Small Land Mammals","Mink",16,16,57,57,"No",0,"Ind.",0.125,0.125,0.125,0,0,0,0,11
+"52","Chugach","Chenega","1985","Chenega_1985","Land Mammals","Small Land Mammals","Mink",16,17,57,60.6,"No",NA,"Ind.",0.25,0.188,0.188,0.063,0,0,0,17
+"53","Chugach","Chenega","1992","Chenega_1992","Land Mammals","Small Land Mammals","Mink",23,26,80,90.4,"No",0,"Ind.",0.043,0.043,0.043,0.043,0,0,0,1
+"54","Chugach","Chenega","1997","Chenega_1997","Land Mammals","Small Land Mammals","Mink",15,21,42,58.8,"No",0,"Ind.",0.067,0.067,0.067,0,0,0,0,10
+"55","Chugach","Chenega","2003","Chenega_2003","Land Mammals","Small Land Mammals","Mink",16,20,45,56.3,"No",0,"Ind.",0.0625,0.0625,0.0625,0.0625,0,0,0,20
+"56","Chugach","Chenega","2014","Chenega_2014","Land Mammals","Small Land Mammals","Mink",12,17,25,35.4,"Yes",0,"Ind.",0.083000004,0.083000004,0.083000004,0,0,0,0,14
+"57","Chugach","Chenega","1984","Chenega_1984","Land Mammals","Small Land Mammals","Porcupine",16,16,57,57,"No",8,"Ind.",0.125,0.063,0.063,0.063,0,24,0.42,3
+"58","Chugach","Chenega","1985","Chenega_1985","Land Mammals","Small Land Mammals","Porcupine",16,17,57,60.6,"No",8,"Ind.",0.375,0.438,0.375,0.125,0.125,51,0.84,6
+"59","Chugach","Chenega","1991","Chenega_1991","Land Mammals","Small Land Mammals","Porcupine",18,22,66,80.7,"No",8,"Ind.",0.055999998,0.055999998,0.055999998,0,0.055999998,10,0.12,1
+"60","Chugach","Chenega","1992","Chenega_1992","Land Mammals","Small Land Mammals","Porcupine",23,26,80,90.4,"No",8,"Ind.",0.043,0.043,0.043,0,0.043,9,0.1,1
+"61","Chugach","Chenega","1993","Chenega_1993","Land Mammals","Small Land Mammals","Porcupine",23,28,83,101,"No",8,"Ind.",0.043,0.043,0.043,0,0.043,49,0.48,5
+"62","Chugach","Chenega","2003","Chenega_2003","Land Mammals","Small Land Mammals","Tree Squirrel",16,20,45,56.3,"No",0.5,"Ind.",0.0625,0.0625,0.0625,0.0625,0.0625,6.25,0.11111111,10
+"63","Chugach","Chenega","2014","Chenega_2014","Land Mammals","Small Land Mammals","Tree Squirrel",12,17,25,35.4,"Yes",0.5,"Ind.",0.083000004,0.083000004,0.083000004,0.083000004,0.083000004,7.1,0.19999981,10
+"64","Chugach","Chenega","1985","Chenega_1985","Land Mammals","Small Land Mammals","Weasel",16,17,57,60.6,"No",NA,"Ind.",0.063,0.063,0.063,0,0,0,0,1
+"65","Chugach","Chenega","1997","Chenega_1997","Land Mammals","Small Land Mammals","Weasel",15,21,42,58.8,"No",0,"Ind.",0.067,0.067,0.067,0,0.067,0,0,3
+"66","Chugach","Chenega","2003","Chenega_2003","Land Mammals","Small Land Mammals","Weasel",16,20,45,56.3,"No",0,"Ind.",0.0625,0.0625,0.0625,0,0,0,0,7
+"67","Chugach","Chenega","2014","Chenega_2014","Land Mammals","Small Land Mammals","Weasel",12,17,25,35.4,"Yes",0,"Ind.",0.083000004,0.083000004,0.083000004,0,0,0,0,4
+"68","Chugach","Chenega","2014","Chenega_2014","Land Mammals","Small Land Mammals","Wolverine",12,17,25,35.4,"Yes",0,"Ind.",0.083000004,0.083000004,0.083000004,0,0,0,0,1
+"69","Chugach","Cooper Landing","1990","Cooper Landing_1990","Land Mammals","Large Land Mammals","Black Bear",61,99,169,257.5,"Yes",58,"Ind.",0.083000004,0.061,0.049000002,0.034,0.024,490,1.9,NA
+"70","Chugach","Cooper Landing","1990","Cooper Landing_1990","Land Mammals","Large Land Mammals","Caribou",61,99,169,257.5,"Yes",150,"Ind.",0.103999995,0.073,0.049000002,0.068,0.037,904,3.51,NA
+"71","Chugach","Cooper Landing","1990","Cooper Landing_1990","Land Mammals","Large Land Mammals","Deer",61,99,169,257.5,"Yes",43.2,"Ind.",0.131,0.095,0.073,0.07,0.012,729,2.83,NA
+"72","Chugach","Cooper Landing","1990","Cooper Landing_1990","Land Mammals","Large Land Mammals","Elk",61,99,169,257.5,"Yes",225,"Ind.",0.024,0.024,0.012,0.012,0,271,1.05,NA
+"73","Chugach","Cooper Landing","1990","Cooper Landing_1990","Land Mammals","Large Land Mammals","Moose",61,99,169,257.5,"Yes",500,"Ind.",0.42900002,0.277,0.096999995,0.393,0.11,4824,18.73,NA
+"74","Chugach","Cooper Landing","1990","Cooper Landing_1990","Land Mammals","Large Land Mammals","Dall Sheep",61,99,169,257.5,"Yes",65,"Ind.",0.037,0.024,0.024,0.012,0.012,157,0.61,NA
+"75","Chugach","Cooper Landing","1990","Cooper Landing_1990","Land Mammals","Small Land Mammals","Snowshoe Hare",61,99,169,257.5,"Yes",2,"Ind.",0.034,0.034,0.034,0,0.012,38,0.15,NA
+"76","Chugach","Cooper Landing","1990","Cooper Landing_1990","Land Mammals","Small Land Mammals","Marmot",61,99,169,257.5,"Yes",8,"Ind.",0.012,0.012,0.012,0,0,10,0.04,NA
+"77","Chugach","Cordova","1991","Cordova_1991","Land Mammals","Large Land Mammals","Bison",101,784,295,2289.9,"No",450,"Ind.",0.01,0.01,0.01,0,0.01,3493,1.53,1
+"78","Chugach","Cordova","1985","Cordova_1985","Land Mammals","Large Land Mammals","Black Bear",206,853,547,2265,"No",58,"Ind.",0.068,0.073,0.029000001,0.044,0.015,1441,0.64,9
+"79","Chugach","Cordova","1988","Cordova_1988","Land Mammals","Large Land Mammals","Black Bear",101,872,299,2407.4,"No",NA,"Ind.",0.049000002,0.078,0.02,0.029000001,0.032,891,0.37,NA
+"80","Chugach","Cordova","1991","Cordova_1991","Land Mammals","Large Land Mammals","Black Bear",101,784,295,2289.9,"No",58,"Ind.",0.03,0.03,0.02,0.01,0.02,450,0.2,2
+"81","Chugach","Cordova","1993","Cordova_1993","Land Mammals","Large Land Mammals","Black Bear",104,946,326,2965.4,"No",58,"Ind.",0.038,0.038,0.019,0.019,0.019,1055,0.36,2
+"82","Chugach","Cordova","1997","Cordova_1997","Land Mammals","Large Land Mammals","Black Bear",152,830,449,2507.1,"No",58,"Ind.",0.118,0.118999995,0.047,0.071,0.051,2473,0.99,NA
+"83","Chugach","Cordova","2003","Cordova_2003","Land Mammals","Large Land Mammals","Black Bear",148,910,378,2397.3,"No",58,"Ind.",0.11030817,0.083970375,0.029771859,0.08931558,0.022515528,2034.7283,0.8410896,5
+"84","Chugach","Cordova","2014","Cordova_2014","Land Mammals","Large Land Mammals","Black Bear",184,950,504,2602.2,"Yes",58,"Ind.",0.06,0.043,0.022,0.038,0.027,1197.8,0.46031746,4
+"85","Chugach","Cordova","1985","Cordova_1985","Land Mammals","Large Land Mammals","Brown Bear",206,853,547,2265,"No",150,"Ind.",0.029000001,0.058000002,0.019,0.01,0.005,2484,1.1,7
+"86","Chugach","Cordova","1988","Cordova_1988","Land Mammals","Large Land Mammals","Brown Bear",101,872,299,2407.4,"No",NA,"Ind.",0.009,0.049000002,0.009,0,0,7,0,NA
+"87","Chugach","Cordova","1991","Cordova_1991","Land Mammals","Large Land Mammals","Brown Bear",101,784,295,2289.9,"No",150,"Ind.",0.01,0.05,0.01,0,0,0,0,1
+"88","Chugach","Cordova","1997","Cordova_1997","Land Mammals","Large Land Mammals","Brown Bear",152,830,449,2507.1,"No",150,"Ind.",0.024,0.063,0.024,0,0,1972,0.79,NA
+"89","Chugach","Cordova","2003","Cordova_2003","Land Mammals","Large Land Mammals","Brown Bear",148,910,378,2397.3,"No",340,"Ind.",0.022515528,0.043508124,0.010302198,0.01221333,0.003434066,468.75,0.19376579,4
+"90","Chugach","Cordova","1991","Cordova_1991","Land Mammals","Large Land Mammals","Caribou",101,784,295,2289.9,"No",150,"Ind.",0.059,0.02,0.02,0.04,0.01,4658,2.03,4
+"91","Chugach","Cordova","1997","Cordova_1997","Land Mammals","Large Land Mammals","Caribou",152,830,449,2507.1,"No",150,"Ind.",0.071,0.024,0.008,0.063,0.027999999,1972,0.79,NA
+"92","Chugach","Cordova","2003","Cordova_2003","Land Mammals","Large Land Mammals","Caribou",148,910,378,2397.3,"No",150,"Ind.",0.077102244,0.017558528,0.017558528,0.06832298,0.003434066,3595.1086,1.4860994,3
+"93","Chugach","Cordova","2014","Cordova_2014","Land Mammals","Large Land Mammals","Caribou",184,950,504,2602.2,"Yes",150,"Ind.",0.022,0.005,0.005,0.016,0.005,1548.9,0.5952381,2
+"94","Chugach","Cordova","1985","Cordova_1985","Land Mammals","Large Land Mammals","Deer",206,853,547,2265,"No",43.2,"Ind.",0.65,0.505,0.316,0.408,0.204,38996,17.22,231
+"95","Chugach","Cordova","1988","Cordova_1988","Land Mammals","Large Land Mammals","Deer",101,872,299,2407.4,"No",43.2,"Ind.",0.72900003,0.56200004,0.39400002,0.437,0.258,62528,25.97,NA
+"96","Chugach","Cordova","1991","Cordova_1991","Land Mammals","Large Land Mammals","Deer",101,784,295,2289.9,"No",43.2,"Ind.",0.683,0.554,0.376,0.376,0.22799999,36887,16.11,110
+"97","Chugach","Cordova","1992","Cordova_1992","Land Mammals","Large Land Mammals","Deer",41,784,140,2677.1,"No",43.2,"Ind.",0.829,0.512,0.439,0.585,0.29299998,50390,18.82,61
+"98","Chugach","Cordova","1993","Cordova_1993","Land Mammals","Large Land Mammals","Deer",104,946,326,2965.4,"No",43.2,"Ind.",0.66300005,0.48099998,0.231,0.52900004,0.24,30257,10.2,77
+"99","Chugach","Cordova","1997","Cordova_1997","Land Mammals","Large Land Mammals","Deer",152,830,449,2507.1,"No",43.2,"Ind.",0.727,0.478,0.407,0.462,0.355,62248,24.83,NA
+"100","Chugach","Cordova","2003","Cordova_2003","Land Mammals","Large Land Mammals","Deer",148,910,378,2397.3,"No",43.2,"Ind.",0.614877,0.431677,0.38625777,0.35953176,0.28434065,58500.78,24.182295,245
+"101","Chugach","Cordova","2014","Cordova_2014","Land Mammals","Large Land Mammals","Deer",184,950,504,2602.2,"Yes",43.2,"Ind.",0.45099998,0.31,0.21200001,0.29299998,0.158,20407.9,7.8426228,91
+"102","Chugach","Cordova","1988","Cordova_1988","Land Mammals","Large Land Mammals","Elk",101,872,299,2407.4,"No",NA,"Ind.",0.008,0.008,0.008,0,0.008,2783,1.16,NA
+"103","Chugach","Cordova","1997","Cordova_1997","Land Mammals","Large Land Mammals","Elk",152,830,449,2507.1,"No",225,"Ind.",0.027999999,0.024,0.024,0.02,0.024,5917,2.36,NA
+"104","Chugach","Cordova","1985","Cordova_1985","Land Mammals","Large Land Mammals","Goat",206,853,547,2265,"No",72.5,"Ind.",0.058000002,0.039,0.015,0.044,0.005,901,0.4,4
+"105","Chugach","Cordova","1988","Cordova_1988","Land Mammals","Large Land Mammals","Goat",101,872,299,2407.4,"No",72.5,"Ind.",0.025,0.011,0.009,0.016,0.009,599,0.25,NA
+"106","Chugach","Cordova","1997","Cordova_1997","Land Mammals","Large Land Mammals","Goat",152,830,449,2507.1,"No",72.5,"Ind.",0.095,0.055,0.04,0.055,0.036,2860,1.14,NA
+"107","Chugach","Cordova","2003","Cordova_2003","Land Mammals","Large Land Mammals","Goat",148,910,378,2397.3,"No",72.5,"Ind.",0.08892737,0.02442666,0.017558528,0.07480291,0.019081462,1158.424,0.47885427,2
+"108","Chugach","Cordova","2014","Cordova_2014","Land Mammals","Large Land Mammals","Goat",184,950,504,2602.2,"Yes",72.5,"Ind.",0.076,0.038,0.027,0.054,0.022,1871.6,0.71924603,5
+"109","Chugach","Cordova","1985","Cordova_1985","Land Mammals","Large Land Mammals","Moose",206,853,547,2265,"No",540,"Ind.",0.5,0.282,0.117,0.38799998,0.111999996,50310,22.21,27.5
+"110","Chugach","Cordova","1988","Cordova_1988","Land Mammals","Large Land Mammals","Moose",101,872,299,2407.4,"No",540,"Ind.",0.523,0.215,0.1,0.43400002,0.1,50949,21.16,NA
+"111","Chugach","Cordova","1991","Cordova_1991","Land Mammals","Large Land Mammals","Moose",101,784,295,2289.9,"No",540,"Ind.",0.624,0.317,0.139,0.485,0.14899999,67067,29.29,16
+"112","Chugach","Cordova","1992","Cordova_1992","Land Mammals","Large Land Mammals","Moose",41,784,140,2677.1,"No",540,"Ind.",0.634,0.366,0.146,0.537,0.22,61955,23.14,6
+"113","Chugach","Cordova","1993","Cordova_1993","Land Mammals","Large Land Mammals","Moose",104,946,326,2965.4,"No",540,"Ind.",0.67300004,0.202,0.077,0.587,0.16299999,39295,13.25,8
+"114","Chugach","Cordova","1997","Cordova_1997","Land Mammals","Large Land Mammals","Moose",152,830,449,2507.1,"No",540,"Ind.",0.49400002,0.221,0.107,0.407,0.198,53182,21.21,NA
+"115","Chugach","Cordova","2003","Cordova_2003","Land Mammals","Large Land Mammals","Moose",148,910,378,2397.3,"No",540,"Ind.",0.49808887,0.14694816,0.12061037,0.39655995,0.16029623,59722.824,24.687447,18
+"116","Chugach","Cordova","2014","Cordova_2014","Land Mammals","Large Land Mammals","Moose",184,950,504,2602.2,"Yes",540,"Ind.",0.66800004,0.239,0.152,0.538,0.22299999,78065.2,30,28
+"117","Chugach","Cordova","1993","Cordova_1993","Land Mammals","Large Land Mammals","Dall Sheep",104,946,326,2965.4,"No",104,"Ind.",0.019,0.01,0.01,0.01,0.01,946,0.32,1
+"118","Chugach","Cordova","1997","Cordova_1997","Land Mammals","Large Land Mammals","Dall Sheep",152,830,449,2507.1,"No",104,"Ind.",0.04,0.016,0.008,0.032,0,684,0.27,NA
+"119","Chugach","Cordova","2003","Cordova_2003","Land Mammals","Large Land Mammals","Dall Sheep",148,910,378,2397.3,"No",104,"Ind.",0.01221333,0.008779264,0.008779264,0.003434066,0.01221333,830.86957,0.3434541,1
+"120","Chugach","Cordova","2014","Cordova_2014","Land Mammals","Large Land Mammals","Dall Sheep",184,950,504,2602.2,"Yes",104,"Ind.",0.038,0.011,0.011,0.033,0.005,1073.9,0.41269842,2
+"121","Chugach","Cordova","1985","Cordova_1985","Land Mammals","Small Land Mammals","Beaver",206,853,547,2265,"No",8.75,"Ind.",0.015,0.015,0.015,0.005,0,652,0.29,18
+"122","Chugach","Cordova","1988","Cordova_1988","Land Mammals","Small Land Mammals","Beaver",101,872,299,2407.4,"No",8.75,"Ind.",0.039,0.022,0.022,0.019,0.009,57,0.02,NA
+"123","Chugach","Cordova","1991","Cordova_1991","Land Mammals","Small Land Mammals","Beaver",101,784,295,2289.9,"No",8.75,"Ind.",0.04,0.02,0.02,0.03,0.01,68,0.03,4
+"124","Chugach","Cordova","1992","Cordova_1992","Land Mammals","Small Land Mammals","Beaver",41,784,140,2677.1,"No",0,"Ind.",0.024,0.024,0.024,0,0,0,0,2
+"125","Chugach","Cordova","1993","Cordova_1993","Land Mammals","Small Land Mammals","Beaver",104,946,326,2965.4,"No",NA,"Ind.",0.019,0.019,0.01,0.01,0,0,0,8
+"126","Chugach","Cordova","1997","Cordova_1997","Land Mammals","Small Land Mammals","Beaver",152,830,449,2507.1,"No",8.75,"Ind.",0.036,0.04,0.032,0.004,0.024,345,0.14,NA
+"127","Chugach","Cordova","2003","Cordova_2003","Land Mammals","Small Land Mammals","Beaver",148,910,378,2397.3,"No",8.75,"Ind.",0.057632584,0.04885332,0.04885332,0.01221333,0.017558528,164.0625,0.06781803,52
+"128","Chugach","Cordova","2014","Cordova_2014","Land Mammals","Small Land Mammals","Beaver",184,950,504,2602.2,"Yes",8.75,"Ind.",0.016,0.016,0.016,0,0,496.9,0.19097222,14
+"129","Chugach","Cordova","1985","Cordova_1985","Land Mammals","Small Land Mammals","Coyote",206,853,547,2265,"No",NA,"Ind.",0.01,0.01,0.01,0,0,0,0,3
+"130","Chugach","Cordova","1993","Cordova_1993","Land Mammals","Small Land Mammals","Coyote",104,946,326,2965.4,"No",NA,"Ind.",0.019,0.029000001,0.01,0,0,0,0,1
+"131","Chugach","Cordova","2003","Cordova_2003","Land Mammals","Small Land Mammals","Coyote",148,910,378,2397.3,"No",0,"Ind.",0.038551122,0.029771859,0.026337793,0.01221333,0.003434066,0,0,4
+"132","Chugach","Cordova","2014","Cordova_2014","Land Mammals","Small Land Mammals","Coyote",184,950,504,2602.2,"Yes",0,"Ind.",0.022,0.033,0.022,0,0,0,0,9
+"133","Chugach","Cordova","1992","Cordova_1992","Land Mammals","Small Land Mammals","Snowshoe Hare",41,784,140,2677.1,"No",2,"Ind.",0.073,0.073,0.073,0,0,765,0.29,20
+"134","Chugach","Cordova","1993","Cordova_1993","Land Mammals","Small Land Mammals","Snowshoe Hare",104,946,326,2965.4,"No",2,"Ind.",0.192,0.221,0.154,0.067,0.058000002,1656,0.56,91
+"135","Chugach","Cordova","1997","Cordova_1997","Land Mammals","Small Land Mammals","Snowshoe Hare",152,830,449,2507.1,"No",2,"Ind.",0.245,0.257,0.221,0.059,0.099,4887,1.95,NA
+"136","Chugach","Cordova","2003","Cordova_2003","Land Mammals","Small Land Mammals","Snowshoe Hare",148,910,378,2397.3,"No",2,"Ind.",0.12061037,0.14885929,0.11374223,0.006868132,0.019081462,1136.4131,0.46975568,117
+"137","Chugach","Cordova","2014","Cordova_2014","Land Mammals","Small Land Mammals","Snowshoe Hare",184,950,504,2602.2,"Yes",2,"Ind.",0.06,0.092,0.06,0,0.011,425.8,0.16363084,43
+"138","Chugach","Cordova","1991","Cordova_1991","Land Mammals","Small Land Mammals","Unknown Hare",101,784,295,2289.9,"No",2,"Ind.",0.129,0.158,0.118999995,0.01,0.04,1739,0.76,112
+"139","Chugach","Cordova","1992","Cordova_1992","Land Mammals","Small Land Mammals","Unknown Hare",41,784,140,2677.1,"No",2,"Ind.",0.024,0.073,0.024,0,0.024,459,0.17,12
+"140","Chugach","Cordova","1985","Cordova_1985","Land Mammals","Small Land Mammals","Land Otter",206,853,547,2265,"No",NA,"Ind.",0.015,0.01,0.01,0.005,0,0,0,4
+"141","Chugach","Cordova","1991","Cordova_1991","Land Mammals","Small Land Mammals","Land Otter",101,784,295,2289.9,"No",0,"Ind.",0.04,0.03,0.03,0.01,0,0,0,3
+"142","Chugach","Cordova","1992","Cordova_1992","Land Mammals","Small Land Mammals","Land Otter",41,784,140,2677.1,"No",0,"Ind.",0.024,0.024,0.024,0,0.024,0,0,1
+"143","Chugach","Cordova","1993","Cordova_1993","Land Mammals","Small Land Mammals","Land Otter",104,946,326,2965.4,"No",NA,"Ind.",0.01,0.019,0.01,0,0,0,0,1
+"144","Chugach","Cordova","2003","Cordova_2003","Land Mammals","Small Land Mammals","Land Otter",148,910,378,2397.3,"No",0,"Ind.",0.040074058,0.045419253,0.036639992,0.003434066,0.026337793,0,0,129
+"145","Chugach","Cordova","2014","Cordova_2014","Land Mammals","Small Land Mammals","Land Otter",184,950,504,2602.2,"Yes",0,"Ind.",0.022,0.022,0.022,0,0,0,0,10
+"146","Chugach","Cordova","1985","Cordova_1985","Land Mammals","Small Land Mammals","Lynx",206,853,547,2265,"No",4,"Ind.",0.005,0.005,0.005,0,0,17,0.01,1
+"147","Chugach","Cordova","2003","Cordova_2003","Land Mammals","Small Land Mammals","Lynx",148,910,378,2397.3,"No",4,"Ind.",0.008779264,0.008779264,0.008779264,0,0,0,0,2
+"148","Chugach","Cordova","1985","Cordova_1985","Land Mammals","Small Land Mammals","Marten",206,853,547,2265,"No",NA,"Ind.",0.015,0.024,0.015,0,0,0,0,41
+"149","Chugach","Cordova","1991","Cordova_1991","Land Mammals","Small Land Mammals","Marten",101,784,295,2289.9,"No",0,"Ind.",0.04,0.03,0.03,0.01,0,0,0,17
+"150","Chugach","Cordova","1992","Cordova_1992","Land Mammals","Small Land Mammals","Marten",41,784,140,2677.1,"No",0,"Ind.",0.024,0.024,0.024,0,0,0,0,6
+"151","Chugach","Cordova","1993","Cordova_1993","Land Mammals","Small Land Mammals","Marten",104,946,326,2965.4,"No",NA,"Ind.",0.01,0.019,0.01,0,0,0,0,5
+"152","Chugach","Cordova","2003","Cordova_2003","Land Mammals","Small Land Mammals","Marten",148,910,378,2397.3,"No",0,"Ind.",0.027860727,0.02442666,0.02442666,0.003434066,0,0,0,40
+"153","Chugach","Cordova","2014","Cordova_2014","Land Mammals","Small Land Mammals","Marten",184,950,504,2602.2,"Yes",0,"Ind.",0.011,0.022,0.011,0,0,0,0,11
+"154","Chugach","Cordova","1985","Cordova_1985","Land Mammals","Small Land Mammals","Mink",206,853,547,2265,"No",NA,"Ind.",0.019,0.019,0.019,0,0,0,0,22
+"155","Chugach","Cordova","1991","Cordova_1991","Land Mammals","Small Land Mammals","Mink",101,784,295,2289.9,"No",0,"Ind.",0.059,0.069,0.05,0.01,0.01,0,0,22
+"156","Chugach","Cordova","1992","Cordova_1992","Land Mammals","Small Land Mammals","Mink",41,784,140,2677.1,"No",0,"Ind.",0.049000002,0.024,0.024,0.024,0,0,0,16
+"157","Chugach","Cordova","1993","Cordova_1993","Land Mammals","Small Land Mammals","Mink",104,946,326,2965.4,"No",NA,"Ind.",0.01,0.019,0.01,0,0.01,0,0,20
+"158","Chugach","Cordova","2003","Cordova_2003","Land Mammals","Small Land Mammals","Mink",148,910,378,2397.3,"No",0,"Ind.",0.052287385,0.052287385,0.052287385,0.003434066,0.006868132,0,0,138
+"159","Chugach","Cordova","2014","Cordova_2014","Land Mammals","Small Land Mammals","Mink",184,950,504,2602.2,"Yes",0,"Ind.",0.022,0.022,0.022,0,0,0,0,11
+"160","Chugach","Cordova","1985","Cordova_1985","Land Mammals","Small Land Mammals","Muskrat",206,853,547,2265,"No",0.5,"Ind.",0.01,0.015,0.01,0,0,17,0.01,8
+"161","Chugach","Cordova","2003","Cordova_2003","Land Mammals","Small Land Mammals","Muskrat",148,910,378,2397.3,"No",0.75,"Ind.",0.017558528,0.026337793,0.017558528,0,0.008779264,0,0,3
+"162","Chugach","Cordova","2014","Cordova_2014","Land Mammals","Small Land Mammals","Muskrat",184,950,504,2602.2,"Yes",0.75,"Ind.",0.005,0.005,0.005,0,0,0,0,3
+"163","Chugach","Cordova","1988","Cordova_1988","Land Mammals","Small Land Mammals","Porcupine",101,872,299,2407.4,"No",NA,"Ind.",0.004,0.004,0.004,0,0.001,9,0,NA
+"164","Chugach","Cordova","1991","Cordova_1991","Land Mammals","Small Land Mammals","Porcupine",101,784,295,2289.9,"No",8,"Ind.",0.01,0.01,0.01,0,0,62,0.03,1
+"165","Chugach","Cordova","1997","Cordova_1997","Land Mammals","Small Land Mammals","Porcupine",152,830,449,2507.1,"No",8,"Ind.",0.02,0.008,0.008,0.012,0,53,0.02,NA
+"166","Chugach","Cordova","2003","Cordova_2003","Land Mammals","Small Land Mammals","Porcupine",148,910,378,2397.3,"No",8,"Ind.",0.006868132,0.003434066,0.003434066,0.003434066,0.006868132,50,0.020668352,2
+"167","Chugach","Cordova","1997","Cordova_1997","Land Mammals","Small Land Mammals","Tree Squirrel",152,830,449,2507.1,"No",0.5,"Ind.",0.024,0.027999999,0.024,0,0,20,0.01,NA
+"168","Chugach","Cordova","2003","Cordova_2003","Land Mammals","Small Land Mammals","Tree Squirrel",148,910,378,2397.3,"No",0.5,"Ind.",0.003434066,0.003434066,0.003434066,0,0.003434066,0,0,12
+"169","Chugach","Cordova","1985","Cordova_1985","Land Mammals","Small Land Mammals","Weasel",206,853,547,2265,"No",NA,"Ind.",0.015,0.015,0.015,0,0,0,0,6
+"170","Chugach","Cordova","1991","Cordova_1991","Land Mammals","Small Land Mammals","Weasel",101,784,295,2289.9,"No",0,"Ind.",0.02,0.02,0.02,0,0,0,0,5
+"171","Chugach","Cordova","1992","Cordova_1992","Land Mammals","Small Land Mammals","Weasel",41,784,140,2677.1,"No",0,"Ind.",0.024,0.024,0.024,0,0,0,0,2
+"172","Chugach","Cordova","1993","Cordova_1993","Land Mammals","Small Land Mammals","Weasel",104,946,326,2965.4,"No",NA,"Ind.",0.01,0.01,0.01,0,0,0,0,3
+"173","Chugach","Cordova","2003","Cordova_2003","Land Mammals","Small Land Mammals","Weasel",148,910,378,2397.3,"No",0,"Ind.",0.02442666,0.02442666,0.02442666,0,0,0,0,39
+"174","Chugach","Cordova","2014","Cordova_2014","Land Mammals","Small Land Mammals","Weasel",184,950,504,2602.2,"Yes",0,"Ind.",0.022,0.022,0.022,0,0,0,0,17
+"175","Chugach","Cordova","1985","Cordova_1985","Land Mammals","Small Land Mammals","Wolverine",206,853,547,2265,"No",NA,"Ind.",0.005,0.005,0.005,0,0,0,0,1
+"176","Chugach","Cordova","1992","Cordova_1992","Land Mammals","Small Land Mammals","Wolverine",41,784,140,2677.1,"No",0,"Ind.",0.024,0.024,0.024,0,0,0,0,1
+"177","Chugach","Cordova","1993","Cordova_1993","Land Mammals","Small Land Mammals","Wolverine",104,946,326,2965.4,"No",NA,"Ind.",0.01,0.019,0.01,0,0.01,0,0,2
+"178","Chugach","Cordova","2014","Cordova_2014","Land Mammals","Small Land Mammals","Wolverine",184,950,504,2602.2,"Yes",0,"Ind.",0.011,0.016,0.011,0,0,0,0,4
+"179","Chugach","Cordova","1993","Cordova_1993","Land Mammals","Feral Animals","Rabbit - Feral",104,946,326,2965.4,"No",2,"Ind.",0.019,0.019,0.019,0.01,0.01,619,0.21,34
+"180","Chugach","Hope","1990","Hope_1990","Land Mammals","Large Land Mammals","Black Bear",41,64,99,151.6,"Yes",58,"Ind.",0.145,0.12,0.084,0.079,0.084,380,2.51,NA
+"181","Chugach","Hope","1990","Hope_1990","Land Mammals","Large Land Mammals","Caribou",41,64,99,151.6,"Yes",150,"Ind.",0.199,0.09,0.072,0.127,0.072,1208,7.97,NA
+"182","Chugach","Hope","1990","Hope_1990","Land Mammals","Large Land Mammals","Deer",41,64,99,151.6,"Yes",43.2,"Ind.",0.048,0.018,0.018,0.031,0,99,0.65,NA
+"183","Chugach","Hope","1990","Hope_1990","Land Mammals","Large Land Mammals","Goat",41,64,99,151.6,"Yes",72.5,"Ind.",0.048,0.018,0.018,0.031,0,83,0.55,NA
+"184","Chugach","Hope","1990","Hope_1990","Land Mammals","Large Land Mammals","Moose",41,64,99,151.6,"Yes",500,"Ind.",0.679,0.252,0.09,0.625,0.277,2875,18.97,NA
+"185","Chugach","Hope","1990","Hope_1990","Land Mammals","Large Land Mammals","Dall Sheep",41,64,99,151.6,"Yes",65,"Ind.",0.018,0.018,0.018,0.018,0.018,75,0.49,NA
+"186","Chugach","Hope","1990","Hope_1990","Land Mammals","Small Land Mammals","Beaver",41,64,99,151.6,"Yes",8.75,"Ind.",0.036,0.036,0.036,0,0.036,121,0.8,NA
+"187","Chugach","Hope","1990","Hope_1990","Land Mammals","Small Land Mammals","Snowshoe Hare",41,64,99,151.6,"Yes",2,"Ind.",0.102,0.12,0.102,0,0.054,98,0.65,NA
+"188","Chugach","Hope","1990","Hope_1990","Land Mammals","Small Land Mammals","Marmot",41,64,99,151.6,"Yes",8,"Ind.",0.018,0.018,0.018,0,0,9,0.06,NA
+"189","Chugach","Hope","1990","Hope_1990","Land Mammals","Small Land Mammals","Porcupine",41,64,99,151.6,"Yes",8,"Ind.",0.018,0.018,0.018,0,0,9,0.06,NA
+"190","Chugach","Hope","1990","Hope_1990","Land Mammals","Small Land Mammals","Parka Squirrel (ground)",41,64,99,151.6,"Yes",0.5,"Ind.",0.018,0.018,0.018,0,0,7,0.05,NA
+"191","Chugach","Hope","1990","Hope_1990","Land Mammals","Small Land Mammals","Tree Squirrel",41,64,99,151.6,"Yes",0.5,"Ind.",0.084,0.102,0.084,0,0,8,0.05,NA
+"192","Chugach","Moose Pass","2000","Moose Pass_2000","Land Mammals","Large Land Mammals","Black Bear",99,148,269,402,"Yes",58,"Ind.",0.172,0.141,0.061,0.111,0.061,520.2,1.3,6
+"193","Chugach","Moose Pass","2000","Moose Pass_2000","Land Mammals","Large Land Mammals","Caribou",99,148,269,402,"Yes",150,"Ind.",0.101,0.01,0.01,0.091000006,0.03,1345.5,3.4,6
+"194","Chugach","Moose Pass","2000","Moose Pass_2000","Land Mammals","Large Land Mammals","Deer",99,148,269,402,"Yes",43.2,"Ind.",0.141,0.061,0.03,0.111,0.03,1227.1,3.1,19
+"195","Chugach","Moose Pass","2000","Moose Pass_2000","Land Mammals","Large Land Mammals","Goat",99,148,269,402,"Yes",72.5,"Ind.",0.051,0.03,0.02,0.03,0.03,216.8,0.5,2
+"196","Chugach","Moose Pass","2000","Moose Pass_2000","Land Mammals","Large Land Mammals","Moose",99,148,269,402,"Yes",540,"Ind.",0.414,0.283,0.081,0.36400002,0.091000006,6458.2,16.1,8
+"197","Chugach","Moose Pass","2000","Moose Pass_2000","Land Mammals","Small Land Mammals","Beaver",99,148,269,402,"Yes",NA,"Ind.",0.02,0.03,0.02,0,0.01,0,0,57
+"198","Chugach","Moose Pass","2000","Moose Pass_2000","Land Mammals","Small Land Mammals","Coyote",99,148,269,402,"Yes",NA,"Ind.",0.02,0.02,0.02,0,0,0,0,16
+"199","Chugach","Moose Pass","2000","Moose Pass_2000","Land Mammals","Small Land Mammals","Red Fox",99,148,269,402,"Yes",NA,"Ind.",0.01,0.01,0.01,0.01,0,0,0,1
+"200","Chugach","Moose Pass","2000","Moose Pass_2000","Land Mammals","Small Land Mammals","Snowshoe Hare",99,148,269,402,"Yes",2,"Ind.",0.061,0.091000006,0.061,0,0.01,86.7,0.2,29
+"201","Chugach","Moose Pass","2000","Moose Pass_2000","Land Mammals","Small Land Mammals","Lynx",99,148,269,402,"Yes",NA,"Ind.",0.01,0.01,0.01,0,0,0,0,2
+"202","Chugach","Moose Pass","2000","Moose Pass_2000","Land Mammals","Small Land Mammals","Marten",99,148,269,402,"Yes",NA,"Ind.",0.02,0.03,0.02,0,0.01,0,0,18
+"203","Chugach","Moose Pass","2000","Moose Pass_2000","Land Mammals","Small Land Mammals","Mink",99,148,269,402,"Yes",NA,"Ind.",0.01,0.02,0.01,0,0,0,0,35
+"204","Chugach","Moose Pass","2000","Moose Pass_2000","Land Mammals","Small Land Mammals","Porcupine",99,148,269,402,"Yes",NA,"Ind.",0.01,0.01,0.01,0,0,0,0,1
+"205","Chugach","Moose Pass","2000","Moose Pass_2000","Land Mammals","Small Land Mammals","Weasel",99,148,269,402,"Yes",NA,"Ind.",0.01,0.01,0.01,0,0,0,0,7
+"206","Chugach","Moose Pass","2000","Moose Pass_2000","Land Mammals","Small Land Mammals","Wolf",99,148,269,402,"Yes",NA,"Ind.",0.01,0.01,0.01,0,0,0,0,13
+"207","Chugach","Moose Pass","2000","Moose Pass_2000","Land Mammals","Small Land Mammals","Wolverine",99,148,269,402,"Yes",NA,"Ind.",0.01,0.01,0.01,0,0,0,0,1
+"208","Chugach","Nanwalek","1987","Nanwalek_1987","Land Mammals","Large Land Mammals","Black Bear",33,40,125,151.5,"No",58,"Ind.",0.515,0.152,0.091000006,0.455,0.152,352,2.32,5
+"209","Chugach","Nanwalek","1989","Nanwalek_1989","Land Mammals","Large Land Mammals","Black Bear",33,41,126,156.5,"No",58,"Ind.",0.333,0.12100001,0.091000006,0.303,0.12100001,288,1.84,4
+"210","Chugach","Nanwalek","1990","Nanwalek_1990","Land Mammals","Large Land Mammals","Black Bear",35,41,157,183.9,"No",58,"Ind.",0.543,0.086,0.086,0.543,0.143,272,1.48,4
+"211","Chugach","Nanwalek","1991","Nanwalek_1991","Land Mammals","Large Land Mammals","Black Bear",29,41,114,161.2,"No",58,"Ind.",0.759,0.345,0.138,0.69,0.241,492,3.05,6
+"212","Chugach","Nanwalek","1992","Nanwalek_1992","Land Mammals","Large Land Mammals","Black Bear",32,41,133,170.4,"No",58,"Ind.",0.75,0.25,0.156,0.71900004,0.25,892,5.23,12
+"213","Chugach","Nanwalek","1993","Nanwalek_1993","Land Mammals","Large Land Mammals","Black Bear",33,37,126,141.3,"No",58,"Ind.",0.818,0.42400002,0.18200001,0.78800005,0.333,650,4.6,10
+"214","Chugach","Nanwalek","1997","Nanwalek_1997","Land Mammals","Large Land Mammals","Black Bear",29,38,128,167.7,"No",58,"Ind.",0.655,0.172,0.138,0.621,0.207,608,3.63,8
+"215","Chugach","Nanwalek","2003","Nanwalek_2003","Land Mammals","Large Land Mammals","Black Bear",22,51,99,229.5,"No",58,"Ind.",0.6363636,0.18181819,0.18181819,0.59090906,0.13636364,290,1.2509804,5
+"216","Chugach","Nanwalek","2014","Nanwalek_2014","Land Mammals","Large Land Mammals","Black Bear",56,58,223,231,"Yes",58,"Ind.",0.17899999,0.054,0.036,0.143,0.054,120.1,0.52017933,2
+"217","Chugach","Nanwalek","2014","Nanwalek_2014","Land Mammals","Large Land Mammals","Caribou",56,58,223,231,"Yes",150,"Ind.",0.071,0.018,0.018,0.071,0.018,155.4,0.6726457,1
+"218","Chugach","Nanwalek","1987","Nanwalek_1987","Land Mammals","Large Land Mammals","Deer",33,40,125,151.5,"No",43.2,"Ind.",0.12100001,0.061,0.061,0.061,0.061,262,1.73,5
+"219","Chugach","Nanwalek","1987","Nanwalek_1987","Land Mammals","Large Land Mammals","Goat",33,40,125,151.5,"No",72.5,"Ind.",0.39400002,0.12100001,0.03,0.36400002,0.061,88,0.58,1
+"220","Chugach","Nanwalek","1990","Nanwalek_1990","Land Mammals","Large Land Mammals","Goat",35,41,157,183.9,"No",72.5,"Ind.",0.056999996,0.029000001,0.029000001,0.029000001,0.029000001,59,0.32,0.69
+"221","Chugach","Nanwalek","1992","Nanwalek_1992","Land Mammals","Large Land Mammals","Goat",32,41,133,170.4,"No",72.5,"Ind.",0.219,0.125,0.063,0.156,0.094,186,1.09,2
+"222","Chugach","Nanwalek","2014","Nanwalek_2014","Land Mammals","Large Land Mammals","Goat",56,58,223,231,"Yes",72.5,"Ind.",0.125,0.088999994,0.054,0.088999994,0.071,300.4,1.3004483,4
+"223","Chugach","Nanwalek","1987","Nanwalek_1987","Land Mammals","Large Land Mammals","Moose",33,40,125,151.5,"No",540,"Ind.",0.576,0.152,0.03,0.545,0.091000006,654,4.32,1
+"224","Chugach","Nanwalek","1989","Nanwalek_1989","Land Mammals","Large Land Mammals","Moose",33,41,126,156.5,"No",540,"Ind.",0.606,0.21200001,0.091000006,0.576,0.152,2013,12.86,3
+"225","Chugach","Nanwalek","1992","Nanwalek_1992","Land Mammals","Large Land Mammals","Moose",32,41,133,170.4,"No",540,"Ind.",0.75,0.094,0.063,0.71900004,0.219,1384,8.12,2
+"226","Chugach","Nanwalek","1993","Nanwalek_1993","Land Mammals","Large Land Mammals","Moose",33,37,126,141.3,"No",540,"Ind.",0.667,0.21200001,0.03,0.636,0.21200001,605,4.28,1
+"227","Chugach","Nanwalek","1997","Nanwalek_1997","Land Mammals","Large Land Mammals","Moose",29,38,128,167.7,"No",540,"Ind.",0.379,0.103,0.069,0.345,0.103,1415,8.44,2
+"228","Chugach","Nanwalek","1992","Nanwalek_1992","Land Mammals","Small Land Mammals","Snowshoe Hare",32,41,133,170.4,"No",2,"Ind.",0.063,0.063,0.063,0,0,5,0.03,2
+"229","Chugach","Nanwalek","1997","Nanwalek_1997","Land Mammals","Small Land Mammals","Land Otter",29,38,128,167.7,"No",0,"Ind.",0.034,0.034,0.034,0.034,0,0,0,2
+"230","Chugach","Nanwalek","1987","Nanwalek_1987","Land Mammals","Small Land Mammals","Porcupine",33,40,125,151.5,"No",8,"Ind.",0.03,0.061,0.03,0,0,10,0.07,1
+"231","Chugach","Nanwalek","1989","Nanwalek_1989","Land Mammals","Small Land Mammals","Porcupine",33,41,126,156.5,"No",8,"Ind.",0.03,0.061,0.03,0,0,10,0.06,1
+"232","Chugach","Nanwalek","1997","Nanwalek_1997","Land Mammals","Small Land Mammals","Porcupine",29,38,128,167.7,"No",8,"Ind.",0.034,0.034,0.034,0,0.034,10,0.06,1
+"233","Chugach","Nanwalek","2003","Nanwalek_2003","Land Mammals","Small Land Mammals","Porcupine",22,51,99,229.5,"No",8,"Ind.",0.09090909,0.09090909,0.09090909,0,0.045454547,74.181816,0.32,4
+"234","Chugach","Nanwalek","2014","Nanwalek_2014","Land Mammals","Small Land Mammals","Porcupine",56,58,223,231,"Yes",8,"Ind.",0.018,0.018,0.018,0,0,16.6,0.071748875,2
+"235","Chugach","Nanwalek","1992","Nanwalek_1992","Land Mammals","Small Land Mammals","Tree Squirrel",32,41,133,170.4,"No",0.5,"Ind.",0.031,0.031,0.031,0,0,0,0,5
+"236","Chugach","Nanwalek","1993","Nanwalek_1993","Land Mammals","Small Land Mammals","Tree Squirrel",33,37,126,141.3,"No",0.5,"Ind.",0.03,0.03,0.03,0,0.03,1,0.01,8
+"237","Chugach","Nanwalek","1997","Nanwalek_1997","Land Mammals","Small Land Mammals","Tree Squirrel",29,38,128,167.7,"No",0.5,"Ind.",0.034,0.034,0.034,0,0,0,0,3
+"238","Chugach","Nanwalek","1997","Nanwalek_1997","Land Mammals","Small Land Mammals","Weasel",29,38,128,167.7,"No",0,"Ind.",0.069,0.069,0.069,0,0,0,0,5
+"239","Chugach","Port Graham","1987","Port Graham_1987","Land Mammals","Large Land Mammals","Black Bear",54,63,155,180.8,"No",58,"Ind.",0.093,0.074,0.019,0.093,0.019,67,0.37,1
+"240","Chugach","Port Graham","1990","Port Graham_1990","Land Mammals","Large Land Mammals","Black Bear",46,55,137,163.8,"No",58,"Ind.",0.348,0.109,0.043,0.304,0.109,139,0.85,2
+"241","Chugach","Port Graham","1991","Port Graham_1991","Land Mammals","Large Land Mammals","Black Bear",49,58,136,161,"No",58,"Ind.",0.42900002,0.204,0.102,0.367,0.184,412,2.56,6
+"242","Chugach","Port Graham","1992","Port Graham_1992","Land Mammals","Large Land Mammals","Black Bear",48,58,138,166.8,"No",58,"Ind.",0.333,0.125,0.042,0.333,0.16700001,140,0.84,2
+"243","Chugach","Port Graham","1993","Port Graham_1993","Land Mammals","Large Land Mammals","Black Bear",51,61,146,173.6,"No",58,"Ind.",0.157,0.02,0.02,0.157,0.059,69,0.4,1
+"244","Chugach","Port Graham","1997","Port Graham_1997","Land Mammals","Large Land Mammals","Black Bear",44,63,109,156.1,"No",58,"Ind.",0.22700001,0.068,0.045,0.18200001,0.091000006,166,1.06,2
+"245","Chugach","Port Graham","2003","Port Graham_2003","Land Mammals","Large Land Mammals","Black Bear",47,65,111,153.5,"No",58,"Ind.",0.23404256,0.06382979,0.04255319,0.21276596,0.06382979,320.85107,2.0530972,4
+"246","Chugach","Port Graham","2014","Port Graham_2014","Land Mammals","Large Land Mammals","Black Bear",41,58,105,148.5,"Yes",58,"Ind.",0.098000005,0.024,0.024,0.073,0.073,82,0.5523809,1
+"247","Chugach","Port Graham","1992","Port Graham_1992","Land Mammals","Large Land Mammals","Caribou",48,58,138,166.8,"No",150,"Ind.",0.188,0.042,0.042,0.146,0.103999995,544,3.26,4
+"248","Chugach","Port Graham","1993","Port Graham_1993","Land Mammals","Large Land Mammals","Caribou",51,61,146,173.6,"No",150,"Ind.",0.235,0.059,0.059,0.19600001,0.078,538,3.08,3
+"249","Chugach","Port Graham","1987","Port Graham_1987","Land Mammals","Large Land Mammals","Deer",54,63,155,180.8,"No",43.2,"Ind.",0.148,0.055999998,0.037,0.111,0.055999998,101,0.56,2
+"250","Chugach","Port Graham","1989","Port Graham_1989","Land Mammals","Large Land Mammals","Deer",48,61,127,161.4,"No",43.2,"Ind.",0.063,0.021,0.021,0.042,0,55,0.34,1
+"251","Chugach","Port Graham","1990","Port Graham_1990","Land Mammals","Large Land Mammals","Deer",46,55,137,163.8,"No",43.2,"Ind.",0.304,0.022,0.022,0.304,0.043,103,0.63,2
+"252","Chugach","Port Graham","1993","Port Graham_1993","Land Mammals","Large Land Mammals","Deer",51,61,146,173.6,"No",43.2,"Ind.",0.157,0.02,0.02,0.157,0.039,103,0.59,2
+"253","Chugach","Port Graham","2003","Port Graham_2003","Land Mammals","Large Land Mammals","Deer",47,65,111,153.5,"No",43.2,"Ind.",0.08510638,0.021276595,0.021276595,0.06382979,0.06382979,179.23404,1.1469027,3
+"254","Chugach","Port Graham","1987","Port Graham_1987","Land Mammals","Large Land Mammals","Goat",54,63,155,180.8,"No",72.5,"Ind.",0.222,0.093,0.037,0.204,0.055999998,169,0.93,2
+"255","Chugach","Port Graham","1991","Port Graham_1991","Land Mammals","Large Land Mammals","Goat",49,58,136,161,"No",72.5,"Ind.",0.061,0.061,0.02,0.040999997,0.02,86,0.53,1
+"256","Chugach","Port Graham","1987","Port Graham_1987","Land Mammals","Large Land Mammals","Moose",54,63,155,180.8,"No",540,"Ind.",0.611,0.093,0.019,0.593,0.037,630,3.48,1
+"257","Chugach","Port Graham","2003","Port Graham_2003","Land Mammals","Large Land Mammals","Moose",47,65,111,153.5,"No",540,"Ind.",0.70212764,0.10638298,0.04255319,0.68085104,0.19148937,1080,6.910824,2
+"258","Chugach","Port Graham","2014","Port Graham_2014","Land Mammals","Large Land Mammals","Moose",41,58,105,148.5,"Yes",540,"Ind.",0.683,0.195,0.049000002,0.634,0.146,1527.8,10.285713,2
+"259","Chugach","Port Graham","1989","Port Graham_1989","Land Mammals","Small Land Mammals","Beaver",48,61,127,161.4,"No",8.75,"Ind.",0.021,0.021,0.021,0,0,0,0,1
+"260","Chugach","Port Graham","1989","Port Graham_1989","Land Mammals","Small Land Mammals","Coyote",48,61,127,161.4,"No",0,"Ind.",0.021,0.021,0.021,0,0,0,0,1
+"261","Chugach","Port Graham","1990","Port Graham_1990","Land Mammals","Small Land Mammals","Snowshoe Hare",46,55,137,163.8,"No",2,"Ind.",0.022,0.022,0.022,0,0,2,0.01,1
+"262","Chugach","Port Graham","1991","Port Graham_1991","Land Mammals","Small Land Mammals","Snowshoe Hare",49,58,136,161,"No",2,"Ind.",0.02,0.040999997,0.02,0,0,0,0,1
+"263","Chugach","Port Graham","2014","Port Graham_2014","Land Mammals","Small Land Mammals","Snowshoe Hare",41,58,105,148.5,"Yes",2,"Ind.",0.049000002,0.024,0.024,0.024,0.024,25.5,0.17142856,9
+"264","Chugach","Port Graham","1987","Port Graham_1987","Land Mammals","Small Land Mammals","Land Otter",54,63,155,180.8,"No",0,"Ind.",0.019,0.019,0.019,0,0,0,0,1
+"265","Chugach","Port Graham","1989","Port Graham_1989","Land Mammals","Small Land Mammals","Mink",48,61,127,161.4,"No",0,"Ind.",0.021,0.021,0.021,0,0,0,0,1
+"266","Chugach","Port Graham","1987","Port Graham_1987","Land Mammals","Small Land Mammals","Porcupine",54,63,155,180.8,"No",8,"Ind.",0.019,0.019,0.019,0,0.019,9,0.05,1
+"267","Chugach","Port Graham","1989","Port Graham_1989","Land Mammals","Small Land Mammals","Porcupine",48,61,127,161.4,"No",8,"Ind.",0.021,0.021,0.021,0,0,10,0.06,1
+"268","Chugach","Port Graham","1991","Port Graham_1991","Land Mammals","Small Land Mammals","Porcupine",49,58,136,161,"No",8,"Ind.",0.081999995,0.061,0.02,0.061,0.02,28,0.17,3
+"269","Chugach","Port Graham","1997","Port Graham_1997","Land Mammals","Small Land Mammals","Porcupine",44,63,109,156.1,"No",8,"Ind.",0.068,0.068,0.068,0,0.023,57,0.37,5
+"270","Chugach","Port Graham","2003","Port Graham_2003","Land Mammals","Small Land Mammals","Porcupine",47,65,111,153.5,"No",8,"Ind.",0.25531915,0.19148937,0.17021276,0.12765957,0.17021276,254.46808,1.6283185,23
+"271","Chugach","Port Graham","2014","Port Graham_2014","Land Mammals","Small Land Mammals","Porcupine",41,58,105,148.5,"Yes",8,"Ind.",0.024,0.024,0.024,0,0,22.6,0.15238094,2
+"272","Chugach","Port Graham","2014","Port Graham_2014","Land Mammals","Small Land Mammals","Parka Squirrel (ground)",41,58,105,148.5,"Yes",0.5,"Ind.",0.024,0.024,0.024,0,0.024,1.4,0.009523809,2
+"273","Chugach","Port Graham","1990","Port Graham_1990","Land Mammals","Small Land Mammals","Tree Squirrel",46,55,137,163.8,"No",0.5,"Ind.",0.022,0.022,0.022,0,0,1,0.01,1
+"274","Chugach","Port Graham","1992","Port Graham_1992","Land Mammals","Small Land Mammals","Tree Squirrel",48,58,138,166.8,"No",0.5,"Ind.",0.021,0.021,0.021,0,0,0,0,3
+"275","Chugach","Port Graham","2003","Port Graham_2003","Land Mammals","Small Land Mammals","Tree Squirrel",47,65,111,153.5,"No",0.5,"Ind.",0.021276595,0.021276595,0.021276595,0,0,0,0,5
+"276","Chugach","Port Graham","2014","Port Graham_2014","Land Mammals","Small Land Mammals","Tree Squirrel",41,58,105,148.5,"Yes",0.5,"Ind.",0.024,0.024,0.024,0,0.024,0,0,21
+"277","Chugach","Port Graham","1992","Port Graham_1992","Land Mammals","Small Land Mammals","Weasel",48,58,138,166.8,"No",0,"Ind.",0.042,0.021,0.021,0.021,0,0,0,6
+"278","Chugach","Port Graham","1997","Port Graham_1997","Land Mammals","Small Land Mammals","Weasel",44,63,109,156.1,"No",0,"Ind.",0.023,0.023,0.023,0,0,0,0,2
+"279","Chugach","Port Graham","2003","Port Graham_2003","Land Mammals","Small Land Mammals","Weasel",47,65,111,153.5,"No",0,"Ind.",0.021276595,0.021276595,0.021276595,0.021276595,0,0,0,2
+"280","Chugach","Port Graham","2014","Port Graham_2014","Land Mammals","Small Land Mammals","Weasel",41,58,105,148.5,"Yes",0,"Ind.",0.073,0.073,0.073,0,0.049000002,0,0,10
+"281","Chugach","Port San Juan (Evans Island)","1984","Port San Juan (Evans Island)_1984","Land Mammals","Large Land Mammals","Black Bear",6,6,17,17,"Yes",58,"Ind.",0.5,0.333,0.333,0.16700001,0.16700001,232,13.65,4
+"282","Chugach","Port San Juan (Evans Island)","1984","Port San Juan (Evans Island)_1984","Land Mammals","Large Land Mammals","Deer",6,6,17,17,"Yes",40,"Ind.",0.833,1,0.833,0.667,0.5,360,21.18,9
+"283","Chugach","Port San Juan (Evans Island)","1984","Port San Juan (Evans Island)_1984","Land Mammals","Small Land Mammals","Land Otter",6,6,17,17,"Yes",0,"Ind.",0.16700001,0.16700001,0.16700001,0,0,0,0,2
+"284","Chugach","Port San Juan (Evans Island)","1984","Port San Juan (Evans Island)_1984","Land Mammals","Small Land Mammals","Mink",6,6,17,17,"Yes",0,"Ind.",0.16700001,0.16700001,0.16700001,0,0,0,0,2
+"285","Chugach","Seward","2000","Seward_2000","Land Mammals","Large Land Mammals","Black Bear",104,1687,280,4542,"Yes",58,"Ind.",0.096,0.048,0.038,0.067,0.029000001,4704.1,1,5
+"286","Chugach","Seward","2000","Seward_2000","Land Mammals","Large Land Mammals","Caribou",104,1687,280,4542,"Yes",150,"Ind.",0.16299999,0.029000001,0.01,0.16299999,0.019,7299.5,1.6,3
+"287","Chugach","Seward","2000","Seward_2000","Land Mammals","Large Land Mammals","Deer",104,1687,280,4542,"Yes",43.2,"Ind.",0.125,0.038,0.019,0.106000006,0.029000001,3503.8,0.8,5
+"288","Chugach","Seward","2000","Seward_2000","Land Mammals","Large Land Mammals","Goat",104,1687,280,4542,"Yes",72.5,"Ind.",0.038,0.038,0.01,0.029000001,0.01,1176,0.3,1
+"289","Chugach","Seward","2000","Seward_2000","Land Mammals","Large Land Mammals","Moose",104,1687,280,4542,"Yes",540,"Ind.",0.337,0.144,0.058000002,0.288,0.067,52556.5,11.6,6
+"290","Chugach","Seward","2000","Seward_2000","Land Mammals","Small Land Mammals","Beaver",104,1687,280,4542,"Yes",NA,"Ind.",0.019,0.01,0.01,0.019,0,0,0,1
+"291","Chugach","Seward","2000","Seward_2000","Land Mammals","Small Land Mammals","Coyote",104,1687,280,4542,"Yes",0.25,"Ind.",0.019,0.019,0.019,0.01,0,16.2,0,4
+"292","Chugach","Seward","2000","Seward_2000","Land Mammals","Small Land Mammals","Snowshoe Hare",104,1687,280,4542,"Yes",2,"Ind.",0.038,0.029000001,0.029000001,0.01,0,162.2,0,5
+"293","Chugach","Seward","2000","Seward_2000","Land Mammals","Small Land Mammals","Marten",104,1687,280,4542,"Yes",NA,"Ind.",0.01,0.01,0.01,0,0,0,0,1
+"294","Chugach","Tatitlek","1987","Tatitlek_1987","Land Mammals","Large Land Mammals","Black Bear",19,31,76,124,"No",58,"Ind.",0.053000003,0.053000003,0.053000003,0,0.053000003,95,0.77,1
+"295","Chugach","Tatitlek","1988","Tatitlek_1988","Land Mammals","Large Land Mammals","Black Bear",21,28,76,101.3,"No",58,"Ind.",0.42900002,0.143,0.143,0.333,0.143,464,4.58,6
+"296","Chugach","Tatitlek","1989","Tatitlek_1989","Land Mammals","Large Land Mammals","Black Bear",22,28,87,110.7,"No",58,"Ind.",0.045,0.045,0.045,0,0.045,74,0.67,1
+"297","Chugach","Tatitlek","1990","Tatitlek_1990","Land Mammals","Large Land Mammals","Black Bear",17,28,75,123.5,"No",58,"Ind.",0.118,0.118,0.059,0.059,0,96,0.78,1
+"298","Chugach","Tatitlek","1991","Tatitlek_1991","Land Mammals","Large Land Mammals","Black Bear",19,27,76,108,"No",58,"Ind.",0.26299998,0.053000003,0.053000003,0.21100001,0.158,82,0.76,1
+"299","Chugach","Tatitlek","2003","Tatitlek_2003","Land Mammals","Large Land Mammals","Black Bear",25,27,68,73.4,"No",58,"Ind.",0.2,0.08,0.04,0.2,0.04,62.64,0.85294116,1
+"300","Chugach","Tatitlek","1987","Tatitlek_1987","Land Mammals","Large Land Mammals","Deer",19,31,76,124,"No",43.2,"Ind.",1,0.78900003,0.78900003,0.78900003,0.895,9586,77.31,136
+"301","Chugach","Tatitlek","1988","Tatitlek_1988","Land Mammals","Large Land Mammals","Deer",21,28,76,101.3,"No",43.2,"Ind.",1,0.714,0.667,0.714,0.714,8352,82.42,145
+"302","Chugach","Tatitlek","1989","Tatitlek_1989","Land Mammals","Large Land Mammals","Deer",22,28,87,110.7,"No",43.2,"Ind.",0.90900004,0.682,0.545,0.636,0.545,5003,45.18,91
+"303","Chugach","Tatitlek","1990","Tatitlek_1990","Land Mammals","Large Land Mammals","Deer",17,28,75,123.5,"No",43.2,"Ind.",0.941,0.706,0.588,0.52900004,0.412,2063,16.7,29
+"304","Chugach","Tatitlek","1991","Tatitlek_1991","Land Mammals","Large Land Mammals","Deer",19,27,76,108,"No",43.2,"Ind.",0.895,0.84199995,0.632,0.684,0.579,3868,35.81,63
+"305","Chugach","Tatitlek","1993","Tatitlek_1993","Land Mammals","Large Land Mammals","Deer",20,28,69,96.6,"No",43.2,"Ind.",0.95,0.7,0.55,0.65,0.55,4596,47.58,76
+"306","Chugach","Tatitlek","1997","Tatitlek_1997","Land Mammals","Large Land Mammals","Deer",16,27,48,81,"No",43.2,"Ind.",0.938,0.625,0.625,0.75,0.375,3353,41.4,46
+"307","Chugach","Tatitlek","2003","Tatitlek_2003","Land Mammals","Large Land Mammals","Deer",25,27,68,73.4,"No",43.2,"Ind.",1,0.56,0.28,0.88,0.8,1283.04,17.470589,26
+"308","Chugach","Tatitlek","2014","Tatitlek_2014","Land Mammals","Large Land Mammals","Deer",21,27,58,74.6,"Yes",43.2,"Ind.",0.81,0.571,0.571,0.47599998,0.42900002,1633,21.89794,28
+"309","Chugach","Tatitlek","1988","Tatitlek_1988","Land Mammals","Large Land Mammals","Goat",21,28,76,101.3,"No",72.5,"Ind.",0.524,0.23799999,0.095,0.47599998,0.095,193,1.9,2
+"310","Chugach","Tatitlek","1991","Tatitlek_1991","Land Mammals","Large Land Mammals","Goat",19,27,76,108,"No",72.5,"Ind.",0.42099997,0.21100001,0.21100001,0.26299998,0.21100001,412,3.81,4
+"311","Chugach","Tatitlek","1993","Tatitlek_1993","Land Mammals","Large Land Mammals","Goat",20,28,69,96.6,"No",72.5,"Ind.",0.4,0.2,0.15,0.25,0.15,406,4.2,4
+"312","Chugach","Tatitlek","1997","Tatitlek_1997","Land Mammals","Large Land Mammals","Goat",16,27,48,81,"No",72.5,"Ind.",0.375,0.25,0.188,0.188,0.188,367,4.53,3
+"313","Chugach","Tatitlek","2003","Tatitlek_2003","Land Mammals","Large Land Mammals","Goat",25,27,68,73.4,"No",72.5,"Ind.",0.4,0.12,0.04,0.36,0.28,78.3,1.0661764,1
+"314","Chugach","Tatitlek","1987","Tatitlek_1987","Land Mammals","Large Land Mammals","Moose",19,31,76,124,"No",540,"Ind.",0.579,0.053000003,0.053000003,0.52599996,0.158,881,7.1,1
+"315","Chugach","Tatitlek","1988","Tatitlek_1988","Land Mammals","Small Land Mammals","Coyote",21,28,76,101.3,"No",0,"Ind.",0.048,0.048,0.048,0,0.048,0,0,1
+"316","Chugach","Tatitlek","2003","Tatitlek_2003","Land Mammals","Small Land Mammals","Coyote",25,27,68,73.4,"No",0,"Ind.",0.04,0.04,0.04,0,0,0,0,2
+"317","Chugach","Tatitlek","1987","Tatitlek_1987","Land Mammals","Small Land Mammals","Land Otter",19,31,76,124,"No",NA,"Ind.",0.26299998,0.316,0.26299998,0,0,0,0,28
+"318","Chugach","Tatitlek","1988","Tatitlek_1988","Land Mammals","Small Land Mammals","Land Otter",21,28,76,101.3,"No",0,"Ind.",0.143,0.19,0.143,0,0,0,0,35
+"319","Chugach","Tatitlek","1989","Tatitlek_1989","Land Mammals","Small Land Mammals","Land Otter",22,28,87,110.7,"No",0,"Ind.",0.091000006,0.045,0.045,0.045,0.045,0,0,6
+"320","Chugach","Tatitlek","1990","Tatitlek_1990","Land Mammals","Small Land Mammals","Land Otter",17,28,75,123.5,"No",0,"Ind.",0.118,0.118,0.118,0,0.059,0,0,9
+"321","Chugach","Tatitlek","1991","Tatitlek_1991","Land Mammals","Small Land Mammals","Land Otter",19,27,76,108,"No",0,"Ind.",0.053000003,0.053000003,0.053000003,0,0,0,0,7
+"322","Chugach","Tatitlek","1993","Tatitlek_1993","Land Mammals","Small Land Mammals","Land Otter",20,28,69,96.6,"No",NA,"Ind.",0.1,0.1,0.1,0,0,0,0,17
+"323","Chugach","Tatitlek","1997","Tatitlek_1997","Land Mammals","Small Land Mammals","Land Otter",16,27,48,81,"No",0,"Ind.",0.125,0.125,0.125,0,0,0,0,14
+"324","Chugach","Tatitlek","1987","Tatitlek_1987","Land Mammals","Small Land Mammals","Marten",19,31,76,124,"No",NA,"Ind.",0.105,0.053000003,0.053000003,0.053000003,0,0,0,1
+"325","Chugach","Tatitlek","1988","Tatitlek_1988","Land Mammals","Small Land Mammals","Marten",21,28,76,101.3,"No",0,"Ind.",0.095,0.048,0.048,0.048,0,0,0,3
+"326","Chugach","Tatitlek","1987","Tatitlek_1987","Land Mammals","Small Land Mammals","Mink",19,31,76,124,"No",NA,"Ind.",0.21100001,0.21100001,0.21100001,0,0,0,0,7
+"327","Chugach","Tatitlek","1988","Tatitlek_1988","Land Mammals","Small Land Mammals","Mink",21,28,76,101.3,"No",0,"Ind.",0.095,0.095,0.095,0,0,0,0,4
+"328","Chugach","Tatitlek","1990","Tatitlek_1990","Land Mammals","Small Land Mammals","Mink",17,28,75,123.5,"No",0,"Ind.",0.059,0.059,0.059,0,0,0,0,1
+"329","Chugach","Valdez","1991","Valdez_1991","Land Mammals","Large Land Mammals","Black Bear",100,1231,330,4062.3,"No",58,"Ind.",0.07,0.08,0.04,0.03,0.03,3570,0.88,6
+"330","Chugach","Valdez","1992","Valdez_1992","Land Mammals","Large Land Mammals","Black Bear",100,1257,297,3733.3,"Yes",58,"Ind.",0.05,0.09,0.01,0.04,0.01,0,0,1
+"331","Chugach","Valdez","1991","Valdez_1991","Land Mammals","Large Land Mammals","Brown Bear",100,1231,330,4062.3,"No",150,"Ind.",0.01,0.02,0.01,0,0.01,0,0,1
+"332","Chugach","Valdez","1991","Valdez_1991","Land Mammals","Large Land Mammals","Caribou",100,1231,330,4062.3,"No",150,"Ind.",0.23,0.08,0.04,0.19,0.04,11079,2.73,6
+"333","Chugach","Valdez","1992","Valdez_1992","Land Mammals","Large Land Mammals","Caribou",100,1257,297,3733.3,"Yes",150,"Ind.",0.31,0.15,0.07,0.24,0.07,15084,4.04,8
+"334","Chugach","Valdez","1993","Valdez_1993","Land Mammals","Large Land Mammals","Caribou",35,1257,104,3735.1,"No",150,"Ind.",0.229,0.086,0.086,0.143,0.056999996,26936,7.21,5
+"335","Chugach","Valdez","1991","Valdez_1991","Land Mammals","Large Land Mammals","Deer",100,1231,330,4062.3,"No",43.2,"Ind.",0.17,0.08,0.05,0.13,0.03,5318,1.31,10
+"336","Chugach","Valdez","1992","Valdez_1992","Land Mammals","Large Land Mammals","Deer",100,1257,297,3733.3,"Yes",43.2,"Ind.",0.18,0.08,0.03,0.15,0.05,6516,1.75,12
+"337","Chugach","Valdez","1993","Valdez_1993","Land Mammals","Large Land Mammals","Deer",35,1257,104,3735.1,"No",43.2,"Ind.",0.229,0.11399999,0.086,0.143,0.056999996,10860,2.91,7
+"338","Chugach","Valdez","1991","Valdez_1991","Land Mammals","Large Land Mammals","Goat",100,1231,330,4062.3,"No",72.5,"Ind.",0.04,0.03,0.01,0.03,0,892,0.22,1
+"339","Chugach","Valdez","1991","Valdez_1991","Land Mammals","Large Land Mammals","Moose",100,1231,330,4062.3,"No",540,"Ind.",0.38,0.28,0.07,0.31,0.06,59827,14.73,9
+"340","Chugach","Valdez","1992","Valdez_1992","Land Mammals","Large Land Mammals","Moose",100,1257,297,3733.3,"Yes",540,"Ind.",0.45,0.22,0.07,0.38,0.07,47515,12.73,7
+"341","Chugach","Valdez","1993","Valdez_1993","Land Mammals","Large Land Mammals","Moose",35,1257,104,3735.1,"No",540,"Ind.",0.286,0.314,0.029000001,0.257,0.029000001,38787,10.38,2
+"342","Chugach","Valdez","1991","Valdez_1991","Land Mammals","Large Land Mammals","Dall Sheep",100,1231,330,4062.3,"No",104,"Ind.",0.05,0.03,0.01,0.04,0.01,1280,0.32,1
+"343","Chugach","Valdez","1992","Valdez_1992","Land Mammals","Large Land Mammals","Dall Sheep",100,1257,297,3733.3,"Yes",104,"Ind.",0.03,0.03,0.01,0.02,0,1307,0.35,1
+"344","Chugach","Valdez","1991","Valdez_1991","Land Mammals","Small Land Mammals","Beaver",100,1231,330,4062.3,"No",8.75,"Ind.",0.02,0.01,0.01,0.01,0.01,0,0,25
+"345","Chugach","Valdez","1991","Valdez_1991","Land Mammals","Small Land Mammals","Coyote",100,1231,330,4062.3,"No",0,"Ind.",0.02,0.02,0.02,0,0.01,0,0,14
+"346","Chugach","Valdez","1992","Valdez_1992","Land Mammals","Small Land Mammals","Coyote",100,1257,297,3733.3,"Yes",0,"Ind.",0.02,0.02,0.02,0,0,0,0,4
+"347","Chugach","Valdez","1991","Valdez_1991","Land Mammals","Small Land Mammals","Snowshoe Hare",100,1231,330,4062.3,"No",2,"Ind.",0.01,0.01,0.01,0,0,148,0.04,6
+"348","Chugach","Valdez","1992","Valdez_1992","Land Mammals","Small Land Mammals","Snowshoe Hare",100,1257,297,3733.3,"Yes",2,"Ind.",0.07,0.07,0.04,0.03,0.01,528,0.14,21
+"349","Chugach","Valdez","1991","Valdez_1991","Land Mammals","Small Land Mammals","Unknown Hare",100,1231,330,4062.3,"No",2,"Ind.",0.1,0.15,0.08,0.03,0.02,2757,0.68,112
+"350","Chugach","Valdez","1992","Valdez_1992","Land Mammals","Small Land Mammals","Unknown Hare",100,1257,297,3733.3,"Yes",2,"Ind.",0.02,0.02,0.02,0,0.01,75,0.02,10
+"351","Chugach","Valdez","1991","Valdez_1991","Land Mammals","Small Land Mammals","Land Otter",100,1231,330,4062.3,"No",0,"Ind.",0.01,0.01,0.01,0,0.01,0,0,10
+"352","Chugach","Valdez","1992","Valdez_1992","Land Mammals","Small Land Mammals","Land Otter",100,1257,297,3733.3,"Yes",0,"Ind.",0.02,0.03,0.02,0,0,0,0,2
+"353","Chugach","Valdez","1991","Valdez_1991","Land Mammals","Small Land Mammals","Lynx",100,1231,330,4062.3,"No",4,"Ind.",0.01,0.01,0.01,0,0,0,0,12
+"354","Chugach","Valdez","1991","Valdez_1991","Land Mammals","Small Land Mammals","Marten",100,1231,330,4062.3,"No",0,"Ind.",0.02,0.02,0.02,0,0,0,0,23
+"355","Chugach","Valdez","1992","Valdez_1992","Land Mammals","Small Land Mammals","Marten",100,1257,297,3733.3,"Yes",0,"Ind.",0.01,0.02,0.01,0,0,0,0,4
+"356","Chugach","Valdez","1991","Valdez_1991","Land Mammals","Small Land Mammals","Mink",100,1231,330,4062.3,"No",0,"Ind.",0.02,0.03,0.02,0,0,0,0,26
+"357","Chugach","Valdez","1992","Valdez_1992","Land Mammals","Small Land Mammals","Mink",100,1257,297,3733.3,"Yes",0,"Ind.",0.02,0.03,0.02,0,0,0,0,6
+"358","Chugach","Valdez","1991","Valdez_1991","Land Mammals","Small Land Mammals","Porcupine",100,1231,330,4062.3,"No",8,"Ind.",0.01,0.01,0.01,0,0.01,0,0,1
+"359","Chugach","Valdez","1991","Valdez_1991","Land Mammals","Small Land Mammals","Weasel",100,1231,330,4062.3,"No",0,"Ind.",0.02,0.02,0.02,0,0.02,0,0,17
+"360","Chugach","Valdez","1992","Valdez_1992","Land Mammals","Small Land Mammals","Weasel",100,1257,297,3733.3,"Yes",0,"Ind.",0.02,0.02,0.02,0,0,0,0,6
+"361","Chugach","Valdez","1991","Valdez_1991","Land Mammals","Small Land Mammals","Wolf",100,1231,330,4062.3,"No",0,"Ind.",0.01,0.01,0.01,0,0,0,0,1
+"362","Chugach","Valdez","1991","Valdez_1991","Land Mammals","Small Land Mammals","Wolverine",100,1231,330,4062.3,"No",0,"Ind.",0.02,0.02,0.02,0,0,0,0,9
+"363","Chugach","Valdez","1992","Valdez_1992","Land Mammals","Feral Animals","Rabbit - Feral",100,1257,297,3733.3,"Yes",2,"Ind.",0.02,0.02,0.02,0,0,201,0.05,8
+"364","Chugach","Valdez","1993","Valdez_1993","Land Mammals","Feral Animals","Rabbit - Feral",35,1257,104,3735.1,"No",2,"Ind.",0.029000001,0.056999996,0.029000001,0,0,862,0.23,12
+"365","Chugach","Whittier","1990","Whittier_1990","Land Mammals","Large Land Mammals","Black Bear",56,103,150,279.1,"Yes",58,"Ind.",0.131,0.023,0.023,0.108,0.065,135,0.48,NA
+"366","Chugach","Whittier","1990","Whittier_1990","Land Mammals","Large Land Mammals","Deer",56,103,150,279.1,"Yes",43.2,"Ind.",0.27,0.068,0.056999996,0.213,0.068,1109,3.97,NA
+"367","Chugach","Whittier","1990","Whittier_1990","Land Mammals","Large Land Mammals","Moose",56,103,150,279.1,"Yes",500,"Ind.",0.439,0.078,0.034,0.41599998,0.118999995,1750,6.27,NA
+"368","Chugach","Whittier","1990","Whittier_1990","Land Mammals","Small Land Mammals","Beaver",56,103,150,279.1,"Yes",8.75,"Ind.",0.023,0.011,0.011,0.011,0,10,0.04,NA
+"369","Chugach","Whittier","1990","Whittier_1990","Land Mammals","Small Land Mammals","Snowshoe Hare",56,103,150,279.1,"Yes",2,"Ind.",0.034,0.034,0.034,0,0.023,47,0.17,NA
+"370","Chugach","Whittier","1990","Whittier_1990","Land Mammals","Small Land Mammals","Porcupine",56,103,150,279.1,"Yes",8,"Ind.",0.011,0.011,0.011,0,0,9,0.03,NA
+"371","Chugach","Whittier","1990","Whittier_1990","Land Mammals","Small Land Mammals","Tree Squirrel",56,103,150,279.1,"Yes",0.5,"Ind.",0.011,0.011,0.011,0,0,4,0.01,NA
+"372","Tongass","Haines","1983","Haines_1983","Land Mammals","Small Land Mammals","Hare",147,660,425,1908.2,"No",1.5,"Ind.",0.15,0.17,0.116000004,0.034,0.027,1459,0.76,217
+"373","Tongass","Haines","1983","Haines_1983","Land Mammals","Small Land Mammals","Squirrel",147,660,425,1908.2,"No",1,"lb.",0.027,0.027,0.027,0,0,172,0.09,38.5
+"374","Tongass","Klukwan","1983","Klukwan_1983","Land Mammals","Small Land Mammals","Hare",33,41,124,154.1,"No",1.5,"Ind.",0.273,0.333,0.273,0,0,80,0.52,43
+"375","Tongass","Yakutat","1984","Yakutat_1984","Land Mammals","Small Land Mammals","Hare",50,181,150,543,"No",1.5,"Ind.",0.08,0.08,0.08,0.02,0,38,0.07,7
+"376","Tongass","Yakutat","1984","Yakutat_1984","Land Mammals","Small Land Mammals","Squirrel",50,181,150,543,"No",0,"Ind.",0.02,0.02,0.02,0,0,0,0,2
+"377","Tongass","Angoon","1984","Angoon_1984","Land Mammals","Large Land Mammals","Deer",38,145,163,622,"No",80,"Ind.",0.895,0.632,0.605,0.447,0.5,36327,58.41,119
+"378","Tongass","Angoon","1987","Angoon_1987","Land Mammals","Large Land Mammals","Deer",46,139,193,520.8,"No",80,"Ind.",1,NA,0.752,0.463,0.398,37926,72.83,NA
+"379","Tongass","Angoon","1996","Angoon_1996","Land Mammals","Large Land Mammals","Deer",74,161,267,580.9,"No",80,"Ind.",0.74300003,0.5,0.5,0.48599997,0.257,29589,50.94,170
+"380","Tongass","Angoon","2012","Angoon_2012","Land Mammals","Large Land Mammals","Deer",51,122,143,342.1,"Yes",80,"Ind.",0.84300005,0.49,0.45099998,0.51,0.38,17451.7,51,90
+"381","Tongass","Angoon","1996","Angoon_1996","Land Mammals","Large Land Mammals","Goat",74,161,267,580.9,"No",102,"Ind.",0.0139999995,0.0139999995,0.0139999995,0.0139999995,0.0139999995,222,0.38,1
+"382","Tongass","Angoon","1996","Angoon_1996","Land Mammals","Small Land Mammals","Land Otter",74,161,267,580.9,"No",0,"Ind.",0.027,0.027,0.027,0.0139999995,0,0,0,3
+"383","Tongass","Angoon","2012","Angoon_2012","Land Mammals","Small Land Mammals","Land Otter",51,122,143,342.1,"Yes",0,"Ind.",0.02,0.02,0.02,0,0,0,0,2
+"384","Tongass","Angoon","2012","Angoon_2012","Land Mammals","Small Land Mammals","Marten",51,122,143,342.1,"Yes",0,"Ind.",0.02,0.02,0.02,0,0,0,0,3
+"385","Tongass","Angoon","2012","Angoon_2012","Land Mammals","Small Land Mammals","Mink",51,122,143,342.1,"Yes",0,"Ind.",0.02,0.02,0.02,0,0,0,0,2
+"386","Tongass","Beecher Pass","1987","Beecher Pass_1987","Land Mammals","Large Land Mammals","Black Bear",5,17,13,44.2,"Yes",58,"Ind.",0.4,NA,0.2,0.2,0,197,4.46,1
+"387","Tongass","Beecher Pass","1987","Beecher Pass_1987","Land Mammals","Large Land Mammals","Deer",5,17,13,44.2,"Yes",80,"Ind.",1,NA,0.8,0.4,0.4,3264,73.85,12
+"388","Tongass","Beecher Pass","1987","Beecher Pass_1987","Land Mammals","Large Land Mammals","Moose",5,17,13,44.2,"Yes",400,"Ind.",0.2,NA,0.2,0,0.2,1360,30.77,1
+"389","Tongass","Coffman Cove","1998","Coffman Cove_1998","Land Mammals","Large Land Mammals","Black Bear",50,75,142,213,"Yes",58,"Ind.",0.32,0.22,0.18,0.16,0.1,870,4.08,10
+"390","Tongass","Coffman Cove","1987","Coffman Cove_1987","Land Mammals","Large Land Mammals","Deer",41,66,120,185.9,"No",80,"Ind.",0.731,NA,0.56700003,0.272,0.216,11085,59.62,NA
+"391","Tongass","Coffman Cove","1998","Coffman Cove_1998","Land Mammals","Large Land Mammals","Deer",50,75,142,213,"Yes",80,"Ind.",0.7,0.88,0.62,0.18,0.24,11640,54.65,97
+"392","Tongass","Coffman Cove","1998","Coffman Cove_1998","Land Mammals","Large Land Mammals","Elk",50,75,142,213,"Yes",225,"Ind.",0.12,0.02,0.02,0.1,0,338,1.58,1
+"393","Tongass","Coffman Cove","1998","Coffman Cove_1998","Land Mammals","Large Land Mammals","Moose",50,75,142,213,"Yes",400,"Ind.",0.3,0.08,0.04,0.28,0.06,1200,5.63,2
+"394","Tongass","Coffman Cove","1998","Coffman Cove_1998","Land Mammals","Small Land Mammals","Beaver",50,75,142,213,"Yes",8.75,"Ind.",0.08,0.06,0.06,0.02,0.02,39,0.18,4
+"395","Tongass","Coffman Cove","1998","Coffman Cove_1998","Land Mammals","Small Land Mammals","Land Otter",50,75,142,213,"Yes",0,"Ind.",0.06,0.06,0.06,0,0,0,0,12
+"396","Tongass","Coffman Cove","1998","Coffman Cove_1998","Land Mammals","Small Land Mammals","Marten",50,75,142,213,"Yes",0.5,"Ind.",0.1,0.14,0.1,0.02,0.02,0,0,31
+"397","Tongass","Coffman Cove","1998","Coffman Cove_1998","Land Mammals","Small Land Mammals","Mink",50,75,142,213,"Yes",0,"Ind.",0.1,0.16,0.1,0,0.04,0,0,54
+"398","Tongass","Coffman Cove","1998","Coffman Cove_1998","Land Mammals","Small Land Mammals","Weasel",50,75,142,213,"Yes",0,"Ind.",0.04,0.04,0.04,0,0,0,0,2
+"399","Tongass","Coffman Cove","1998","Coffman Cove_1998","Land Mammals","Small Land Mammals","Wolf",50,75,142,213,"Yes",0,"Ind.",0.04,0.04,0.04,0,0,0,0,4
+"400","Tongass","Craig","1987","Craig_1987","Land Mammals","Large Land Mammals","Black Bear",64,365,213,1182.3,"No",58,"Ind.",0.053000003,NA,0.021,0.033,0.01,653,0.55,NA
+"401","Tongass","Craig","1997","Craig_1997","Land Mammals","Large Land Mammals","Black Bear",173,608,502,1764.3,"Yes",58,"Ind.",0.081,0.058000002,0.046,0.046,0.04,1631,0.92,8
+"402","Tongass","Craig","1997","Craig_1997","Land Mammals","Large Land Mammals","Caribou",173,608,502,1764.3,"Yes",130,"Ind.",0.075,0.012,0.012,0.069,0.023,1371,0.78,3
+"403","Tongass","Craig","1987","Craig_1987","Land Mammals","Large Land Mammals","Deer",64,365,213,1182.3,"No",80,"Ind.",0.801,NA,0.515,0.41599998,0.254,48018,40.61,NA
+"404","Tongass","Craig","1997","Craig_1997","Land Mammals","Large Land Mammals","Deer",173,608,502,1764.3,"Yes",80,"Ind.",0.75699997,0.59,0.468,0.37,0.24299999,77037,43.67,274
+"405","Tongass","Craig","1987","Craig_1987","Land Mammals","Large Land Mammals","Moose",64,365,213,1182.3,"No",400,"Ind.",0.074,NA,0.01,0.064,0,1500,1.27,NA
+"406","Tongass","Craig","1997","Craig_1997","Land Mammals","Large Land Mammals","Moose",173,608,502,1764.3,"Yes",400,"Ind.",0.11,0.006,0.006,0.11,0.023,1406,0.8,1
+"407","Tongass","Craig","1997","Craig_1997","Land Mammals","Small Land Mammals","Beaver",173,608,502,1764.3,"Yes",8.75,"Ind.",0.035,0.023,0.023,0.017,0.023,646,0.37,32
+"408","Tongass","Craig","1997","Craig_1997","Land Mammals","Small Land Mammals","Red Fox",173,608,502,1764.3,"Yes",0,"Ind.",0.006,0.006,0.006,0.006,0,0,0,1
+"409","Tongass","Craig","1997","Craig_1997","Land Mammals","Small Land Mammals","Land Otter",173,608,502,1764.3,"Yes",0,"Ind.",0.017,0.023,0.017,0,0.006,0,0,8
+"410","Tongass","Craig","1997","Craig_1997","Land Mammals","Small Land Mammals","Marten",173,608,502,1764.3,"Yes",0.5,"Ind.",0.035,0.035,0.035,0,0.006,53,0.03,459
+"411","Tongass","Craig","1997","Craig_1997","Land Mammals","Small Land Mammals","Mink",173,608,502,1764.3,"Yes",0,"Ind.",0.046,0.051999997,0.046,0,0.012,0,0,44
+"412","Tongass","Craig","1997","Craig_1997","Land Mammals","Small Land Mammals","Wolf",173,608,502,1764.3,"Yes",0,"Ind.",0.012,0.029000001,0.012,0,0.006,0,0,24
+"413","Tongass","Edna Bay","1987","Edna Bay_1987","Land Mammals","Large Land Mammals","Black Bear",20,21,66,69.3,"No",58,"Ind.",0.45,NA,0.45,0.2,0.2,1705,24.6,28
+"414","Tongass","Edna Bay","1998","Edna Bay_1998","Land Mammals","Large Land Mammals","Black Bear",12,17,37,52.4,"Yes",58,"Ind.",0.333,0.16700001,0.16700001,0.16700001,0.16700001,164,3.14,2
+"415","Tongass","Edna Bay","1987","Edna Bay_1987","Land Mammals","Large Land Mammals","Deer",20,21,66,69.3,"No",80,"Ind.",0.95,NA,0.85,0.6,0.45,7644,110.3,91
+"416","Tongass","Edna Bay","1998","Edna Bay_1998","Land Mammals","Large Land Mammals","Deer",12,17,37,52.4,"Yes",80,"Ind.",0.917,0.917,0.833,0.417,0.083000004,4533,86.49,40
+"417","Tongass","Edna Bay","1987","Edna Bay_1987","Land Mammals","Large Land Mammals","Moose",20,21,66,69.3,"No",400,"Ind.",0.25,NA,0.05,0.2,0,840,12.12,2
+"418","Tongass","Elfin Cove","1987","Elfin Cove_1987","Land Mammals","Large Land Mammals","Deer",13,19,41,59.9,"Yes",80,"Ind.",0.92300004,NA,0.692,0.692,0.462,4326,72.27,37
+"419","Tongass","Game Creek","1996","Game Creek_1996","Land Mammals","Large Land Mammals","Brown Bear",12,15,51,63.8,"Yes",150,"Ind.",0.083000004,0.083000004,0.083000004,0,0.083000004,188,2.94,1
+"420","Tongass","Game Creek","1996","Game Creek_1996","Land Mammals","Large Land Mammals","Caribou",12,15,51,63.8,"Yes",130,"Ind.",1,0.083000004,0.083000004,1,0.083000004,162,2.55,1
+"421","Tongass","Game Creek","1996","Game Creek_1996","Land Mammals","Large Land Mammals","Deer",12,15,51,63.8,"Yes",80,"Ind.",1,0.5,0.333,1,0.333,2600,40.78,26
+"422","Tongass","Game Creek","1996","Game Creek_1996","Land Mammals","Small Land Mammals","Land Otter",12,15,51,63.8,"Yes",0,"Ind.",0.417,0.417,0.417,0,0,0,0,15
+"423","Tongass","Game Creek","1996","Game Creek_1996","Land Mammals","Small Land Mammals","Marten",12,15,51,63.8,"Yes",0.5,"Ind.",0.333,0.333,0.333,0,0.083000004,0,0,19
+"424","Tongass","Game Creek","1996","Game Creek_1996","Land Mammals","Small Land Mammals","Mink",12,15,51,63.8,"Yes",0,"Ind.",0.16700001,0.25,0.16700001,0,0,0,0,7
+"425","Tongass","Game Creek","1996","Game Creek_1996","Land Mammals","Small Land Mammals","Unknown Squirrel",12,15,51,63.8,"Yes",0.5,"Ind.",0.16700001,0.16700001,0.16700001,0.083000004,0.083000004,24,0.37,38
+"426","Tongass","Game Creek","1996","Game Creek_1996","Land Mammals","Small Land Mammals","Weasel",12,15,51,63.8,"Yes",0,"Ind.",0.083000004,0.083000004,0.083000004,0,0,0,0,1
+"427","Tongass","Gustavus","1987","Gustavus_1987","Land Mammals","Large Land Mammals","Deer",35,65,91,152.3,"Yes",80,"Ind.",0.7,NA,0.478,0.318,0.269,9764,64.1,NA
+"428","Tongass","Haines","1983","Haines_1983","Land Mammals","Large Land Mammals","Black Bear",147,660,425,1908.2,"No",150,"Ind.",0.16299999,0.157,0.095,0.081999995,0.048,13464,7.06,20
+"429","Tongass","Haines","1987","Haines_1987","Land Mammals","Large Land Mammals","Black Bear",62,608,181,1622.6,"No",58,"Ind.",0.168,NA,0.081,0.111999996,0.051999997,2935,1.81,NA
+"430","Tongass","Haines","1996","Haines_1996","Land Mammals","Large Land Mammals","Black Bear",92,787,254,2172.8,"No",58,"Ind.",0.183,0.065,0.065,0.14,0.065,4423,2.06,9
+"431","Tongass","Haines","2012","Haines_2012","Land Mammals","Large Land Mammals","Black Bear",132,818,310,1921.1,"Yes",58,"Ind.",0.129,0.091000006,0.038,0.091000006,0.038,2516,1.3,7
+"432","Tongass","Haines","1983","Haines_1983","Land Mammals","Large Land Mammals","Caribou",147,660,425,1908.2,"No",130,"Ind.",0.02,0.034,0.0139999995,0.0069999998,0.0139999995,1168,0.61,2
+"433","Tongass","Haines","1996","Haines_1996","Land Mammals","Large Land Mammals","Caribou",92,787,254,2172.8,"No",130,"Ind.",0.258,0.075,0.065,0.19399999,0.086,8812,4.09,8
+"434","Tongass","Haines","2012","Haines_2012","Land Mammals","Large Land Mammals","Caribou",132,818,310,1921.1,"Yes",130,"Ind.",0.106000006,0.038,0.023,0.083000004,0.023,4028,2.1,5
+"435","Tongass","Haines","1983","Haines_1983","Land Mammals","Large Land Mammals","Deer",147,660,425,1908.2,"No",80,"Ind.",0.184,0.122,0.061,0.129,0.034,8620,4.52,24
+"436","Tongass","Haines","1987","Haines_1987","Land Mammals","Large Land Mammals","Deer",62,608,181,1622.6,"No",80,"Ind.",0.433,NA,0.145,0.34,0.135,25042,15.43,NA
+"437","Tongass","Haines","1996","Haines_1996","Land Mammals","Large Land Mammals","Deer",92,787,254,2172.8,"No",80,"Ind.",0.48400003,0.15100001,0.108,0.43,0.096999995,16946,7.87,25
+"438","Tongass","Haines","2012","Haines_2012","Land Mammals","Large Land Mammals","Deer",132,818,310,1921.1,"Yes",80,"Ind.",0.295,0.106000006,0.076,0.24200001,0.076,14377,7.5,29
+"439","Tongass","Haines","1983","Haines_1983","Land Mammals","Large Land Mammals","Goat",147,660,425,1908.2,"No",55,"Ind.",0.129,0.184,0.095,0.040999997,0.027,3953,2.07,16
+"440","Tongass","Haines","1987","Haines_1987","Land Mammals","Large Land Mammals","Goat",62,608,181,1622.6,"No",102,"Ind.",0.062,NA,0.002,0.062,0,125,0.08,NA
+"441","Tongass","Haines","1996","Haines_1996","Land Mammals","Large Land Mammals","Goat",92,787,254,2172.8,"No",102,"Ind.",0.19399999,0.065,0.054,0.14,0.065,5186,2.41,6
+"442","Tongass","Haines","2012","Haines_2012","Land Mammals","Large Land Mammals","Goat",132,818,310,1921.1,"Yes",102,"Ind.",0.106000006,0.076,0.038,0.083000004,0.023,3160.5,1.6,5
+"443","Tongass","Haines","1983","Haines_1983","Land Mammals","Large Land Mammals","Moose",147,660,425,1908.2,"No",400,"Ind.",0.272,0.497,0.129,0.157,0.061,33515,17.56,18.66
+"444","Tongass","Haines","1987","Haines_1987","Land Mammals","Large Land Mammals","Moose",62,608,181,1622.6,"No",400,"Ind.",0.45400003,NA,0.037,0.42299998,0.035,9044,5.57,NA
+"445","Tongass","Haines","1996","Haines_1996","Land Mammals","Large Land Mammals","Moose",92,787,254,2172.8,"No",400,"Ind.",0.667,0.129,0.075,0.59099996,0.108,27114,12.6,8
+"446","Tongass","Haines","2012","Haines_2012","Land Mammals","Large Land Mammals","Moose",132,818,310,1921.1,"Yes",400,"Ind.",0.553,0.258,0.083000004,0.485,0.083000004,29745.5,15.5,12
+"447","Tongass","Haines","1983","Haines_1983","Land Mammals","Large Land Mammals","Unknown Large Land Mammal",147,660,425,1908.2,"No",NA,"Ind.",0.0069999998,0.0069999998,0.0069999998,0,0,NA,NA,8
+"448","Tongass","Haines","2012","Haines_2012","Land Mammals","Small Land Mammals","Beaver",132,818,310,1921.1,"Yes",8.75,"Ind.",0.015,0.015,0.008,0.008,0,216.9,0.1,4
+"449","Tongass","Haines","1983","Haines_1983","Land Mammals","Small Land Mammals","Coyote",147,660,425,1908.2,"No",20,"Ind.",0.088,0.116000004,0.088,0,0,1795,0.94,20
+"450","Tongass","Haines","1996","Haines_1996","Land Mammals","Small Land Mammals","Coyote",92,787,254,2172.8,"No",0,"Ind.",0.011,0.011,0.011,0,0,0,0,2
+"451","Tongass","Haines","1983","Haines_1983","Land Mammals","Small Land Mammals","Red Fox",147,660,425,1908.2,"No",0,"Ind.",0.02,0.027,0.02,0,0,0,0,5
+"452","Tongass","Haines","1996","Haines_1996","Land Mammals","Small Land Mammals","Red Fox",92,787,254,2172.8,"No",0,"Ind.",0.011,0.011,0.011,0,0,0,0,1
+"453","Tongass","Haines","2012","Haines_2012","Land Mammals","Small Land Mammals","Snowshoe Hare",132,818,310,1921.1,"Yes",2,"Ind.",0.015,0.023,0.015,0.008,0,62,0,5
+"454","Tongass","Haines","1996","Haines_1996","Land Mammals","Small Land Mammals","Unknown Hare",92,787,254,2172.8,"No",2,"Ind.",0.022,0.011,0.011,0.011,0.011,280,0.13,22
+"455","Tongass","Haines","1996","Haines_1996","Land Mammals","Small Land Mammals","Land Otter",92,787,254,2172.8,"No",0,"Ind.",0.011,0.011,0.011,0,0,0,0,1
+"456","Tongass","Haines","1983","Haines_1983","Land Mammals","Small Land Mammals","Lynx",147,660,425,1908.2,"No",4,"Ind.",0.048,0.095,0.048,0,0,502,0.26,28
+"457","Tongass","Haines","1983","Haines_1983","Land Mammals","Small Land Mammals","Marmot",147,660,425,1908.2,"No",1.5,"Ind.",0.0139999995,0.0139999995,0.0139999995,0,0,79,0.04,12
+"458","Tongass","Haines","1983","Haines_1983","Land Mammals","Small Land Mammals","Marten",147,660,425,1908.2,"No",0,"Ind.",0.040999997,0.095,0.040999997,0,0,0,0,92
+"459","Tongass","Haines","1996","Haines_1996","Land Mammals","Small Land Mammals","Marten",92,787,254,2172.8,"No",0,"Ind.",0.022,0.022,0.022,0,0,0,0,14
+"460","Tongass","Haines","2012","Haines_2012","Land Mammals","Small Land Mammals","Marten",132,818,310,1921.1,"Yes",0,"Ind.",0.03,0.038,0.023,0.015,0,0,0,39
+"461","Tongass","Haines","1983","Haines_1983","Land Mammals","Small Land Mammals","Mink",147,660,425,1908.2,"No",0,"Ind.",0.034,0.068,0.034,0,0,0,0,63
+"462","Tongass","Haines","1996","Haines_1996","Land Mammals","Small Land Mammals","Mink",92,787,254,2172.8,"No",0,"Ind.",0.022,0.022,0.022,0,0,0,0,9
+"463","Tongass","Haines","2012","Haines_2012","Land Mammals","Small Land Mammals","Mink",132,818,310,1921.1,"Yes",0,"Ind.",0.008,0.015,0.008,0,0,0,0,3
+"464","Tongass","Haines","1983","Haines_1983","Land Mammals","Small Land Mammals","Muskrat",147,660,425,1908.2,"No",2.4,"Ind.",0.0139999995,0.0139999995,0.0139999995,0,0,251,0.13,23
+"465","Tongass","Haines","1983","Haines_1983","Land Mammals","Small Land Mammals","Porcupine",147,660,425,1908.2,"No",4.5,"Ind.",0.040999997,0.040999997,0.040999997,0,0,343,0.18,17
+"466","Tongass","Haines","1996","Haines_1996","Land Mammals","Small Land Mammals","Porcupine",92,787,254,2172.8,"No",6,"Ind.",0.011,0.011,0.011,0,0,51,0.02,1
+"467","Tongass","Haines","2012","Haines_2012","Land Mammals","Small Land Mammals","Porcupine",132,818,310,1921.1,"Yes",6,"Ind.",0.008,0.015,0.008,0,0.008,37.2,0,1
+"468","Tongass","Haines","2012","Haines_2012","Land Mammals","Small Land Mammals","Tree Squirrel",132,818,310,1921.1,"Yes",0.5,"Ind.",0.023,0.03,0.023,0,0,40.3,0,17
+"469","Tongass","Haines","1996","Haines_1996","Land Mammals","Small Land Mammals","Weasel",92,787,254,2172.8,"No",0,"Ind.",0.011,0.011,0.011,0,0,0,0,2
+"470","Tongass","Haines","1983","Haines_1983","Land Mammals","Small Land Mammals","Wolf",147,660,425,1908.2,"No",0,"Ind.",0.0069999998,0.068,0.0069999998,0,0,0,0,2
+"471","Tongass","Haines","1996","Haines_1996","Land Mammals","Small Land Mammals","Wolf",92,787,254,2172.8,"No",0,"Ind.",0.022,0.022,0.022,0,0,0,0,2
+"472","Tongass","Haines","1983","Haines_1983","Land Mammals","Small Land Mammals","Wolverine",147,660,425,1908.2,"No",0,"Ind.",0.0069999998,0.034,0.0069999998,0,0,0,0,3
+"473","Tongass","Haines","1996","Haines_1996","Land Mammals","Small Land Mammals","Wolverine",92,787,254,2172.8,"No",0,"Ind.",0.011,0.011,0.011,0,0,0,0,2
+"474","Tongass","Hollis","1987","Hollis_1987","Land Mammals","Large Land Mammals","Black Bear",29,32,72,79.4,"No",58,"Ind.",0.333,NA,0.111,0.262,0.071,207,2.61,NA
+"475","Tongass","Hollis","1998","Hollis_1998","Land Mammals","Large Land Mammals","Black Bear",46,59,121,155.2,"Yes",58,"Ind.",0.065,0.022,0.022,0.065,0.022,74,0.48,1
+"476","Tongass","Hollis","1987","Hollis_1987","Land Mammals","Large Land Mammals","Deer",29,32,72,79.4,"No",80,"Ind.",0.666,NA,0.404,0.32299998,0.161,3008,37.88,NA
+"477","Tongass","Hollis","1998","Hollis_1998","Land Mammals","Large Land Mammals","Deer",46,59,121,155.2,"Yes",80,"Ind.",0.565,0.63,0.39099997,0.261,0.109,4823,31.07,47
+"478","Tongass","Hollis","1987","Hollis_1987","Land Mammals","Large Land Mammals","Goat",29,32,72,79.4,"No",102,"Ind.",0.040999997,NA,0.040999997,0,0.040999997,133,1.67,NA
+"479","Tongass","Hollis","1998","Hollis_1998","Land Mammals","Large Land Mammals","Goat",46,59,121,155.2,"Yes",102,"Ind.",0.022,0.022,0.022,0,0.022,131,0.84,1
+"480","Tongass","Hollis","1998","Hollis_1998","Land Mammals","Large Land Mammals","Moose",46,59,121,155.2,"Yes",400,"Ind.",0.087,0.043,0.043,0.087,0.043,1026,6.61,2
+"481","Tongass","Hollis","1998","Hollis_1998","Land Mammals","Large Land Mammals","Dall Sheep",46,59,121,155.2,"Yes",104,"Ind.",0.022,0.022,0.022,0,0,133,0.86,1
+"482","Tongass","Hollis","1998","Hollis_1998","Land Mammals","Small Land Mammals","Beaver",46,59,121,155.2,"Yes",8.75,"Ind.",0.022,0.022,0.022,0,0,0,0,2
+"483","Tongass","Hollis","1998","Hollis_1998","Land Mammals","Small Land Mammals","Land Otter",46,59,121,155.2,"Yes",0,"Ind.",0.043,0.043,0.043,0.022,0,0,0,11
+"484","Tongass","Hollis","1998","Hollis_1998","Land Mammals","Small Land Mammals","Marten",46,59,121,155.2,"Yes",0.5,"Ind.",0.043,0.043,0.043,0,0,0,0,34
+"485","Tongass","Hollis","1998","Hollis_1998","Land Mammals","Small Land Mammals","Mink",46,59,121,155.2,"Yes",0,"Ind.",0.022,0.022,0.022,0,0,0,0,6
+"486","Tongass","Hollis","1998","Hollis_1998","Land Mammals","Small Land Mammals","Wolf",46,59,121,155.2,"Yes",0,"Ind.",0.043,0.043,0.043,0,0,0,0,13
+"487","Tongass","Hoonah","1987","Hoonah_1987","Land Mammals","Large Land Mammals","Black Bear",62,219,222,699.8,"No",58,"Ind.",0.03,NA,0.025,0.005,0,323,0.46,NA
+"488","Tongass","Hoonah","1996","Hoonah_1996","Land Mammals","Large Land Mammals","Black Bear",77,280,245,890.9,"No",58,"Ind.",0.025999999,0.025999999,0.012999999,0.012999999,0.012999999,211,0.24,1
+"489","Tongass","Hoonah","1996","Hoonah_1996","Land Mammals","Large Land Mammals","Brown Bear",77,280,245,890.9,"No",150,"Ind.",0.025999999,0.012999999,0.012999999,0.012999999,0,545,0.61,1
+"490","Tongass","Hoonah","1985","Hoonah_1985","Land Mammals","Large Land Mammals","Caribou",71,280,227,895.2,"No",120,"Ind.",0.0139999995,0.0139999995,0.0139999995,NA,NA,473,0.53,1
+"491","Tongass","Hoonah","1985","Hoonah_1985","Land Mammals","Large Land Mammals","Deer",71,280,227,895.2,"No",80,"Ind.",0.859,0.592,0.52099997,0.535,0.38,46693,52.16,148
+"492","Tongass","Hoonah","1987","Hoonah_1987","Land Mammals","Large Land Mammals","Deer",62,219,222,699.8,"No",80,"Ind.",0.944,NA,0.65,0.48099998,0.45900002,62840,89.79,NA
+"493","Tongass","Hoonah","1996","Hoonah_1996","Land Mammals","Large Land Mammals","Deer",77,280,245,890.9,"No",80,"Ind.",0.74,0.597,0.55799997,0.312,0.39,66327,74.45,228
+"494","Tongass","Hoonah","2012","Hoonah_2012","Land Mammals","Large Land Mammals","Deer",122,280,319,732.1,"Yes",80,"Ind.",0.77,0.59,0.475,0.45099998,0.402,37558.4,51.3,204
+"495","Tongass","Hoonah","2016","Hoonah_2016","Land Mammals","Large Land Mammals","Deer",65,260,184,736,"Yes",43.2,"Ind.",0.93846154,0.63076925,0.5538462,0.5538462,0.47692308,24192,32.869564,140
+"496","Tongass","Hoonah","1985","Hoonah_1985","Land Mammals","Large Land Mammals","Moose",71,280,227,895.2,"No",550,"Ind.",0.07,0.042,0.027999999,NA,NA,4337,4.84,2
+"497","Tongass","Hoonah","1996","Hoonah_1996","Land Mammals","Large Land Mammals","Moose",77,280,245,890.9,"No",400,"Ind.",0.156,0.065,0.039,0.117,0.039,4364,4.9,3
+"498","Tongass","Hoonah","2016","Hoonah_2016","Land Mammals","Large Land Mammals","Moose",65,260,184,736,"Yes",400,"Ind.",0.16923077,0.046153847,0.015384615,0.15384616,0.046153847,1600,2.173913,1
+"499","Tongass","Hoonah","1996","Hoonah_1996","Land Mammals","Large Land Mammals","Dall Sheep",77,280,245,890.9,"No",104,"Ind.",0.012999999,0.012999999,0.012999999,0,0.012999999,378,0.42,1
+"500","Tongass","Hoonah","2012","Hoonah_2012","Land Mammals","Small Land Mammals","Beaver",122,280,319,732.1,"Yes",8.75,"Ind.",0.008,0.008,0.008,0,0.008,40.2,0.1,2
+"501","Tongass","Hoonah","2012","Hoonah_2012","Land Mammals","Small Land Mammals","Coyote",122,280,319,732.1,"Yes",20,"Ind.",0.008,0.008,0.008,0,0.008,183.6,0.3,4
+"502","Tongass","Hoonah","1996","Hoonah_1996","Land Mammals","Small Land Mammals","Marten",77,280,245,890.9,"No",0.5,"Ind.",0.025999999,0.025999999,0.025999999,0,0,0,0,7
+"503","Tongass","Hoonah","2012","Hoonah_2012","Land Mammals","Small Land Mammals","Marten",122,280,319,732.1,"Yes",0,"Ind.",0.025,0.025,0.025,0,0.008,0,0,23
+"504","Tongass","Hoonah","1996","Hoonah_1996","Land Mammals","Small Land Mammals","Mink",77,280,245,890.9,"No",0,"Ind.",0.012999999,0.012999999,0.012999999,0,0,0,0,2
+"505","Tongass","Hoonah","2012","Hoonah_2012","Land Mammals","Small Land Mammals","Mink",122,280,319,732.1,"Yes",0,"Ind.",0.016,0.016,0.016,0,0.008,0,0,1
+"506","Tongass","Hoonah","2012","Hoonah_2012","Land Mammals","Small Land Mammals","Tree Squirrel",122,280,319,732.1,"Yes",0.5,"Ind.",0.008,0.008,0.008,0,0,1.1,0,0
+"507","Tongass","Hoonah","2012","Hoonah_2012","Land Mammals","Small Land Mammals","Weasel",122,280,319,732.1,"Yes",0,"Ind.",0.008,0.008,0.008,0,0,0,0,1
+"508","Tongass","Hydaburg","1987","Hydaburg_1987","Land Mammals","Large Land Mammals","Black Bear",35,110,129,379.1,"No",58,"Ind.",0.06,NA,0.015,0.045,0.015,95,0.25,NA
+"509","Tongass","Hydaburg","1987","Hydaburg_1987","Land Mammals","Large Land Mammals","Deer",35,110,129,379.1,"No",80,"Ind.",0.77599996,NA,0.372,0.552,0.268,16226,42.8,NA
+"510","Tongass","Hydaburg","1997","Hydaburg_1997","Land Mammals","Large Land Mammals","Deer",51,131,155,398.1,"No",80,"Ind.",0.686,0.45099998,0.333,0.49,0.275,13973,34.65,68
+"511","Tongass","Hydaburg","2012","Hydaburg_2012","Land Mammals","Large Land Mammals","Deer",48,119,134,332.2,"Yes",80,"Ind.",0.875,0.625,0.52099997,0.542,0.542,22610,68.1,114
+"512","Tongass","Hydaburg","1997","Hydaburg_1997","Land Mammals","Small Land Mammals","Land Otter",51,131,155,398.1,"No",0,"Ind.",0.02,0.02,0.02,0,0,0,0,3
+"513","Tongass","Hydaburg","1997","Hydaburg_1997","Land Mammals","Small Land Mammals","Marten",51,131,155,398.1,"No",0.5,"Ind.",0.059,0.059,0.059,0,0,0,0,19
+"514","Tongass","Hydaburg","1997","Hydaburg_1997","Land Mammals","Small Land Mammals","Mink",51,131,155,398.1,"No",0,"Ind.",0.059,0.059,0.059,0,0,0,0,13
+"515","Tongass","Hydaburg","2012","Hydaburg_2012","Land Mammals","Small Land Mammals","Mink",48,119,134,332.2,"Yes",0,"Ind.",0.021,0.021,0.021,0,0.021,0,0,1
+"516","Tongass","Hyder","1987","Hyder_1987","Land Mammals","Large Land Mammals","Black Bear",33,39,66,77.9,"Yes",58,"Ind.",0.18200001,NA,0.18200001,0,0.03,960,12.33,14
+"517","Tongass","Hyder","1987","Hyder_1987","Land Mammals","Large Land Mammals","Goat",33,39,66,77.9,"Yes",102,"Ind.",0.12100001,NA,0.091000006,0.03,0,603,7.74,5
+"518","Tongass","Hyder","1987","Hyder_1987","Land Mammals","Large Land Mammals","Moose",33,39,66,77.9,"Yes",400,"Ind.",0.333,NA,0.061,0.273,0,945,12.13,2
+"519","Tongass","Kake","1985","Kake_1985","Land Mammals","Large Land Mammals","Black Bear",70,171,256,625.4,"No",150,"Ind.",0.029000001,0.0139999995,0.0139999995,NA,NA,366,0.59,1
+"520","Tongass","Kake","1996","Kake_1996","Land Mammals","Large Land Mammals","Black Bear",73,249,219,747,"Yes",58,"Ind.",0.040999997,0.027,0.027,0.0139999995,0.0139999995,396,0.53,2
+"521","Tongass","Kake","1985","Kake_1985","Land Mammals","Large Land Mammals","Deer",70,171,256,625.4,"No",80,"Ind.",0.7,0.443,0.38599998,0.38599998,0.214,16611,26.56,85
+"522","Tongass","Kake","1987","Kake_1987","Land Mammals","Large Land Mammals","Deer",52,193,192,642,"No",80,"Ind.",0.77800006,NA,0.41900003,0.573,0.216,24802,38.63,NA
+"523","Tongass","Kake","1996","Kake_1996","Land Mammals","Large Land Mammals","Deer",73,249,219,747,"Yes",80,"Ind.",0.795,0.52099997,0.493,0.37,0.233,37111,49.68,136
+"524","Tongass","Kake","1996","Kake_1996","Land Mammals","Large Land Mammals","Moose",73,249,219,747,"Yes",400,"Ind.",0.040999997,0.055,0.0139999995,0.027,0,1364,1.83,1
+"525","Tongass","Kake","1985","Kake_1985","Land Mammals","Small Land Mammals","Beaver",70,171,256,625.4,"No",0,"Ind.",0.029000001,NA,0.029000001,NA,NA,0,0,3
+"526","Tongass","Kake","1996","Kake_1996","Land Mammals","Small Land Mammals","Beaver",73,249,219,747,"Yes",8.75,"Ind.",0.0139999995,0.0139999995,0.0139999995,0,0,0,0,3
+"527","Tongass","Kake","1985","Kake_1985","Land Mammals","Small Land Mammals","Land Otter",70,171,256,625.4,"No",0,"Ind.",0.0139999995,NA,0.0139999995,NA,NA,0,0,2
+"528","Tongass","Kake","1996","Kake_1996","Land Mammals","Small Land Mammals","Land Otter",73,249,219,747,"Yes",0,"Ind.",0.0139999995,0.0139999995,0.0139999995,0,0,0,0,5
+"529","Tongass","Kake","1985","Kake_1985","Land Mammals","Small Land Mammals","Marten",70,171,256,625.4,"No",0,"Ind.",0.029000001,NA,0.029000001,NA,NA,0,0,28
+"530","Tongass","Kake","1996","Kake_1996","Land Mammals","Small Land Mammals","Marten",73,249,219,747,"Yes",0.5,"Ind.",0.027,0.027,0.027,0,0,0,0,22
+"531","Tongass","Kake","1985","Kake_1985","Land Mammals","Small Land Mammals","Mink",70,171,256,625.4,"No",0,"Ind.",0.029000001,NA,0.029000001,NA,NA,0,0,16
+"532","Tongass","Kake","1996","Kake_1996","Land Mammals","Small Land Mammals","Mink",73,249,219,747,"Yes",0,"Ind.",0.040999997,0.040999997,0.040999997,0,0,0,0,25
+"533","Tongass","Kake","1985","Kake_1985","Land Mammals","Small Land Mammals","Muskrat",70,171,256,625.4,"No",0,"Ind.",0.0139999995,NA,0.0139999995,NA,NA,0,0,1
+"534","Tongass","Kake","1985","Kake_1985","Land Mammals","Small Land Mammals","Weasel",70,171,256,625.4,"No",0,"Ind.",0.0139999995,NA,0.0139999995,NA,NA,0,0,8
+"535","Tongass","Kasaan","1998","Kasaan_1998","Land Mammals","Large Land Mammals","Black Bear",14,18,34,43.7,"Yes",58,"Ind.",0.071,0.143,0.071,0,0.071,75,1.71,1
+"536","Tongass","Kasaan","1987","Kasaan_1987","Land Mammals","Large Land Mammals","Deer",14,14,40,40,"No",80,"Ind.",0.857,NA,0.42900002,0.643,0.214,1600,40,20
+"537","Tongass","Kasaan","1998","Kasaan_1998","Land Mammals","Large Land Mammals","Deer",14,18,34,43.7,"Yes",80,"Ind.",0.857,0.643,0.571,0.286,0.42900002,2983,68.24,29
+"538","Tongass","Klawock","1984","Klawock_1984","Land Mammals","Large Land Mammals","Black Bear",36,131,130,473.1,"No",150,"Ind.",0.027999999,0.083000004,0.027999999,0,0.027999999,546,1.15,1
+"539","Tongass","Klawock","1987","Klawock_1987","Land Mammals","Large Land Mammals","Black Bear",52,224,198,790.3,"No",58,"Ind.",0.064,NA,0.022,0.040999997,0.011,290,0.37,NA
+"540","Tongass","Klawock","1997","Klawock_1997","Land Mammals","Large Land Mammals","Black Bear",106,303,295,847.3,"Yes",58,"Ind.",0.056999996,0.066,0.027999999,0.027999999,0.019,497,0.59,3
+"541","Tongass","Klawock","1997","Klawock_1997","Land Mammals","Large Land Mammals","Caribou",106,303,295,847.3,"Yes",130,"Ind.",0.038,0.019,0.019,0.019,0.009,1115,1.32,3
+"542","Tongass","Klawock","1984","Klawock_1984","Land Mammals","Large Land Mammals","Deer",36,131,130,473.1,"No",80,"Ind.",0.806,0.611,0.556,0.38900003,0.36099997,16302,34.46,56
+"543","Tongass","Klawock","1987","Klawock_1987","Land Mammals","Large Land Mammals","Deer",52,224,198,790.3,"No",80,"Ind.",0.736,NA,0.518,0.376,0.213,35587,45.03,NA
+"544","Tongass","Klawock","1997","Klawock_1997","Land Mammals","Large Land Mammals","Deer",106,303,295,847.3,"Yes",80,"Ind.",0.71699995,0.585,0.43400002,0.35799998,0.255,40248,47.57,176
+"545","Tongass","Klawock","1987","Klawock_1987","Land Mammals","Large Land Mammals","Moose",52,224,198,790.3,"No",400,"Ind.",0.033,NA,0.011,0.022,0,1000,1.27,NA
+"546","Tongass","Klawock","1997","Klawock_1997","Land Mammals","Large Land Mammals","Moose",106,303,295,847.3,"Yes",400,"Ind.",0.066,0.027999999,0.027999999,0.047,0.027999999,3430,4.05,3
+"547","Tongass","Klawock","1997","Klawock_1997","Land Mammals","Small Land Mammals","Beaver",106,303,295,847.3,"Yes",8.75,"Ind.",0.019,0.019,0.019,0,0,0,0,52
+"548","Tongass","Klawock","1984","Klawock_1984","Land Mammals","Small Land Mammals","Coyote",36,131,130,473.1,"No",0,"Ind.",0.027999999,0.027999999,0.027999999,0,0,0,0,2
+"549","Tongass","Klawock","1997","Klawock_1997","Land Mammals","Small Land Mammals","Land Otter",106,303,295,847.3,"Yes",0,"Ind.",0.019,0.019,0.019,0,0,0,0,12
+"550","Tongass","Klawock","1997","Klawock_1997","Land Mammals","Small Land Mammals","Marten",106,303,295,847.3,"Yes",0.5,"Ind.",0.019,0.019,0.019,0,0,0,0,34
+"551","Tongass","Klawock","1984","Klawock_1984","Land Mammals","Small Land Mammals","Mink",36,131,130,473.1,"No",0,"Ind.",0.027999999,0.027999999,0.027999999,0,0,0,0,11
+"552","Tongass","Klawock","1997","Klawock_1997","Land Mammals","Small Land Mammals","Mink",106,303,295,847.3,"Yes",0,"Ind.",0.038,0.038,0.038,0,0.019,0,0,22
+"553","Tongass","Klawock","1997","Klawock_1997","Land Mammals","Small Land Mammals","Weasel",106,303,295,847.3,"Yes",0,"Ind.",0.009,0.009,0.009,0,0,0,0,6
+"554","Tongass","Klawock","1997","Klawock_1997","Land Mammals","Small Land Mammals","Wolf",106,303,295,847.3,"Yes",0,"Ind.",0.019,0.019,0.019,0,0.009,0,0,45
+"555","Tongass","Klukwan","1983","Klukwan_1983","Land Mammals","Large Land Mammals","Black Bear",33,41,124,154.1,"No",150,"Ind.",0.03,0.12100001,0.03,0,0.03,187,1.21,1
+"556","Tongass","Klukwan","1987","Klukwan_1987","Land Mammals","Large Land Mammals","Black Bear",29,39,101,133.4,"No",58,"Ind.",0.117,NA,0.071,0.046,0.071,162,1.21,NA
+"557","Tongass","Klukwan","2014","Klukwan_2014","Land Mammals","Large Land Mammals","Black Bear",24,32,48,64,"Yes",58,"Ind.",25,8.3,4.1,25,12.5,154.6,2.4166667,2
+"558","Tongass","Klukwan","1983","Klukwan_1983","Land Mammals","Large Land Mammals","Deer",33,41,124,154.1,"No",80,"Ind.",0.12100001,0.152,0.03,0.091000006,0,199,1.29,2
+"559","Tongass","Klukwan","1987","Klukwan_1987","Land Mammals","Large Land Mammals","Deer",29,39,101,133.4,"No",80,"Ind.",0.477,NA,0.122,0.38099998,0.122,1710,12.82,NA
+"560","Tongass","Klukwan","1996","Klukwan_1996","Land Mammals","Large Land Mammals","Deer",32,36,96,108,"Yes",80,"Ind.",0.774,0.29,0.22600001,0.645,0.29,1765,15.83,19
+"561","Tongass","Klukwan","2014","Klukwan_2014","Land Mammals","Large Land Mammals","Deer",24,32,48,64,"Yes",80,"Ind.",25,4.1,4.1,20.8,16.6,320,5,3
+"562","Tongass","Klukwan","1983","Klukwan_1983","Land Mammals","Large Land Mammals","Goat",33,41,124,154.1,"No",55,"Ind.",0.03,0.12100001,0.03,0,0.03,137,0.89,2
+"563","Tongass","Klukwan","1996","Klukwan_1996","Land Mammals","Large Land Mammals","Goat",32,36,96,108,"Yes",102,"Ind.",0.258,0.096999995,0.065,0.19399999,0.065,355,3.19,3
+"564","Tongass","Klukwan","2014","Klukwan_2014","Land Mammals","Large Land Mammals","Goat",24,32,48,64,"Yes",102,"Ind.",58.3,4.1,4.1,58.3,20.8,136,2.125,1
+"565","Tongass","Klukwan","1983","Klukwan_1983","Land Mammals","Large Land Mammals","Moose",33,41,124,154.1,"No",400,"Ind.",0.24200001,0.576,0.091000006,0.152,0.061,1491,9.68,3
+"566","Tongass","Klukwan","1996","Klukwan_1996","Land Mammals","Large Land Mammals","Moose",32,36,96,108,"Yes",400,"Ind.",0.645,0.19399999,0.065,0.613,0.065,929,8.33,2
+"567","Tongass","Klukwan","2014","Klukwan_2014","Land Mammals","Large Land Mammals","Moose",24,32,48,64,"Yes",400,"Ind.",95.8,12.5,8.3,95.8,33.3,1066.6,16.666666,2
+"568","Tongass","Klukwan","1996","Klukwan_1996","Land Mammals","Small Land Mammals","Unknown Hare",32,36,96,108,"Yes",2,"Ind.",0.065,0.065,0.065,0,0,5,0.05,3
+"569","Tongass","Klukwan","2014","Klukwan_2014","Land Mammals","Small Land Mammals","Marten",24,32,48,64,"Yes",0,"Ind.",4.1,4.1,4.1,0,0,0,0,4
+"570","Tongass","Klukwan","1996","Klukwan_1996","Land Mammals","Small Land Mammals","Porcupine",32,36,96,108,"Yes",6,"Ind.",0.065,0.065,0.065,0.065,0.032,14,0.13,2
+"571","Tongass","Klukwan","2014","Klukwan_2014","Land Mammals","Small Land Mammals","Wolf",24,32,48,64,"Yes",0,"Ind.",4.1,4.1,4.1,0,0,0,0,1
+"572","Tongass","Metlakatla","1987","Metlakatla_1987","Land Mammals","Large Land Mammals","Black Bear",64,418,255,1554.2,"Yes",58,"Ind.",0.06,NA,0.003,0.056999996,0.003,69,0.04,NA
+"573","Tongass","Metlakatla","1987","Metlakatla_1987","Land Mammals","Large Land Mammals","Deer",64,418,255,1554.2,"Yes",80,"Ind.",0.69,NA,0.162,0.602,0.118999995,16546,10.65,NA
+"574","Tongass","Metlakatla","1987","Metlakatla_1987","Land Mammals","Large Land Mammals","Goat",64,418,255,1554.2,"Yes",102,"Ind.",0.006,NA,0.003,0.003,0.003,121,0.08,NA
+"575","Tongass","Meyers Chuck","1987","Meyers Chuck_1987","Land Mammals","Large Land Mammals","Deer",10,10,30,30,"Yes",80,"Ind.",0.8,NA,0.5,0.6,0,640,21.33,8
+"576","Tongass","Meyers Chuck","1987","Meyers Chuck_1987","Land Mammals","Large Land Mammals","Moose",10,10,30,30,"Yes",400,"Ind.",0.1,NA,0.1,0,0.1,800,26.67,2
+"577","Tongass","Naukati Bay","1998","Naukati Bay_1998","Land Mammals","Large Land Mammals","Black Bear",50,66,111,146.5,"Yes",58,"Ind.",0.32,0.18,0.16,0.18,0.06,766,5.23,10
+"578","Tongass","Naukati Bay","1998","Naukati Bay_1998","Land Mammals","Large Land Mammals","Deer",50,66,111,146.5,"Yes",80,"Ind.",0.68,0.66,0.52,0.26,0.18,6653,45.41,63
+"579","Tongass","Naukati Bay","1998","Naukati Bay_1998","Land Mammals","Small Land Mammals","Beaver",50,66,111,146.5,"Yes",8.75,"Ind.",0.08,0.04,0.04,0.04,0,12,0.08,17
+"580","Tongass","Naukati Bay","1998","Naukati Bay_1998","Land Mammals","Small Land Mammals","Land Otter",50,66,111,146.5,"Yes",0,"Ind.",0.04,0.02,0.02,0.02,0,0,0,1
+"581","Tongass","Naukati Bay","1998","Naukati Bay_1998","Land Mammals","Small Land Mammals","Marten",50,66,111,146.5,"Yes",0.5,"Ind.",0.06,0.06,0.06,0,0,0,0,68
+"582","Tongass","Naukati Bay","1998","Naukati Bay_1998","Land Mammals","Small Land Mammals","Mink",50,66,111,146.5,"Yes",0,"Ind.",0.06,0.06,0.06,0,0,0,0,51
+"583","Tongass","Naukati Bay","1998","Naukati Bay_1998","Land Mammals","Small Land Mammals","Weasel",50,66,111,146.5,"Yes",0,"Ind.",0.02,0.02,0.02,0,0,0,0,2
+"584","Tongass","Pelican","1987","Pelican_1987","Land Mammals","Large Land Mammals","Deer",48,82,148,238.4,"Yes",80,"Ind.",0.905,NA,0.632,0.59099996,0.445,25250,105.47,NA
+"585","Tongass","Pelican","1987","Pelican_1987","Land Mammals","Large Land Mammals","Moose",48,82,148,238.4,"Yes",400,"Ind.",0.159,NA,0.04,0.131,0.04,1308,5.46,NA
+"586","Tongass","Petersburg","1987","Petersburg_1987","Land Mammals","Large Land Mammals","Black Bear",49,1123,166,3738.8,"No",58,"Ind.",0.053000003,NA,0.031,0.022,0.031,2020,0.54,NA
+"587","Tongass","Petersburg","2000","Petersburg_2000","Land Mammals","Large Land Mammals","Black Bear",125,1070,344,2945,"Yes",58,"Ind.",0.032,0.024,0.008,0.024,0,496.48,0.16860466,1
+"588","Tongass","Petersburg","2000","Petersburg_2000","Land Mammals","Large Land Mammals","Caribou",125,1070,344,2945,"Yes",130,"Ind.",0.032,0.008,0.008,0.024,0,2225.6,0.75581396,2
+"589","Tongass","Petersburg","1987","Petersburg_1987","Land Mammals","Large Land Mammals","Deer",49,1123,166,3738.8,"No",80,"Ind.",0.699,NA,0.39400002,0.4,0.296,164250,43.93,NA
+"590","Tongass","Petersburg","2000","Petersburg_2000","Land Mammals","Large Land Mammals","Deer",125,1070,344,2945,"Yes",80,"Ind.",0.4,0.344,0.192,0.22399999,0.08,40403.2,13.72093,59
+"591","Tongass","Petersburg","2000","Petersburg_2000","Land Mammals","Large Land Mammals","Goat",125,1070,344,2945,"Yes",102,"Ind.",0.016,0.008,0.008,0.016,0,873.12,0.29651162,1
+"592","Tongass","Petersburg","1987","Petersburg_1987","Land Mammals","Large Land Mammals","Moose",49,1123,166,3738.8,"No",400,"Ind.",0.274,NA,0.084,0.221,0.073,47672,12.75,NA
+"593","Tongass","Petersburg","2000","Petersburg_2000","Land Mammals","Large Land Mammals","Moose",125,1070,344,2945,"Yes",400,"Ind.",0.256,0.168,0.016,0.248,0.016,6848,2.3255813,2
+"594","Tongass","Petersburg","2000","Petersburg_2000","Land Mammals","Small Land Mammals","Beaver",125,1070,344,2945,"Yes",0,"Ind.",0.008,0.016,0.008,0.008,0.008,0,0,5
+"595","Tongass","Petersburg","2000","Petersburg_2000","Land Mammals","Small Land Mammals","Land Otter",125,1070,344,2945,"Yes",0,"Ind.",0.016,0.016,0.008,0.008,0.008,0,0,12
+"596","Tongass","Petersburg","2000","Petersburg_2000","Land Mammals","Small Land Mammals","Marten",125,1070,344,2945,"Yes",0,"Ind.",0.032,0.024,0.016,0.016,0.008,0,0,141
+"597","Tongass","Petersburg","2000","Petersburg_2000","Land Mammals","Small Land Mammals","Mink",125,1070,344,2945,"Yes",0,"Ind.",0.016,0.024,0.016,0,0.008,0,0,6
+"598","Tongass","Petersburg","2000","Petersburg_2000","Land Mammals","Small Land Mammals","Weasel",125,1070,344,2945,"Yes",0,"Ind.",0.008,0.008,0.008,0,0,0,0,6
+"599","Tongass","Petersburg","2000","Petersburg_2000","Land Mammals","Small Land Mammals","Wolf",125,1070,344,2945,"Yes",0,"Ind.",0.016,0.024,0.016,0,0.008,0,0,10
+"600","Tongass","Petersburg","2000","Petersburg_2000","Land Mammals","Small Land Mammals","Wolverine",125,1070,344,2945,"Yes",0,"Ind.",0.008,0.008,0.008,0,0,0,0,7
+"601","Tongass","Point Baker","1987","Point Baker_1987","Land Mammals","Large Land Mammals","Black Bear",19,19,35,35,"No",58,"Ind.",0.316,NA,0.21100001,0.105,0.21100001,406,11.6,7
+"602","Tongass","Point Baker","1996","Point Baker_1996","Land Mammals","Large Land Mammals","Black Bear",16,19,40,47.5,"Yes",58,"Ind.",0.25,0.063,0.063,0.188,0.063,69,1.45,1
+"603","Tongass","Point Baker","1987","Point Baker_1987","Land Mammals","Large Land Mammals","Deer",19,19,35,35,"No",80,"Ind.",0.94699997,NA,0.632,0.52599996,0.368,3120,89.14,39
+"604","Tongass","Point Baker","1996","Point Baker_1996","Land Mammals","Large Land Mammals","Deer",16,19,40,47.5,"Yes",80,"Ind.",0.938,0.75,0.5,0.56299996,0.25,2185,46,23
+"605","Tongass","Port Alexander","1987","Port Alexander_1987","Land Mammals","Large Land Mammals","Black Bear",34,37,98,106.6,"Yes",58,"Ind.",0.06,NA,0.03,0.06,0.03,64,0.6,NA
+"606","Tongass","Port Alexander","1987","Port Alexander_1987","Land Mammals","Large Land Mammals","Deer",34,37,98,106.6,"Yes",80,"Ind.",0.94,NA,0.65699995,0.64199996,0.59599996,11492,107.83,NA
+"607","Tongass","Port Protection","1987","Port Protection_1987","Land Mammals","Large Land Mammals","Black Bear",25,27,54,58.3,"No",58,"Ind.",0.44,NA,0.04,0.44,0,63,1.08,1
+"608","Tongass","Port Protection","1996","Port Protection_1996","Land Mammals","Large Land Mammals","Black Bear",25,40,25,97.5,"Yes",58,"Ind.",0.24,0.12,0.12,0.12,0.08,650,6.66,7
+"609","Tongass","Port Protection","1987","Port Protection_1987","Land Mammals","Large Land Mammals","Deer",25,27,54,58.3,"No",80,"Ind.",0.84,NA,0.36,0.64,0.16,2333,40,27
+"610","Tongass","Port Protection","1996","Port Protection_1996","Land Mammals","Large Land Mammals","Deer",25,40,25,97.5,"Yes",80,"Ind.",0.92,0.68,0.56,0.64,0.36,9216,94.43,72
+"611","Tongass","Port Protection","1996","Port Protection_1996","Land Mammals","Small Land Mammals","Land Otter",25,40,25,97.5,"Yes",0,"Ind.",0.08,0.04,0.04,0.04,0,0,0,3
+"612","Tongass","Port Protection","1996","Port Protection_1996","Land Mammals","Small Land Mammals","Marten",25,40,25,97.5,"Yes",0.5,"Ind.",0.04,0.04,0.04,0,0,0,0,5
+"613","Tongass","Port Protection","1996","Port Protection_1996","Land Mammals","Small Land Mammals","Mink",25,40,25,97.5,"Yes",0,"Ind.",0.08,0.04,0.04,0.04,0,0,0,4
+"614","Tongass","Saxman","1999","Saxman_1999","Land Mammals","Large Land Mammals","Black Bear",73,110,252,379.7,"Yes",58,"Ind.",0.08219178,0.02739726,0.01369863,0.06849315,0.05479452,263.389,0.46031746,3.0136986
+"615","Tongass","Saxman","1987","Saxman_1987","Land Mammals","Large Land Mammals","Deer",36,76,127,258.7,"No",80,"Ind.",0.575,NA,0.23,0.42,0.113000005,4285,16.56,NA
+"616","Tongass","Saxman","1999","Saxman_1999","Land Mammals","Large Land Mammals","Deer",73,110,252,379.7,"Yes",80,"Ind.",0.63013697,0.3561644,0.23287672,0.46575344,0.2739726,15803.34,27.619047,131.09589
+"617","Tongass","Saxman","1999","Saxman_1999","Land Mammals","Large Land Mammals","Elk",73,110,252,379.7,"Yes",225,"Ind.",0.08219178,0.01369863,0.01369863,0.06849315,0.01369863,510.88385,0.89285713,1.5068493
+"618","Tongass","Saxman","1987","Saxman_1987","Land Mammals","Large Land Mammals","Moose",36,76,127,258.7,"No",400,"Ind.",0.213,NA,0.033,0.17899999,0.033,1008,3.9,NA
+"619","Tongass","Saxman","1999","Saxman_1999","Land Mammals","Small Land Mammals","Beaver",73,110,252,379.7,"Yes",0,"Ind.",0.01369863,0.01369863,0.01369863,0,0.01369863,0,0,1.5068493
+"620","Tongass","Saxman","1999","Saxman_1999","Land Mammals","Small Land Mammals","Land Otter",73,110,252,379.7,"Yes",0,"Ind.",0.01369863,0.01369863,0.01369863,0,0.01369863,0,0,1.5068493
+"621","Tongass","Saxman","1999","Saxman_1999","Land Mammals","Small Land Mammals","Marten",73,110,252,379.7,"Yes",0,"Ind.",0.01369863,0.01369863,0.01369863,0,0.01369863,0,0,1.5068493
+"622","Tongass","Saxman","1999","Saxman_1999","Land Mammals","Small Land Mammals","Mink",73,110,252,379.7,"Yes",0,"Ind.",0.01369863,0.01369863,0.01369863,0,0.01369863,0,0,1.5068493
+"623","Tongass","Saxman","1999","Saxman_1999","Land Mammals","Small Land Mammals","Muskrat",73,110,252,379.7,"Yes",0,"Ind.",0.01369863,0.01369863,0.01369863,0,0.01369863,0,0,1.5068493
+"624","Tongass","Saxman","1999","Saxman_1999","Land Mammals","Small Land Mammals","Tree Squirrel",73,110,252,379.7,"Yes",0.5,"Ind.",0.01369863,0.01369863,0.01369863,0,0,2.2705948,0.003968254,3.0136986
+"625","Tongass","Sitka","1987","Sitka_1987","Land Mammals","Large Land Mammals","Black Bear",296,2871,831,8060.7,"No",58,"Ind.",0.01,NA,0.01,0,0,1688,0.21,3
+"626","Tongass","Sitka","1996","Sitka_1996","Land Mammals","Large Land Mammals","Black Bear",150,3053,431,8535,"No",58,"Ind.",0.033,0.016,0.016,0.017,0.0069999998,2170,0.25,NA
+"627","Tongass","Sitka","2013","Sitka_2013","Land Mammals","Large Land Mammals","Brown Bear",212,2965,592,7873.2,"Yes",150,"Ind.",0.009,0.0069999998,0.0069999998,0.002,0,3251.8,0.413024,1
+"628","Tongass","Sitka","1987","Sitka_1987","Land Mammals","Large Land Mammals","Deer",296,2871,831,8060.7,"No",80,"Ind.",0.382,NA,0.382,0,0,302619,37.54,390
+"629","Tongass","Sitka","1996","Sitka_1996","Land Mammals","Large Land Mammals","Deer",150,3053,431,8535,"No",80,"Ind.",0.619,0.42700002,0.348,0.31,0.22,378669,44.37,NA
+"630","Tongass","Sitka","2013","Sitka_2013","Land Mammals","Large Land Mammals","Deer",212,2965,592,7873.2,"Yes",80,"Ind.",0.56200004,0.36900002,0.259,0.35799998,0.213,200051.8,25.409096,189
+"631","Tongass","Sitka","1987","Sitka_1987","Land Mammals","Large Land Mammals","Goat",296,2871,831,8060.7,"No",102,"Ind.",0.0069999998,NA,0.0069999998,0,0,1979,0.25,2
+"632","Tongass","Sitka","1996","Sitka_1996","Land Mammals","Large Land Mammals","Goat",150,3053,431,8535,"No",102,"Ind.",0.055999998,0.047,0.027,0.027999999,0.024,8487,0.99,NA
+"633","Tongass","Sitka","1987","Sitka_1987","Land Mammals","Large Land Mammals","Moose",296,2871,831,8060.7,"No",400,"Ind.",0.003,NA,0.003,0,0,3880,0.48,1
+"634","Tongass","Sitka","1996","Sitka_1996","Land Mammals","Large Land Mammals","Moose",150,3053,431,8535,"No",400,"Ind.",0.123,0.045,0.027999999,0.098000005,0.040999997,44899,5.26,NA
+"635","Tongass","Sitka","1996","Sitka_1996","Land Mammals","Small Land Mammals","Beaver",150,3053,431,8535,"No",8.75,"Ind.",0.0069999998,0.004,0.004,0.004,0,200,0.02,NA
+"636","Tongass","Sitka","2013","Sitka_2013","Land Mammals","Small Land Mammals","Beaver",212,2965,592,7873.2,"Yes",8.75,"Ind.",0.017,0.017,0.017,0,0.0069999998,948.5,0.12046533,9
+"637","Tongass","Sitka","2013","Sitka_2013","Land Mammals","Small Land Mammals","Land Otter",212,2965,592,7873.2,"Yes",0,"Ind.",0.009,0.009,0.009,0,0.0069999998,0,0,49
+"638","Tongass","Sitka","1996","Sitka_1996","Land Mammals","Small Land Mammals","Marten",150,3053,431,8535,"No",0.5,"Ind.",0.0069999998,0.0069999998,0.0069999998,0,0,395,0.05,NA
+"639","Tongass","Sitka","2013","Sitka_2013","Land Mammals","Small Land Mammals","Marten",212,2965,592,7873.2,"Yes",0.5,"Ind.",0.024,0.035,0.024,0.0069999998,0.0069999998,0,0,113
+"640","Tongass","Sitka","2013","Sitka_2013","Land Mammals","Small Land Mammals","Mink",212,2965,592,7873.2,"Yes",0,"Ind.",0.019,0.019,0.019,0,0,0,0,50
+"641","Tongass","Sitka","1996","Sitka_1996","Land Mammals","Small Land Mammals","Porcupine",150,3053,431,8535,"No",6,"Ind.",0.004,0.004,0.004,0,0,137,0.02,NA
+"642","Tongass","Sitka","2013","Sitka_2013","Land Mammals","Small Land Mammals","Tree Squirrel",212,2965,592,7873.2,"Yes",0.5,"Ind.",0.0069999998,0.0069999998,0.0069999998,0,0,108.4,0.013767467,10
+"643","Tongass","Sitka","1996","Sitka_1996","Land Mammals","Small Land Mammals","Unknown Squirrel",150,3053,431,8535,"No",0.5,"Ind.",0.012,0.012,0.012,0,0,13,0,NA
+"644","Tongass","Sitka","2013","Sitka_2013","Land Mammals","Small Land Mammals","Weasel",212,2965,592,7873.2,"Yes",0,"Ind.",0.002,0.002,0.002,0,0,0,0,4
+"645","Tongass","Skagway","1987","Skagway_1987","Land Mammals","Large Land Mammals","Black Bear",60,204,164,582.6,"Yes",58,"Ind.",0.040999997,NA,0.01,0.031,0.01,116,0.2,NA
+"646","Tongass","Skagway","1987","Skagway_1987","Land Mammals","Large Land Mammals","Deer",60,204,164,582.6,"Yes",80,"Ind.",0.291,NA,0.056999996,0.255,0.031,1905,3.27,NA
+"647","Tongass","Skagway","1987","Skagway_1987","Land Mammals","Large Land Mammals","Goat",60,204,164,582.6,"Yes",102,"Ind.",0.073,NA,0.005,0.068,0.005,102,0.18,NA
+"648","Tongass","Tenakee Springs","1984","Tenakee Springs_1984","Land Mammals","Large Land Mammals","Deer",24,47,48,94,"No",80,"Ind.",0.833,0.5,0.5,0.583,0.417,6110,65,39
+"649","Tongass","Tenakee Springs","1987","Tenakee Springs_1987","Land Mammals","Large Land Mammals","Deer",31,44,66,94.7,"Yes",80,"Ind.",0.871,NA,0.548,0.45200002,0.38599998,12826,135.48,NA
+"650","Tongass","Tenakee Springs","1984","Tenakee Springs_1984","Land Mammals","Small Land Mammals","Marten",24,47,48,94,"No",0,"Ind.",0.042,0.042,0.042,0,0,0,0,5
+"651","Tongass","Tenakee Springs","1984","Tenakee Springs_1984","Land Mammals","Small Land Mammals","Mink",24,47,48,94,"No",0,"Ind.",0.042,0.042,0.042,0,0,0,0,15
+"652","Tongass","Thorne Bay","1987","Thorne Bay_1987","Land Mammals","Large Land Mammals","Black Bear",52,157,163,478.5,"No",58,"Ind.",0.221,NA,0.072,0.17799999,0.043,656,1.37,NA
+"653","Tongass","Thorne Bay","1998","Thorne Bay_1998","Land Mammals","Large Land Mammals","Black Bear",89,204,226,518,"Yes",58,"Ind.",0.055999998,0.055999998,0.045,0.022,0.011,665,1.28,5
+"654","Tongass","Thorne Bay","1987","Thorne Bay_1987","Land Mammals","Large Land Mammals","Deer",52,157,163,478.5,"No",80,"Ind.",0.75,NA,0.583,0.366,0.27899998,17576,36.73,NA
+"655","Tongass","Thorne Bay","1998","Thorne Bay_1998","Land Mammals","Large Land Mammals","Deer",89,204,226,518,"Yes",80,"Ind.",0.53900003,0.708,0.41599998,0.157,0.045,16687,32.21,91
+"656","Tongass","Thorne Bay","1998","Thorne Bay_1998","Land Mammals","Large Land Mammals","Elk",89,204,226,518,"Yes",225,"Ind.",0.034,0.011,0.011,0.022,0.011,516,1,1
+"657","Tongass","Thorne Bay","1987","Thorne Bay_1987","Land Mammals","Large Land Mammals","Goat",52,157,163,478.5,"No",102,"Ind.",0.061,NA,0.011,0.051,0,172,0.36,NA
+"658","Tongass","Thorne Bay","1998","Thorne Bay_1998","Land Mammals","Large Land Mammals","Goat",89,204,226,518,"Yes",102,"Ind.",0.034,0.011,0.011,0.022,0.011,234,0.45,1
+"659","Tongass","Thorne Bay","1987","Thorne Bay_1987","Land Mammals","Large Land Mammals","Moose",52,157,163,478.5,"No",400,"Ind.",0.134,NA,0.011,0.134,0,676,1.41,NA
+"660","Tongass","Thorne Bay","1998","Thorne Bay_1998","Land Mammals","Large Land Mammals","Muskox",89,204,226,518,"Yes",593,"Ind.",0.011,0.011,0.011,0,0.011,593,1.14,0.4
+"661","Tongass","Thorne Bay","1998","Thorne Bay_1998","Land Mammals","Small Land Mammals","Beaver",89,204,226,518,"Yes",8.75,"Ind.",0.034,0.022,0.022,0.011,0,0,0,9
+"662","Tongass","Thorne Bay","1998","Thorne Bay_1998","Land Mammals","Small Land Mammals","Mink",89,204,226,518,"Yes",0,"Ind.",0.034,0.055999998,0.034,0,0,0,0,4
+"663","Tongass","Whale Pass","1987","Whale Pass_1987","Land Mammals","Large Land Mammals","Black Bear",18,18,51,51,"No",58,"Ind.",0.222,NA,0.111,0.111,0,116,2.27,2
+"664","Tongass","Whale Pass","1987","Whale Pass_1987","Land Mammals","Large Land Mammals","Deer",18,18,51,51,"No",80,"Ind.",0.77800006,NA,0.667,0.278,0.055999998,2560,50.2,32
+"665","Tongass","Whale Pass","1998","Whale Pass_1998","Land Mammals","Large Land Mammals","Deer",15,20,41,54.7,"No",80,"Ind.",0.667,0.6,0.467,0.4,0.26700002,2773,50.73,26
+"666","Tongass","Whale Pass","2012","Whale Pass_2012","Land Mammals","Large Land Mammals","Deer",21,27,43,55.3,"Yes",80,"Ind.",0.76199996,0.76199996,0.571,0.19,0.19,4011.4,72.6,39
+"667","Tongass","Whale Pass","2012","Whale Pass_2012","Land Mammals","Large Land Mammals","Goat",21,27,43,55.3,"Yes",102,"Ind.",0.143,0.143,0.143,0,0.048,393.4,7.1,3
+"668","Tongass","Whale Pass","1987","Whale Pass_1987","Land Mammals","Large Land Mammals","Moose",18,18,51,51,"No",400,"Ind.",0.111,NA,0.055999998,0.055999998,0,400,7.84,1
+"669","Tongass","Whale Pass","1998","Whale Pass_1998","Land Mammals","Small Land Mammals","Beaver",15,20,41,54.7,"No",8.75,"Ind.",0.133,0.133,0.133,0,0,12,0.21,3
+"670","Tongass","Whale Pass","2012","Whale Pass_2012","Land Mammals","Small Land Mammals","Beaver",21,27,43,55.3,"Yes",8.75,"Ind.",0.048,0.048,0.048,0,0,0,0,10
+"671","Tongass","Whale Pass","2012","Whale Pass_2012","Land Mammals","Small Land Mammals","Land Otter",21,27,43,55.3,"Yes",0,"Ind.",0.095,0.143,0.095,0,0,0,0,18
+"672","Tongass","Whale Pass","1998","Whale Pass_1998","Land Mammals","Small Land Mammals","Marten",15,20,41,54.7,"No",0.5,"Ind.",0.133,0.133,0.133,0,0.067,0,0,43
+"673","Tongass","Whale Pass","2012","Whale Pass_2012","Land Mammals","Small Land Mammals","Marten",21,27,43,55.3,"Yes",0,"Ind.",0.23799999,0.23799999,0.23799999,0,0,0,0,70
+"674","Tongass","Whale Pass","1998","Whale Pass_1998","Land Mammals","Small Land Mammals","Mink",15,20,41,54.7,"No",0,"Ind.",0.067,0.067,0.067,0,0.067,0,0,15
+"675","Tongass","Whale Pass","2012","Whale Pass_2012","Land Mammals","Small Land Mammals","Mink",21,27,43,55.3,"Yes",0,"Ind.",0.286,0.286,0.286,0,0,0,0,165
+"676","Tongass","Whale Pass","2012","Whale Pass_2012","Land Mammals","Small Land Mammals","Flying Squirrel",21,27,43,55.3,"Yes",0.5,"Ind.",0.143,0.143,0.143,0,0,3.9,0.1,6
+"677","Tongass","Whale Pass","2012","Whale Pass_2012","Land Mammals","Small Land Mammals","Weasel",21,27,43,55.3,"Yes",0,"Ind.",0.143,0.143,0.143,0,0,0,0,12
+"678","Tongass","Whale Pass","2012","Whale Pass_2012","Land Mammals","Small Land Mammals","Wolf",21,27,43,55.3,"Yes",0,"Ind.",0.048,0.048,0.048,0.048,0,0,0,5
+"679","Tongass","Whitestone","1996","Whitestone_1996","Land Mammals","Large Land Mammals","Deer",24,41,83,141.8,"Yes",80,"Ind.",0.833,0.708,0.708,0.125,0.042,8063,56.87,59
+"680","Tongass","Whitestone","1996","Whitestone_1996","Land Mammals","Small Land Mammals","Marten",24,41,83,141.8,"Yes",0.5,"Ind.",0.125,0.125,0.125,0,0,0,0,95
+"681","Tongass","Whitestone","1996","Whitestone_1996","Land Mammals","Small Land Mammals","Mink",24,41,83,141.8,"Yes",0,"Ind.",0.042,0.042,0.042,0,0,0,0,4
+"682","Tongass","Wrangell","1987","Wrangell_1987","Land Mammals","Large Land Mammals","Black Bear",75,1013,211,2839,"No",58,"Ind.",0.084,NA,0.048,0.069,0.025,3258,1.15,NA
+"683","Tongass","Wrangell","2000","Wrangell_2000","Land Mammals","Large Land Mammals","Black Bear",98,747,257,1959,"Yes",58,"Ind.",0.030612245,0.030612245,0.010204081,0.020408163,0.020408163,442.10205,0.22568093,1
+"684","Tongass","Wrangell","2000","Wrangell_2000","Land Mammals","Large Land Mammals","Caribou",98,747,257,1959,"Yes",130,"Ind.",0.040816326,0.020408163,0.020408163,0.020408163,0.020408163,1981.8368,1.0116731,2
+"685","Tongass","Wrangell","1987","Wrangell_1987","Land Mammals","Large Land Mammals","Deer",75,1013,211,2839,"No",80,"Ind.",0.63,NA,0.276,0.463,0.127,57997,20.43,NA
+"686","Tongass","Wrangell","2000","Wrangell_2000","Land Mammals","Large Land Mammals","Deer",98,747,257,1959,"Yes",80,"Ind.",0.47959182,0.377551,0.24489796,0.28571427,0.18367347,55491.43,28.326849,91
+"687","Tongass","Wrangell","1987","Wrangell_1987","Land Mammals","Large Land Mammals","Goat",75,1013,211,2839,"No",102,"Ind.",0.077,NA,0.03,0.062,0.023,3881,1.37,NA
+"688","Tongass","Wrangell","1987","Wrangell_1987","Land Mammals","Large Land Mammals","Moose",75,1013,211,2839,"No",400,"Ind.",0.425,NA,0.063,0.377,0.062,25512,8.99,NA
+"689","Tongass","Wrangell","2000","Wrangell_2000","Land Mammals","Large Land Mammals","Moose",98,747,257,1959,"Yes",400,"Ind.",0.31632653,0.1734694,0.06122449,0.25510204,0.091836736,18293.877,9.338521,6
+"690","Tongass","Wrangell","2000","Wrangell_2000","Land Mammals","Small Land Mammals","Beaver",98,747,257,1959,"Yes",0,"Ind.",0.010204081,0.010204081,0.010204081,0,0,0,0,7
+"691","Tongass","Wrangell","2000","Wrangell_2000","Land Mammals","Small Land Mammals","Marten",98,747,257,1959,"Yes",0,"Ind.",0.010204081,0.010204081,0.010204081,0,0,0,0,16
+"692","Tongass","Wrangell","2000","Wrangell_2000","Land Mammals","Small Land Mammals","Mink",98,747,257,1959,"Yes",0,"Ind.",0.010204081,0.010204081,0.010204081,0,0,0,0,7
+"693","Tongass","Wrangell","2000","Wrangell_2000","Land Mammals","Small Land Mammals","Weasel",98,747,257,1959,"Yes",0,"Ind.",0.010204081,0.010204081,0.010204081,0,0,0,0,30
+"694","Tongass","Wrangell","2000","Wrangell_2000","Land Mammals","Small Land Mammals","Wolf",98,747,257,1959,"Yes",0,"Ind.",0.030612245,0.020408163,0.020408163,0.010204081,0.010204081,0,0,6
+"695","Tongass","Yakutat","1984","Yakutat_1984","Land Mammals","Large Land Mammals","Black Bear",50,181,150,543,"No",150,"Ind.",0.08,0.08,0.04,0.08,0.04,2715,5,5
+"696","Tongass","Yakutat","1987","Yakutat_1987","Land Mammals","Large Land Mammals","Black Bear",48,169,184,588.8,"No",58,"Ind.",0.096,NA,0.008,0.088,0.044,76,0.13,NA
+"697","Tongass","Yakutat","2000","Yakutat_2000","Land Mammals","Large Land Mammals","Black Bear",139,234,377,634.7,"Yes",58,"Ind.",0.101,0.058000002,0.036,0.072,0.029000001,586,0.92,6
+"698","Tongass","Yakutat","2015","Yakutat_2015","Land Mammals","Large Land Mammals","Black Bear",101,240,249,591.7,"Yes",58,"Ind.",0.139,0.099,0.069,0.079,0.05,964.8,1.630522,7
+"699","Tongass","Yakutat","1984","Yakutat_1984","Land Mammals","Large Land Mammals","Brown Bear",50,181,150,543,"No",50,"Ind.",0.08,0.1,0.02,0.08,0.04,362,0.67,4
+"700","Tongass","Yakutat","2015","Yakutat_2015","Land Mammals","Large Land Mammals","Brown Bear",101,240,249,591.7,"Yes",141,"Ind.",0.01,0.03,0.01,0,0,335,0.56626505,1
+"701","Tongass","Yakutat","1984","Yakutat_1984","Land Mammals","Large Land Mammals","Deer",50,181,150,543,"No",80,"Ind.",0.2,0.06,0.06,0.16,0.08,1448,2.67,5
+"702","Tongass","Yakutat","2000","Yakutat_2000","Land Mammals","Large Land Mammals","Deer",139,234,377,634.7,"Yes",80,"Ind.",0.23,0.086,0.05,0.20899999,0.072,1751,2.76,13
+"703","Tongass","Yakutat","2015","Yakutat_2015","Land Mammals","Large Land Mammals","Deer",101,240,249,591.7,"Yes",43.2,"Ind.",0.44599998,0.347,0.088999994,0.366,0.139,1437.1,2.4289155,14
+"704","Tongass","Yakutat","1984","Yakutat_1984","Land Mammals","Large Land Mammals","Goat",50,181,150,543,"No",120,"Ind.",0.12,0.08,0.06,0.08,0.06,1303,2.4,3
+"705","Tongass","Yakutat","2000","Yakutat_2000","Land Mammals","Large Land Mammals","Goat",139,234,377,634.7,"Yes",102,"Ind.",0.18,0.036,0.022,0.158,0.029000001,515,0.81,3
+"706","Tongass","Yakutat","1984","Yakutat_1984","Land Mammals","Large Land Mammals","Moose",50,181,150,543,"No",550,"Ind.",0.7,0.62,0.22,0.62,0.22,21901,40.33,11
+"707","Tongass","Yakutat","1987","Yakutat_1987","Land Mammals","Large Land Mammals","Moose",48,169,184,588.8,"No",400,"Ind.",0.53900003,NA,0.127,0.435,0.16299999,8580,14.57,NA
+"708","Tongass","Yakutat","2000","Yakutat_2000","Land Mammals","Large Land Mammals","Moose",139,234,377,634.7,"Yes",400,"Ind.",0.77,0.396,0.173,0.64699996,0.30200002,18181,28.65,27
+"709","Tongass","Yakutat","2015","Yakutat_2015","Land Mammals","Large Land Mammals","Moose",101,240,249,591.7,"Yes",540,"Ind.",0.752,0.485,0.198,0.644,0.317,25663.4,43.373493,20
+"710","Tongass","Yakutat","1984","Yakutat_1984","Land Mammals","Small Land Mammals","Beaver",50,181,150,543,"No",15,"Ind.",0.02,0.02,0.02,0,0.02,272,0.5,5
+"711","Tongass","Yakutat","2000","Yakutat_2000","Land Mammals","Small Land Mammals","Beaver",139,234,377,634.7,"Yes",0,"Ind.",0.0139999995,0.0069999998,0.0069999998,0.0069999998,0,0,0,1
+"712","Tongass","Yakutat","2015","Yakutat_2015","Land Mammals","Small Land Mammals","Beaver",101,240,249,591.7,"Yes",8.75,"Ind.",0.03,0.03,0.02,0,0,207.9,0.3514056,10
+"713","Tongass","Yakutat","1984","Yakutat_1984","Land Mammals","Small Land Mammals","Coyote",50,181,150,543,"No",0,"Ind.",0.02,0.02,0.02,0,0.02,0,0,1
+"714","Tongass","Yakutat","2000","Yakutat_2000","Land Mammals","Small Land Mammals","Coyote",139,234,377,634.7,"Yes",0,"Ind.",0.0069999998,0.0069999998,0.0069999998,0,0,0,0,1
+"715","Tongass","Yakutat","2015","Yakutat_2015","Land Mammals","Small Land Mammals","Coyote",101,240,249,591.7,"Yes",0,"Ind.",0.01,0.01,0.01,0,0.01,0,0,1
+"716","Tongass","Yakutat","2000","Yakutat_2000","Land Mammals","Small Land Mammals","Red Fox",139,234,377,634.7,"Yes",0,"Ind.",0.0069999998,0.0069999998,0.0069999998,0,0,0,0,1
+"717","Tongass","Yakutat","2000","Yakutat_2000","Land Mammals","Small Land Mammals","Snowshoe Hare",139,234,377,634.7,"Yes",2,"Ind.",0.072,0.072,0.065,0.0069999998,0.022,418,0.66,126
+"718","Tongass","Yakutat","2015","Yakutat_2015","Land Mammals","Small Land Mammals","Snowshoe Hare",101,240,249,591.7,"Yes",2,"Ind.",0.118999995,0.139,0.118999995,0.01,0.04,628.8,1.0627309,131
+"719","Tongass","Yakutat","1984","Yakutat_1984","Land Mammals","Small Land Mammals","Land Otter",50,181,150,543,"No",0,"Ind.",0.02,0.02,0.02,0,0.02,0,0,3
+"720","Tongass","Yakutat","2000","Yakutat_2000","Land Mammals","Small Land Mammals","Land Otter",139,234,377,634.7,"Yes",0,"Ind.",0.022,0.029000001,0.022,0,0.0069999998,0,0,7
+"721","Tongass","Yakutat","2015","Yakutat_2015","Land Mammals","Small Land Mammals","Land Otter",101,240,249,591.7,"Yes",0,"Ind.",0.02,0.02,0.02,0.01,0,0,0,4
+"722","Tongass","Yakutat","1984","Yakutat_1984","Land Mammals","Small Land Mammals","Lynx",50,181,150,543,"No",20,"Ind.",0.02,0.02,0.02,0,0,145,0.27,2
+"723","Tongass","Yakutat","2015","Yakutat_2015","Land Mammals","Small Land Mammals","Lynx",101,240,249,591.7,"Yes",4,"Ind.",0.01,0.02,0.01,0,0,0,0,1
+"724","Tongass","Yakutat","2000","Yakutat_2000","Land Mammals","Small Land Mammals","Marmot",139,234,377,634.7,"Yes",0,"Ind.",0.0069999998,0.0069999998,0.0069999998,0,0,0,0,6
+"725","Tongass","Yakutat","1984","Yakutat_1984","Land Mammals","Small Land Mammals","Marten",50,181,150,543,"No",0,"Ind.",0.06,0.06,0.06,0,0.02,0,0,21
+"726","Tongass","Yakutat","2000","Yakutat_2000","Land Mammals","Small Land Mammals","Marten",139,234,377,634.7,"Yes",0,"Ind.",0.05,0.036,0.036,0.022,0.0139999995,0,0,62
+"727","Tongass","Yakutat","2015","Yakutat_2015","Land Mammals","Small Land Mammals","Marten",101,240,249,591.7,"Yes",0,"Ind.",0.059,0.059,0.059,0,0.02,0,0,164
+"728","Tongass","Yakutat","1984","Yakutat_1984","Land Mammals","Small Land Mammals","Mink",50,181,150,543,"No",0,"Ind.",0.06,0.06,0.06,0,0,0,0,16
+"729","Tongass","Yakutat","2000","Yakutat_2000","Land Mammals","Small Land Mammals","Mink",139,234,377,634.7,"Yes",0,"Ind.",0.029000001,0.0139999995,0.0139999995,0.0139999995,0,0,0,5
+"730","Tongass","Yakutat","2015","Yakutat_2015","Land Mammals","Small Land Mammals","Mink",101,240,249,591.7,"Yes",0,"Ind.",0.02,0.03,0.02,0,0,0,0,20
+"731","Tongass","Yakutat","2000","Yakutat_2000","Land Mammals","Small Land Mammals","Tree Squirrel",139,234,377,634.7,"Yes",0,"Ind.",0.0069999998,0.0069999998,0.0069999998,0,0,0,0,1
+"732","Tongass","Yakutat","2015","Yakutat_2015","Land Mammals","Small Land Mammals","Tree Squirrel",101,240,249,591.7,"Yes",0.5,"Ind.",0.01,0.01,0.01,0,0,19,0.032128513,16
+"733","Tongass","Yakutat","1984","Yakutat_1984","Land Mammals","Small Land Mammals","Weasel",50,181,150,543,"No",0,"Ind.",0.02,0.02,0.02,0,0.02,0,0,3
+"734","Tongass","Yakutat","2000","Yakutat_2000","Land Mammals","Small Land Mammals","Weasel",139,234,377,634.7,"Yes",0,"Ind.",0.0069999998,0.0069999998,0.0069999998,0,0,0,0,2
+"735","Tongass","Yakutat","2015","Yakutat_2015","Land Mammals","Small Land Mammals","Weasel",101,240,249,591.7,"Yes",0,"Ind.",0.02,0.02,0.02,0,0.01,0,0,11
+"736","Tongass","Yakutat","1984","Yakutat_1984","Land Mammals","Small Land Mammals","Wolf",50,181,150,543,"No",0,"Ind.",0.1,0.1,0.1,0,0.02,0,0,19
+"737","Tongass","Yakutat","2000","Yakutat_2000","Land Mammals","Small Land Mammals","Wolf",139,234,377,634.7,"Yes",0,"Ind.",0.022,0.05,0.022,0,0.0069999998,0,0,6
+"738","Tongass","Yakutat","2015","Yakutat_2015","Land Mammals","Small Land Mammals","Wolf",101,240,249,591.7,"Yes",0,"Ind.",0.02,0.04,0.01,0,0,0,0,2
+"739","Tongass","Yakutat","1984","Yakutat_1984","Land Mammals","Small Land Mammals","Wolverine",50,181,150,543,"No",0,"Ind.",0.04,0.04,0.04,0,0.02,0,0,12
+"740","Tongass","Yakutat","2000","Yakutat_2000","Land Mammals","Small Land Mammals","Wolverine",139,234,377,634.7,"Yes",0,"Ind.",0.0069999998,0.0139999995,0.0069999998,0,0,0,0,1
+"741","Tongass","Yakutat","2015","Yakutat_2015","Land Mammals","Small Land Mammals","Wolverine",101,240,249,591.7,"Yes",0,"Ind.",0.02,0.02,0.02,0,0.01,0,0,4
