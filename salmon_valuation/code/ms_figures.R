@@ -30,6 +30,7 @@ t_fish_num <- read_excel("salmon_valuation/data/Regional_Analyses&Graphs_7-15-20
 
 fish_num <- rbind(t_fish_num, c_fish_num)
 
+
 ##sum across regions within the forests so get total per forest 
 fish_num_summary <- fish_num %>%
   group_by(Forest, Fishery, Species, Year) %>%
@@ -84,7 +85,8 @@ fish_df_1 <- left_join(fish_num_summary, resale_value_mean, by = "Species") %>%
   ) %>%
   mutate(Scenario = str_to_title(Scenario)) %>%
   select(Forest, Fishery, Species, Year, Scenario, everything()) %>%
-  rename(fish_total_num = "Forest_fish")
+  rename(fish_total_num = "Forest_fish") %>%
+  mutate( total_value_cpi = NA)
 
 str(fish_df_1)
 
@@ -109,11 +111,16 @@ comm_recovery_rate <- read_excel("salmon_valuation/data/Regional_Analyses&Graphs
   rename(Species = "Species Name", recover_rate = "Recovery Rate")
 
 
+comm_cpi <-  read_excel("salmon_valuation/data/Regional_Analyses&Graphs_7-15-2025_v2.xlsx", sheet = "commercial_cpi")
+
 comm_df_1 <- left_join(comm_df, comm_recovery_rate, by = c("Forest", "Species")) %>%
+  left_join(comm_cpi, by = "Year") %>%
+  mutate(fish_total_weight = fish_total_weight*recover_rate) %>%
   mutate(conversion_lb_to_oz = 6/16,
          num_6oz_servings = fish_total_weight/conversion_lb_to_oz) %>%
+  mutate(total_value_cpi = total_value * CPI) %>%
   mutate(Scenario = "Conservative") %>%
-  select(Forest, Fishery, Species, Year, Scenario, fish_total_num, fish_total_weight,  num_6oz_servings,   total_value)
+  select(Forest, Fishery, Species, Year, Scenario, fish_total_num, fish_total_weight,  num_6oz_servings,   total_value, total_value_cpi)
 comm_df_1$Year <- as.numeric(comm_df_1$Year)
 
 ##Combine all data together
@@ -124,13 +131,13 @@ df_all <- rbind(fish_df_1, comm_df_1)
 df_all_summary <- df_all %>%
   ungroup() %>%
   group_by(Fishery, Year, Scenario) %>%
-  summarise_at(vars(fish_total_num, fish_total_weight,  num_6oz_servings,   total_value), list(annual_total = sum))
+  summarise_at(vars(fish_total_num, fish_total_weight,  num_6oz_servings,   total_value, total_value_cpi), list(annual_total = sum))
 
 
 df_all_median <- df_all_summary %>%
   ungroup() %>%
   group_by(Fishery, Scenario) %>%
-  summarise_at(vars(fish_total_num_annual_total, fish_total_weight_annual_total,  num_6oz_servings_annual_total,   total_value_annual_total), list(median = median))
+  summarise_at(vars(fish_total_num_annual_total, fish_total_weight_annual_total,  num_6oz_servings_annual_total,   total_value_annual_total, total_value_cpi_annual_total), list(median = median))
 
 ##calculate proportion of total harvest each species for each year 
 df_all_sp_total <- df_all %>%
@@ -164,9 +171,36 @@ df_all_sp_prop <- df_all %>%
 ##Sport plot 
 sport_df <- df_all_summary %>%
   filter(Fishery == "Sport") %>%
-  group_by(Scenario) %>%
-  summarise_at(vars(fish_total_num_annual_total:total_value_annual_total), list(mean = mean, sd = sd, median = median))
+  mutate(Scenario_2 = case_when(
+    startsWith(Scenario, "Conser") ~ "Low-end",
+    startsWith(Scenario, "Lib") ~ "High-end",
+  )) #%>%
+  #group_by(Scenario_2) %>%
+  #summarise_at(vars(fish_total_num_annual_total:total_value_annual_total), list(mean = mean, sd = sd, median = median))
   
+sport_df_summary <- sport_df %>%
+  group_by(Scenario_2) %>%
+  summarise(min_num_fish = min(fish_total_num_annual_total),
+            max_num_fish = max(fish_total_num_annual_total)) #%>%
+  #summarise_at(vars(fish_total_num_annual_total:total_value_annual_total), list(mean = mean, sd = sd, median = median))
+  
+sport_df$Scenario_2 <- ordered(sport_df$Scenario_2, levels = c("Low-end", "High-end"))
+sport_df_summary$Scenario_2 <- ordered(sport_df_summary$Scenario_2, levels = c("Low-end", "High-end"))
+
+sport_fish_num_boxplot <- ggplot() +
+  geom_boxplot(data = sport_df, aes(x = Scenario_2, y = fish_total_num_annual_total, fill = Scenario_2), coef = Inf) +  # makes whiskers extend to min/max
+#  geom_errorbar(data = sport_df_summary, aes(x = Scenario_2, ymin =  min_num_fish, ymax = max_num_fish), position = position_dodge(width = 0.9), width = 0.25) + 
+  geom_segment(data = sport_df_summary, aes(x = as.numeric(Scenario_2) - 0.15, xend = as.numeric(Scenario_2) + 0.15, y = min_num_fish, yend = min_num_fish), linewidth = 0.25) + 
+  geom_segment(data = sport_df_summary, aes(x = as.numeric(Scenario_2) - 0.15, xend = as.numeric(Scenario_2) + 0.15, y = max_num_fish, yend = max_num_fish), linewidth = 0.25) + 
+   scale_fill_manual(values = c("#4E5A5D", "#C7DDE4"))+
+  scale_colour_manual(values = c("black")) +
+  theme_classic() +
+  ylab("Annual Number of Fish") +
+  theme(axis.title.x = element_blank(), legend.position = "none")+
+  theme(axis.text.x = element_text(size = 18),axis.text.y = element_text(size = 18),axis.title.y=element_text(size = 18, face = "bold"), text = element_text(family = "Arial"), strip.background = element_blank()) +
+  scale_y_continuous(labels = comma, limits = c(0, 1000000)) 
+
+sport_fish_num_boxplot
 
 
 head(sport_df)
@@ -247,7 +281,8 @@ sport_piechart
 
 library(ggpubr)
 
-sport_plot <- ggarrange(sport_fish_num, sport_piechart,  nrow = 1, ncol = 2, labels = c("a)", "b)"),  font.label = list(size = 20, face = "bold", family = "Arial"))
+#sport_plot <- ggarrange(sport_fish_num_boxplot, sport_piechart,  nrow = 1, ncol = 2, labels = c("a)", "b)"),  font.label = list(size = 18, face = "bold", family = "Arial"))
+sport_plot <- ggarrange(sport_fish_num_boxplot, sport_piechart,  nrow = 1, ncol = 2)
 sport_plot
 
 
@@ -258,9 +293,39 @@ ps_df <- df_all_summary %>%
   group_by(Scenario, Year) %>%
   summarise_at(vars(fish_total_num_annual_total:total_value_annual_total), list(sum = sum)) %>%
   ungroup() %>%
-  group_by(Scenario) %>%
-  summarise_at(vars(fish_total_num_annual_total_sum:total_value_annual_total_sum), list(mean = mean, sd = sd, median = median))
+  mutate(Scenario_2 = case_when(
+    startsWith(Scenario, "Conser") ~ "Low-end",
+    startsWith(Scenario, "Lib") ~ "High-end",
+  ))
+#  group_by(Scenario) %>%
+#  summarise_at(vars(fish_total_num_annual_total_sum:total_value_annual_total_sum), list(mean = mean, sd = sd, median = median))
 head(ps_df)
+
+
+ps_df_summary <- ps_df %>%
+  group_by(Scenario_2) %>%
+  summarise(min_num_fish = min(fish_total_num_annual_total_sum),
+            max_num_fish = max(fish_total_num_annual_total_sum)) #%>%
+#summarise_at(vars(fish_total_num_annual_total:total_value_annual_total), list(mean = mean, sd = sd, median = median))
+
+ps_df$Scenario_2 <- ordered(ps_df$Scenario_2, levels = c("Low-end", "High-end"))
+ps_df_summary$Scenario_2 <- ordered(ps_df_summary$Scenario_2, levels = c("Low-end", "High-end"))
+
+ps_fish_num_boxplot <- ggplot() +
+  geom_boxplot(data = ps_df, aes(x = Scenario_2, y = fish_total_num_annual_total_sum, fill = Scenario_2), coef = Inf) +  # makes whiskers extend to min/max
+  #  geom_errorbar(data = sport_df_summary, aes(x = Scenario_2, ymin =  min_num_fish, ymax = max_num_fish), position = position_dodge(width = 0.9), width = 0.25) + 
+  geom_segment(data = ps_df_summary, aes(x = as.numeric(Scenario_2) - 0.15, xend = as.numeric(Scenario_2) + 0.15, y = min_num_fish, yend = min_num_fish), linewidth = 0.25) + 
+  geom_segment(data = ps_df_summary, aes(x = as.numeric(Scenario_2) - 0.15, xend = as.numeric(Scenario_2) + 0.15, y = max_num_fish, yend = max_num_fish), linewidth = 0.25) + 
+  scale_fill_manual(values = c("#4E5A5D", "#C7DDE4"))+
+  scale_colour_manual(values = c("black")) +
+  theme_classic() +
+  ylab("Annual Number of Fish") +
+  theme(axis.title.x = element_blank(), legend.position = "none")+
+  theme(axis.text.x = element_text(size = 18),axis.text.y = element_text(size = 18),axis.title.y=element_text(size = 18, face = "bold"), text = element_text(family = "Arial"), strip.background = element_blank()) +
+  scale_y_continuous(labels = comma, limits = c(0, 700000)) 
+
+ps_fish_num_boxplot
+
 
 
 ps_df$label_y_position <- ps_df$fish_total_num_annual_total_sum_mean + ps_df$fish_total_num_annual_total_sum_sd + 30000
@@ -287,17 +352,6 @@ ps_fish_num
 
 
 
-
-ps_fish_num <- ggplot(ps_df, aes(x = Scenario, y = fish_total_num_annual_total_sum, fill = Scenario)) +
-  geom_boxplot() +
-  scale_fill_manual(values = c("#003366", "#6699CC"))+
-  scale_colour_manual(values = c("black")) +
-  theme_classic() +
-  ylab("Annual Number of Fish") +
-  theme(axis.title.x = element_blank(), legend.position = "none")+
-  theme(axis.text.x = element_text(size = 12),axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14), text = element_text(family = "Avenir"), strip.background = element_blank()) +
-  scale_y_continuous(labels = comma)
-ps_fish_num
 
 ps_fish_servings <- ggplot(ps_df, aes(x = Scenario, y = num_6oz_servings_annual_total_sum, fill = Scenario)) +
   geom_boxplot() +
@@ -367,7 +421,8 @@ ps_piechart
 
 library(ggpubr)
 
-ps_plot <- ggarrange(ps_fish_num, ps_piechart,  nrow = 1, ncol = 2, labels = c("a)", "b)"),  font.label = list(size = 20, face = "bold", family = "Arial"))
+#ps_plot <- ggarrange(ps_fish_num_boxplot, ps_piechart,  nrow = 1, ncol = 2, labels = c("a)", "b)"),  font.label = list(size = 18, face = "bold", family = "Arial"))
+ps_plot <- ggarrange(ps_fish_num_boxplot, ps_piechart,  nrow = 1, ncol = 2)
 ps_plot
 
 
@@ -377,19 +432,49 @@ ps_plot
 comm_df <- df_all_summary %>%
   filter(Fishery == "Commercial") %>%
   ungroup() %>%
-  group_by(Scenario) %>%
-  summarise_at(vars(fish_total_num_annual_total:total_value_annual_total), list(mean = mean, sd = sd, median = median))
+  mutate(Scenario_2 = case_when(
+    startsWith(Scenario, "Conser") ~ "Low-end",
+    startsWith(Scenario, "Lib") ~ "High-end",
+  )) 
+  #group_by(Scenario) %>%
+  #summarise_at(vars(fish_total_num_annual_total:total_value_cpi_annual_total), list(mean = mean, sd = sd, median = median))
 
 head(comm_df)
 
 
+comm_df_summary <- comm_df %>%
+  group_by(Scenario_2) %>%
+  summarise(min_num_fish = min(fish_total_num_annual_total),
+            max_num_fish = max(fish_total_num_annual_total)) #%>%
+#summarise_at(vars(fish_total_num_annual_total:total_value_annual_total), list(mean = mean, sd = sd, median = median))
+
+comm_df$Scenario_2 <- ordered(comm_df$Scenario_2, levels = c("Low-end", "High-end"))
+comm_df_summary$Scenario_2 <- ordered(comm_df_summary$Scenario_2, levels = c("Low-end", "High-end"))
+
+comm_fish_num_boxplot <- ggplot() +
+  geom_boxplot(data = comm_df, aes(x = Scenario_2, y = fish_total_num_annual_total, fill = Scenario_2), coef = Inf) +  # makes whiskers extend to min/max
+  #  geom_errorbar(data = sport_df_summary, aes(x = Scenario_2, ymin =  min_num_fish, ymax = max_num_fish), position = position_dodge(width = 0.9), width = 0.25) + 
+  geom_segment(data = comm_df_summary, aes(x = as.numeric(Scenario_2) - 0.15, xend = as.numeric(Scenario_2) + 0.15, y = min_num_fish, yend = min_num_fish), linewidth = 0.25) + 
+  geom_segment(data = comm_df_summary, aes(x = as.numeric(Scenario_2) - 0.15, xend = as.numeric(Scenario_2) + 0.15, y = max_num_fish, yend = max_num_fish), linewidth = 0.25) + 
+  scale_fill_manual(values = c("#4E5A5D", "#C7DDE4"))+
+  scale_colour_manual(values = c("black")) +
+  theme_classic() +
+  ylab("Annual Number of Fish") +
+  theme(axis.title.x = element_blank(), legend.position = "none")+
+  theme(axis.text.x = element_text(size = 18),axis.text.y = element_text(size = 18),axis.title.y=element_text(size = 18, face = "bold"), text = element_text(family = "Arial"), strip.background = element_blank()) +
+   scale_y_continuous(labels = comma, limits = c(0, 120000000)) 
+
+comm_fish_num_boxplot
+
+
+##old column plot -- need to change summary calculation to commented out line if want to do this 
 comm_df$label_y_position <- comm_df$fish_total_num_annual_total_mean + comm_df$fish_total_num_annual_total_sd + 5000000
 
 
 comm_fish_num <- ggplot(comm_df, aes(x = Scenario, y = fish_total_num_annual_total_mean, fill = Scenario)) +
   geom_col() +
   geom_errorbar(aes(ymin =  fish_total_num_annual_total_mean - fish_total_num_annual_total_sd, ymax = fish_total_num_annual_total_mean + fish_total_num_annual_total_sd), position = position_dodge(width = 0.9), width = 0.25) + 
-  geom_text(aes(y = label_y_position,    label = paste0("$", comma(total_value_annual_total_median))),
+  geom_text(aes(y = label_y_position,    label = paste0("$", comma(total_value_cpi_annual_total_median))),
             size = 7, family = "Arial") + 
   geom_text(aes(y = label_y_position + 5000000,     label = paste0(comma(num_6oz_servings_annual_total_median), " servings")),
             size = 7, family = "Arial") + 
@@ -405,18 +490,6 @@ comm_fish_num
 
 
 
-
-comm_fish_num <- ggplot(comm_df, aes(x = Scenario, y = fish_total_num_annual_total, fill = Scenario)) +
-  geom_boxplot() +
-  scale_fill_manual(values = c("#003366", "#6699CC"))+
-  scale_colour_manual(values = c("black")) +
-  theme_classic() +
-  ylab("Annual Number of Fish") +
-  theme(axis.title.x = element_blank(), legend.position = "none")+
-  theme(axis.text.x = element_text(size = 12),axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14), text = element_text(family = "Avenir"), strip.background = element_blank()) +
-  
-  scale_y_continuous(labels = comma)
-comm_fish_num
 
 comm_fish_servings <- ggplot(comm_df, aes(x = Scenario, y = num_6oz_servings_annual_total, fill = Scenario)) +
   geom_boxplot() +
@@ -455,10 +528,11 @@ blank_theme <- theme_minimal()+
 clrs2 = c("#000066", "#CC99FF", "#FFCCFF", "#FF9999","#990000")
 
 comm_df_prop <- df_all_sp_prop %>%
-  filter(Fishery == "Commercial") 
+  filter(Fishery == "Commercial") %>%
+  mutate(Species = str_remove(Species, " Salmon"))
 
 
-comm_df_prop$Species <- ordered(comm_df_prop$Species, levels = c("Chinook Salmon", "Chum Salmon", "Coho Salmon", "Pink Salmon", "Sockeye Salmon"))
+comm_df_prop$Species <- ordered(comm_df_prop$Species, levels = c("Chinook", "Chum", "Coho", "Pink", "Sockeye"))
 ##remove salmon part of species names
 
 
@@ -467,13 +541,17 @@ comm_piechart <- ggplot(comm_df_prop, aes(x = "", y = sp_prop_harvest, fill = Sp
   coord_polar("y", start = 0)+
   scale_fill_manual(values = clrs2)+
   blank_theme +
-  theme(axis.text.x = element_blank(), legend.position = "right", axis.text.y = element_blank(), legend.text = element_text(size = 18, family = "Arial"), legend.title =element_text(size = 20, family = "Arial", face = "bold"))
+#  theme(axis.text.x = element_blank(), legend.position = "bottom", axis.text.y = element_blank(), legend.text = element_text(size = 18, family = "Arial"), legend.title =element_text(size = 20, family = "Arial", face = "bold"))
+  theme(axis.text.x = element_blank(), legend.position = "bottom", legend.box = "horizontal", legend.box.just  = "center", axis.text.y = element_blank(), legend.text = element_text(size = 14, family = "Arial"), legend.title = element_blank()) #+
+#  guides(fill = guide_legend(nrow = 2, byrow = TRUE))
 
 comm_piechart
 
 library(ggpubr)
 
-comm_plot <- ggarrange(comm_fish_num, comm_piechart,  nrow = 1, ncol = 2, labels = c("a)", "b)"),  font.label = list(size = 20, face = "bold", family = "Arial"))
+#comm_plot <- ggarrange(comm_fish_num_boxplot, comm_piechart,  nrow = 1, ncol = 2, labels = c("a)", "b)"),  font.label = list(size = 18, face = "bold", family = "Arial"))
+comm_plot <- ggarrange(comm_fish_num_boxplot, comm_piechart,  nrow = 1, ncol = 2)
+
 comm_plot
 
 
