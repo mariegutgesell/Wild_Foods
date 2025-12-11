@@ -140,7 +140,9 @@ avg_cv_coupling <- ggplot(avg_df, aes(x = sd_0_1, y = harvest_total_cv)) +
  # ylim(0.5, 1.55) +
  # xlim(-3.7,-1.43)+
   theme(plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"))+
-  theme(axis.text.x = element_text(size = 12),axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14), axis.title.x = element_text(size = 14), text = element_text(family = "Avenir"), strip.background = element_blank(), legend.position = "none")
+  theme(panel.background = element_rect(fill = NA, color = NA),   # transparent panel
+        plot.background = element_rect(fill = NA, color = NA), 
+        axis.text.x = element_text(size = 12),axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14), axis.title.x = element_text(size = 14), text = element_text(family = "Avenir"), strip.background = element_blank(), legend.position = "none")
 avg_cv_coupling
 
 avg_cv_diversity <- ggplot(avg_df, aes(x = sw_diversity, y = harvest_total_cv)) +
@@ -153,8 +155,13 @@ avg_cv_diversity <- ggplot(avg_df, aes(x = sw_diversity, y = harvest_total_cv)) 
   xlim(1.92, 3.03) + 
   ylim(0.5,1.55)+
   theme(plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"))+
-  theme(axis.text.x = element_text(size = 12),axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14), axis.title.x = element_text(size = 14), text = element_text(family = "Avenir"), strip.background = element_blank(), legend.position = "none")
+  theme(panel.background = element_rect(fill = NA, color = NA),   # transparent panel
+        plot.background = element_rect(fill = NA, color = NA), 
+        axis.text.x = element_text(size = 12),axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14), axis.title.x = element_text(size = 14), text = element_text(family = "Avenir"), strip.background = element_blank(), legend.position = "none")
 avg_cv_diversity
+
+ggsave("figures/transparent_background/seasonal_cv_coupling.png", plot = avg_cv_coupling, bg = "transparent")
+ggsave("figures/transparent_background/seasonal_cv_diversity.png", plot = avg_cv_diversity, bg = "transparent")
 
 ##3.3) Decadal CV vs. SW diversity and coupling
 decadal_cv_coupling <- ggplot(mean_hc_cv, aes(x = sd_0_1_mean, y = cv_ph )) +
@@ -185,7 +192,7 @@ decadal_cv_diversity
 
 
 ##Combine into 1 figure
-fig_6 <-  ggarrange(avg_robust_diversity, avg_robust_coupling, avg_cv_diversity, avg_cv_coupling, decadal_cv_diversity, decadal_cv_coupling, nrow = 3, ncol = 2, labels = c("i)", "ii)", "i)", "ii)", "i)", "ii)"), font.label = list(colour = "black", size = 14, family = "Avenir"))
+fig_6 <-  ggarrange(avg_cv_diversity, avg_cv_coupling, decadal_cv_diversity, decadal_cv_coupling,avg_robust_diversity, avg_robust_coupling, nrow = 3, ncol = 2, labels = c("i)", "ii)", "i)", "ii)", "i)", "ii)"), font.label = list(colour = "black", size = 14, family = "Avenir"))
 fig_6
 ###4) REGRESSION ANALYSIS ------------
 avg_robust_div_lm <- lm(alpha ~ sw_diversity, avg_df)

@@ -10,7 +10,7 @@ library(ggrepel)
 library(data.table)
 library(networkD3)
 
-setwd("/Users/mariegutgesell/Desktop/Wild Foods Repo/")
+setwd("/Users/mariegutgesell/LocalRepos/Wild Foods Repo/")
 getwd()
 ##Read in estimated population size data -- latest year I have is 2020 for all communities in Chugach and Tongass
 pop_df <- read_excel("data/CSIS_Community_Demographics.xlsx", sheet = 1) %>%

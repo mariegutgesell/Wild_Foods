@@ -38,15 +38,19 @@ seasonal_example1_total <- total_simulated_harvest %>%
 
 seasonal_ex1_plot <- ggplot() +
   geom_line(data = seasonal_example1, aes(x = date, y = harvest_amount_kg, group = habitat, color = habitat)) +
-#  geom_line(data = seasonal_example1_total, aes(x = date, y = harvest_total), linewidth = 1, colour = "black") +
+  geom_line(data = seasonal_example1_total, aes(x = date, y = harvest_total), linewidth = 1, colour = "black") +
   scale_colour_manual(values = c("#FF9999","#003366","#CC9966", "#339933"))+
   labs(x = "Calendar Year", y = "Daily Harvest Amount\n(kg/person)") +
   theme_classic()+
- # ylim(0,3.0) +
-  theme(axis.text.x = element_blank(), axis.ticks.x = element_blank(), axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14), axis.title.x = element_text(size = 14), legend.position = "none", legend.title = element_text("Habitat"), text = element_text(family = "Avenir")) +
+  ylim(0,3.0) +
+  theme(panel.background = element_rect(fill = NA, color = NA),   # transparent panel
+        plot.background = element_rect(fill = NA, color = NA), #transparent full plot
+        axis.text.x = element_blank(), axis.ticks.x = element_blank(), axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14), axis.title.x = element_text(size = 14), legend.position = "none", legend.title = element_text("Habitat"), text = element_text(family = "Avenir")) +
   theme(plot.margin = unit(c(0.25, 1, 0.25, 0.25), "cm"))
 seasonal_ex1_plot
 
+#ggsave("figures/transparent_background/C1_seasonal_phenology_a.png", plot = seasonal_ex1_plot, bg = "transparent")
+ggsave("figures/transparent_background/C1_seasonal_phenology_b.png", plot = seasonal_ex1_plot, bg = "transparent")
 
 seasonal_example2 <- simulated_harvest_df %>%  filter(site == "Angoon")
 seasonal_example2_total <- total_simulated_harvest %>%
@@ -54,14 +58,40 @@ seasonal_example2_total <- total_simulated_harvest %>%
 
 seasonal_ex2_plot <- ggplot() +
   geom_line(data = seasonal_example2, aes(x = date, y = harvest_amount_kg, group = habitat, color = habitat)) +
- # geom_line(data = seasonal_example2_total, aes(x = date, y = harvest_total), linewidth = 1, color = "black") +
+  geom_line(data = seasonal_example2_total, aes(x = date, y = harvest_total), linewidth = 1, color = "black") +
   scale_colour_manual(values = c("#FF9999","#003366","#CC9966", "#339933"))+
   labs(x = "Calendar Year", y = "Daily Harvest Amount\n(kg/person)") +
   theme_classic()+
- # ylim(0, 0.21) +
-  theme(axis.text.x = element_blank(), axis.ticks.x = element_blank(),axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14), axis.title.x =element_text(size = 14) , legend.position = "none", legend.title = element_text("Habitat"), text = element_text(family = "Avenir"))+
+  ylim(0, 0.8) +
+  theme( panel.background = element_rect(fill = NA, color = NA),   # transparent panel
+         plot.background = element_rect(fill = NA, color = NA), #transparent full plot
+         axis.text.x = element_blank(), axis.ticks.x = element_blank(),axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14), axis.title.x =element_text(size = 14) , legend.position = "none", legend.title = element_text("Habitat"), text = element_text(family = "Avenir"))+
   theme(plot.margin = unit(c(0.25, 1, 0.25, 0.25), "cm"))
 seasonal_ex2_plot
+
+#ggsave("figures/transparent_background/C2_seasonal_phenology_a.png", plot = seasonal_ex2_plot, bg = "transparent")
+ggsave("figures/transparent_background/C2_seasonal_phenology_b.png", plot = seasonal_ex2_plot, bg = "transparent")
+
+##Plot Cordova
+seasonal_example3 <- simulated_harvest_df %>%  filter(site == "Cordova")
+seasonal_example3_total <- total_simulated_harvest %>%
+  filter(site == "Cordova")
+
+seasonal_ex3_plot <- ggplot() +
+  geom_line(data = seasonal_example3, aes(x = date, y = harvest_amount_kg, group = habitat, color = habitat)) +
+ # geom_line(data = seasonal_example3_total, aes(x = date, y = harvest_total), linewidth = 1, color = "black") +
+  scale_colour_manual(values = c("#FF9999","#003366","#CC9966", "#339933"))+
+  labs(x = "Calendar Year", y = "Daily Harvest Amount\n(kg/person)") +
+  theme_classic()+
+ # ylim(0, 0.8) +
+  theme( panel.background = element_rect(fill = NA, color = NA),   # transparent panel
+         plot.background = element_rect(fill = NA, color = NA), #transparent full plot
+         axis.text.x = element_blank(), axis.ticks.x = element_blank(),axis.text.y = element_text(size = 12),axis.title.y=element_text(size = 14), axis.title.x =element_text(size = 14) , legend.position = "none", legend.title = element_text("Habitat"), text = element_text(family = "Avenir"))+
+  theme(plot.margin = unit(c(0.25, 1, 0.25, 0.25), "cm"))
+seasonal_ex3_plot
+
+ggsave("figures/transparent_background/Cordova_seasonal_phenology_b.png", plot = seasonal_ex3_plot, bg = "transparent")
+
 
 ##Plot of all communities -- supplemental figure
 
@@ -171,9 +201,9 @@ decadal_all_plot
 data <- data.frame(
   Xdata = rnorm(4),
   Ydata = rnorm(4),
-  LegendData = c("Freshwater/Anadromous", "Marine", "Nearshore", "Terrestrial")
+  LegendData = c("Freshwater/Anadromous", "Marine", "Intertidal", "Terrestrial")
 )
-data$LegendData <- factor(data$LegendData, levels = c("Freshwater/Anadromous", "Marine", "Nearshore", "Terrestrial"))
+data$LegendData <- factor(data$LegendData, levels = c("Freshwater/Anadromous", "Marine", "Intertidal", "Terrestrial"))
 gplot <- ggplot(data, aes(Xdata, Ydata, fill = LegendData)) +
   geom_col() +
   scale_fill_manual(values = c("#FF9999","#003366","#CC9966", "#339933")) +

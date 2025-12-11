@@ -77,13 +77,21 @@ df_4 <- left_join(df_3, cost_df, by = "Lowest_Common_Taxon_Name")
 cost_est_2020 <- df_4 %>%
   mutate(total_cost_est_2020 = est_total_lbs_2020*Cost_per_lb,
    total_cost_est_2020_mil = total_cost_est_2020/1000000) %>%
-    mutate(servings = est_total_kgs_2020/0.150)
+    mutate(servings = est_total_kgs_2020/0.150) %>%
+  mutate(servings_0.25_lb = est_total_lbs_2020/0.25)
 
 
 total_cost_2020 <- cost_est_2020 %>%
-  group_by(Forest) %>%
-  summarise_at(vars(total_cost_est_2020), list(sum = sum))
+  #group_by(Forest) %>%
+  summarise_at(vars(total_cost_est_2020, servings_0.25_lb, est_total_lbs_2020), list(sum = sum)) 
 
+3654844 + 14113353
+21344593+88560322
+
+cost_by_group_2020 <- cost_est_2020 %>% 
+  group_by(Group) %>%
+  summarise_at(vars(total_cost_est_2020, servings_0.25_lb, est_total_lbs_2020), list(sum = sum)) %>%
+  mutate(total_1000_lbs = est_total_lbs_2020_sum/1000)
 
 total_pop_2020 <- cost_est_2020 %>%
   dplyr::select(Forest, Community, Community_Population_2020) %>%

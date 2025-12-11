@@ -232,10 +232,10 @@ seasonal_plot_mean_3
 ia_plot_mean_3
 
 avg_decadal_synchrony_fig_2 <-  ggarrange(seasonal_plot_mean_3, avg_sync_cv, seasonal_pf, ia_plot_mean_3, dec_sync_cv, decadal_pf,
-                                        nrow = 2, ncol = 3, labels = c("i)", "ii)", "iii)", "i)", "ii)", "iii)"), font.label = list(colour = "black", size = 14, family = "Avenir"))
+                                        nrow = 2, ncol = 3,  font.label = list(colour = "black", size = 14, family = "Avenir"))
 avg_decadal_synchrony_fig_2
 
-
+ggsave(avg_decadal_synchrony_fig_2, "figures/Fig6_phenology_synchrony_fig.png")
 ##arrangement 2 
 avg_seasonal <- ggarrange(seasonal_plot_mean_3, 
                           ggarrange(avg_sync_cv, seasonal_pf, nrow = 1, ncol = 2, labels = c("ii)", "iii)"), font.label = list(colour = "black", size = 14, family = "Avenir")), 
