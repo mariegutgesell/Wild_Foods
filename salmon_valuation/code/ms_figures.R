@@ -53,7 +53,7 @@ fish_weight <- read_excel("salmon_valuation/data/Regional_Analyses&Graphs_7-15-2
 ##Join fish number, value and weight dfs together and then convert number of fish to weight, and use that to estimate # of 6oz servings and replacement value 
 fish_df_1 <- left_join(fish_num_summary, resale_value_mean, by = "Species") %>%
   left_join(fish_weight, by = "Species") %>%
-  mutate(conversion_lb_to_oz = 6/16) %>%
+  mutate(conversion_lb_to_oz = 4/16) %>%
   mutate(fish_total_weight_conservative = if_else(
     Forest == "Chugach",
     Forest_fish_conservative_sum * Chugach_fish_mass_lbs * Recovery_rate,
@@ -64,19 +64,19 @@ fish_df_1 <- left_join(fish_num_summary, resale_value_mean, by = "Species") %>%
     Forest_fish_liberal_sum * Chugach_fish_mass_lbs * Recovery_rate,
     Forest_fish_liberal_sum * Tongass_fish_lbs * Recovery_rate
   )) %>%
-  mutate(num_6oz_servings_conservative = fish_total_weight_conservative/conversion_lb_to_oz,
-         num_6oz_servings_liberal = fish_total_weight_liberal/conversion_lb_to_oz,
+  mutate(num_4oz_servings_conservative = fish_total_weight_conservative/conversion_lb_to_oz,
+         num_4oz_servings_liberal = fish_total_weight_liberal/conversion_lb_to_oz,
          total_value_conservative = fish_total_weight_conservative*mean_value,
          total_value_liberal = fish_total_weight_liberal*mean_value) %>%
-  select(Forest, Fishery, Species, Year, Forest_fish_conservative_sum, Forest_fish_liberal_sum,fish_total_weight_conservative,fish_total_weight_liberal, num_6oz_servings_conservative,  num_6oz_servings_liberal,  total_value_conservative, total_value_liberal) %>%
+  select(Forest, Fishery, Species, Year, Forest_fish_conservative_sum, Forest_fish_liberal_sum,fish_total_weight_conservative,fish_total_weight_liberal, num_4oz_servings_conservative,  num_4oz_servings_liberal,  total_value_conservative, total_value_liberal) %>%
   pivot_longer(
     cols = c(
       Forest_fish_conservative_sum,
       Forest_fish_liberal_sum,
       fish_total_weight_conservative,
       fish_total_weight_liberal,
-      num_6oz_servings_conservative,
-      num_6oz_servings_liberal, 
+      num_4oz_servings_conservative,
+      num_4oz_servings_liberal, 
       total_value_conservative,
       total_value_liberal
     ),
@@ -116,11 +116,11 @@ comm_cpi <-  read_excel("salmon_valuation/data/Regional_Analyses&Graphs_7-15-202
 comm_df_1 <- left_join(comm_df, comm_recovery_rate, by = c("Forest", "Species")) %>%
   left_join(comm_cpi, by = "Year") %>%
   mutate(fish_total_weight = fish_total_weight*recover_rate) %>%
-  mutate(conversion_lb_to_oz = 6/16,
-         num_6oz_servings = fish_total_weight/conversion_lb_to_oz) %>%
+  mutate(conversion_lb_to_oz = 4/16,
+         num_4oz_servings = fish_total_weight/conversion_lb_to_oz) %>%
   mutate(total_value_cpi = total_value * CPI) %>%
   mutate(Scenario = "Conservative") %>%
-  select(Forest, Fishery, Species, Year, Scenario, fish_total_num, fish_total_weight,  num_6oz_servings,   total_value, total_value_cpi)
+  select(Forest, Fishery, Species, Year, Scenario, fish_total_num, fish_total_weight,  num_4oz_servings,   total_value, total_value_cpi)
 comm_df_1$Year <- as.numeric(comm_df_1$Year)
 
 ##Combine all data together
@@ -131,13 +131,13 @@ df_all <- rbind(fish_df_1, comm_df_1)
 df_all_summary <- df_all %>%
   ungroup() %>%
   group_by(Fishery, Year, Scenario) %>%
-  summarise_at(vars(fish_total_num, fish_total_weight,  num_6oz_servings,   total_value, total_value_cpi), list(annual_total = sum))
+  summarise_at(vars(fish_total_num, fish_total_weight,  num_4oz_servings,   total_value, total_value_cpi), list(annual_total = sum))
 
 
-df_all_median <- df_all_summary %>%
+df_all_median_mean <- df_all_summary %>%
   ungroup() %>%
   group_by(Fishery, Scenario) %>%
-  summarise_at(vars(fish_total_num_annual_total, fish_total_weight_annual_total,  num_6oz_servings_annual_total,   total_value_annual_total, total_value_cpi_annual_total), list(median = median))
+  summarise_at(vars(fish_total_num_annual_total, fish_total_weight_annual_total,  num_4oz_servings_annual_total,   total_value_annual_total, total_value_cpi_annual_total), list(mean = mean,median = median))
 
 ##calculate proportion of total harvest each species for each year 
 df_all_sp_total <- df_all %>%
@@ -174,30 +174,32 @@ sport_df <- df_all_summary %>%
   mutate(Scenario_2 = case_when(
     startsWith(Scenario, "Conser") ~ "Low-end",
     startsWith(Scenario, "Lib") ~ "High-end",
-  )) #%>%
-  #group_by(Scenario_2) %>%
-  #summarise_at(vars(fish_total_num_annual_total:total_value_annual_total), list(mean = mean, sd = sd, median = median))
-  
+  )) %>%
+  filter(Scenario_2 == "High-end")
+
 sport_df_summary <- sport_df %>%
   group_by(Scenario_2) %>%
   summarise(min_num_fish = min(fish_total_num_annual_total),
             max_num_fish = max(fish_total_num_annual_total)) #%>%
   #summarise_at(vars(fish_total_num_annual_total:total_value_annual_total), list(mean = mean, sd = sd, median = median))
   
-sport_df$Scenario_2 <- ordered(sport_df$Scenario_2, levels = c("Low-end", "High-end"))
-sport_df_summary$Scenario_2 <- ordered(sport_df_summary$Scenario_2, levels = c("Low-end", "High-end"))
+sport_df$Scenario_2 <- ordered(sport_df$Scenario_2, levels = c("High-end", "Low-end"))
+sport_df_summary$Scenario_2 <- ordered(sport_df_summary$Scenario_2, levels = c("High-end", "Low-end"))
+
+
 
 sport_fish_num_boxplot <- ggplot() +
   geom_boxplot(data = sport_df, aes(x = Scenario_2, y = fish_total_num_annual_total, fill = Scenario_2), coef = Inf) +  # makes whiskers extend to min/max
-#  geom_errorbar(data = sport_df_summary, aes(x = Scenario_2, ymin =  min_num_fish, ymax = max_num_fish), position = position_dodge(width = 0.9), width = 0.25) + 
+ # geom_errorbar(data = sport_df_summary, aes(x = Scenario_2, ymin =  min_num_fish, ymax = max_num_fish), position = position_dodge(width = 0.9), width = 0.25) + 
   geom_segment(data = sport_df_summary, aes(x = as.numeric(Scenario_2) - 0.15, xend = as.numeric(Scenario_2) + 0.15, y = min_num_fish, yend = min_num_fish), linewidth = 0.25) + 
   geom_segment(data = sport_df_summary, aes(x = as.numeric(Scenario_2) - 0.15, xend = as.numeric(Scenario_2) + 0.15, y = max_num_fish, yend = max_num_fish), linewidth = 0.25) + 
-   scale_fill_manual(values = c("#4E5A5D", "#C7DDE4"))+
+  scale_fill_manual(values = c("#4E5A5D", "#C7DDE4"))+
   scale_colour_manual(values = c("black")) +
   theme_classic() +
   ylab("Annual Number of Fish") +
-  theme(axis.title.x = element_blank(), legend.position = "none")+
-  theme(axis.text.x = element_text(size = 18),axis.text.y = element_text(size = 18),axis.title.y=element_text(size = 18, face = "bold"), text = element_text(family = "Arial"), strip.background = element_blank()) +
+  xlab("Sport") +
+  # theme(axis.text.x = element_text(size = 18),axis.text.y = element_text(size = 18),axis.title.y=element_text(size = 18, face = "bold"), text = element_text(family = "Arial"), strip.background = element_blank(), legend.position = "none") +
+  theme(axis.text.x = element_blank(),axis.text.y = element_text(size = 18),axis.title.y=element_text(size = 18, face = "bold"), axis.title.x = element_text(size = 18), text = element_text(family = "Arial"), strip.background = element_blank(), legend.position = "none") +
   scale_y_continuous(labels = comma, limits = c(0, 1000000)) 
 
 sport_fish_num_boxplot
@@ -296,9 +298,10 @@ ps_df <- df_all_summary %>%
   mutate(Scenario_2 = case_when(
     startsWith(Scenario, "Conser") ~ "Low-end",
     startsWith(Scenario, "Lib") ~ "High-end",
-  ))
-#  group_by(Scenario) %>%
-#  summarise_at(vars(fish_total_num_annual_total_sum:total_value_annual_total_sum), list(mean = mean, sd = sd, median = median))
+  )) %>%
+  filter(Scenario_2 == "High-end") %>%
+  group_by(Scenario) %>%
+   summarise_at(vars(fish_total_num_annual_total_sum:total_value_annual_total_sum), list(mean = mean, sd = sd, median = median))
 head(ps_df)
 
 
@@ -308,8 +311,8 @@ ps_df_summary <- ps_df %>%
             max_num_fish = max(fish_total_num_annual_total_sum)) #%>%
 #summarise_at(vars(fish_total_num_annual_total:total_value_annual_total), list(mean = mean, sd = sd, median = median))
 
-ps_df$Scenario_2 <- ordered(ps_df$Scenario_2, levels = c("Low-end", "High-end"))
-ps_df_summary$Scenario_2 <- ordered(ps_df_summary$Scenario_2, levels = c("Low-end", "High-end"))
+ps_df$Scenario_2 <- ordered(ps_df$Scenario_2, levels = c("High-end","Low-end"))
+ps_df_summary$Scenario_2 <- ordered(ps_df_summary$Scenario_2, levels = c("High-end","Low-end"))
 
 ps_fish_num_boxplot <- ggplot() +
   geom_boxplot(data = ps_df, aes(x = Scenario_2, y = fish_total_num_annual_total_sum, fill = Scenario_2), coef = Inf) +  # makes whiskers extend to min/max
@@ -320,8 +323,9 @@ ps_fish_num_boxplot <- ggplot() +
   scale_colour_manual(values = c("black")) +
   theme_classic() +
   ylab("Annual Number of Fish") +
-  theme(axis.title.x = element_blank(), legend.position = "none")+
-  theme(axis.text.x = element_text(size = 18),axis.text.y = element_text(size = 18),axis.title.y=element_text(size = 18, face = "bold"), text = element_text(family = "Arial"), strip.background = element_blank()) +
+  xlab("Personal/Subsistence") +
+  # theme(axis.text.x = element_text(size = 18),axis.text.y = element_text(size = 18),axis.title.y=element_text(size = 18, face = "bold"), text = element_text(family = "Arial"), strip.background = element_blank(), legend.position = "none") +
+  theme(axis.text.x = element_blank(),axis.text.y = element_text(size = 18),axis.title.y=element_text(size = 18, face = "bold"), axis.title.x = element_text(size = 18), text = element_text(family = "Arial"), strip.background = element_blank(), legend.position = "none") +
   scale_y_continuous(labels = comma, limits = c(0, 700000)) 
 
 ps_fish_num_boxplot
@@ -460,8 +464,10 @@ comm_fish_num_boxplot <- ggplot() +
   scale_colour_manual(values = c("black")) +
   theme_classic() +
   ylab("Annual Number of Fish") +
-  theme(axis.title.x = element_blank(), legend.position = "none")+
-  theme(axis.text.x = element_text(size = 18),axis.text.y = element_text(size = 18),axis.title.y=element_text(size = 18, face = "bold"), text = element_text(family = "Arial"), strip.background = element_blank()) +
+  xlab("Commercial") +
+ # theme(axis.text.x = element_text(size = 18),axis.text.y = element_text(size = 18),axis.title.y=element_text(size = 18, face = "bold"), text = element_text(family = "Arial"), strip.background = element_blank(), legend.position = "none") +
+  theme(axis.text.x = element_blank(),axis.text.y = element_text(size = 18),axis.title.y=element_text(size = 18, face = "bold"), axis.title.x = element_text(size = 18), text = element_text(family = "Arial"), strip.background = element_blank(), legend.position = "none") +
+  
    scale_y_continuous(labels = comma, limits = c(0, 120000000)) 
 
 comm_fish_num_boxplot
